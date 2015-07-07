@@ -1,5 +1,6 @@
 #include "generalgene.h"
 #include <QDebug>
+#include <cstdlib>
 
 GeneralGene::GeneralGene()
 {
@@ -28,6 +29,27 @@ GeneralGene::GeneralGene(QList< QList<int> > gene, int segment_size) :
 
 GeneralGene::~GeneralGene()
 {
+}
+
+
+QList< QList<int> > GeneralGene::segments()
+{
+    return _gene;
+}
+
+void GeneralGene::mutate()
+{
+    //Simple mutation py probability - the chance of mutating a value is the same for every value.
+    for(int i = 0; i < _gene.length(); ++i)
+    {
+        for(int j = 0; j < _gene[i].length(); ++j)
+        {
+            if(qrand()/RAND_MAX < MUTATION_RATE)
+            {
+                _gene[i][j] = qrand();
+            }
+        }
+    }
 }
 
 QList<GeneralGene> GeneralGene::combine(GeneralGene gene1, GeneralGene gene2)
@@ -82,9 +104,4 @@ QList<GeneralGene> GeneralGene::combine(GeneralGene gene1, GeneralGene gene2)
     geneList.append(GeneralGene(newGene1, gene1._gene[0].length()));
     geneList.append(GeneralGene(newGene2, gene2._gene[0].length()));
     return geneList;
-}
-
-QList< QList<int> > GeneralGene::segments()
-{
-    return _gene;
 }

@@ -19,6 +19,9 @@ protected:
     GeneralGene(QList< QList<int> > gene, int segment_size);
     QList< QList<int> > _gene;
     int _segment_size;
+
+private:
+    static const float MUTATION_RATE = 0.03;
 };
 
 #endif // GENERALGENE_H
