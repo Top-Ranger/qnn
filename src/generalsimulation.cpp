@@ -1,5 +1,9 @@
 #include "genericsimulation.h"
 
-GeneralSimulation::GeneralSimulation()
+GeneralSimulation::GeneralSimulation(AbstractNeuralNetwork network)
+{
+}
+
+GeneralSimulation::~GeneralSimulation()
 {
 }

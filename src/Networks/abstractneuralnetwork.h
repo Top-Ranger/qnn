@@ -7,10 +7,16 @@
 class AbstractNeuralNetwork
 {
 public:
-    AbstractNeuralNetwork(GenericGene gene, int len_input, int len_output);
+    AbstractNeuralNetwork(GeneralGene gene, int len_input, int len_output);
+    virtual ~AbstractNeuralNetwork();
 
-    virtual void processInput(QList<double> input);
-    virtual double getNeuronOutput(int i);
+    virtual void processInput(QList<double> input) = 0;
+    virtual double getNeuronOutput(int i) = 0;
+
+protected:
+    AbstractNeuralNetwork();
+    int _len_input;
+    int _len_output;
 };
 
 #endif // ABSTRACTNEURALNETWORK_H

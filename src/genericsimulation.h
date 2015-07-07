@@ -7,8 +7,9 @@ class GeneralSimulation
 {
 public:
     GeneralSimulation(AbstractNeuralNetwork network);
+    virtual ~GeneralSimulation();
 
-    virtual void getScore();
+    virtual void getScore() = 0;
 };
 
 #endif // GENERICSIMULATION_H
