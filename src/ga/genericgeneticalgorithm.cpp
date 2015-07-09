@@ -76,6 +76,8 @@ GenericGeneticAlgorithm::~GenericGeneticAlgorithm()
 void GenericGeneticAlgorithm::run_ga()
 {
     // Initialise
+    emit ga_current_round(0, _max_rounds, 0.0d);
+
     QList<SimulationThread *> threadList;
     int currentRound = 0;
 
@@ -109,9 +111,10 @@ void GenericGeneticAlgorithm::run_ga()
 
     while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
     {
-        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness);
         create_children();
         survivor_selection();
+        qSort(_population);
+        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness);
     }
 
     // Find the best individuum
@@ -140,10 +143,60 @@ GenericGene GenericGeneticAlgorithm::best_gene()
 
 void GenericGeneticAlgorithm::create_children()
 {
+    QList<GeneContainer> newPopulation;
+    QList<GeneContainer> temp;
+    QList<GeneContainer> newChildren;
+    QList<GenericGene *> childrenGene;
+    QList<SimulationThread *> threadList;
+    int num_childs;
 
+    while(!_population.empty())
+    {
+        temp.clear();
+        newChildren.clear();
+        num_childs = 0;
+        for(int i = 0; i < 8 && !_population.empty(); ++i)
+        {
+            temp.append(_population.takeAt(qrand()%_population.length()));
+        }
+        qSort(temp);
+        if(temp.length() >= 2)
+        {
+            childrenGene = temp[temp.length()-1].gene->combine(temp[temp.length()-1].gene, temp[temp.length()-2].gene);
+            for(int i = 0; i < childrenGene.length(); ++i)
+            {
+                ++num_childs;
+                GeneContainer container;
+                container.gene = childrenGene[i];
+                container.network = _network->createConfigCopy();
+                container.network->initialise(childrenGene[i]);
+                container.fitness = -1.0d;
+                newChildren.append(container);
+                GenericSimulation simulation = *_simulation;
+                simulation.initialise(container.network);
+                threadList.append(new SimulationThread(simulation));
+                threadList[i]->start();
+            }
+            for(int i = 0; i < num_childs; ++i)
+            {
+                threadList[i]->wait();
+                newChildren[i].fitness = threadList[i]->getFitness();
+            }
+            temp.append(newChildren);
+            qSort(temp);
+            for(int i = 0; i < num_childs; ++i)
+            {
+                GeneContainer container = temp.takeFirst();
+                delete container.network;
+                delete container.gene;
+            }
+            newPopulation.append(temp);
+        }
+    }
+    _population = newPopulation;
 }
 
 void GenericGeneticAlgorithm::survivor_selection()
 {
-
+    // Not needed because survivors are selected in create_children
 }

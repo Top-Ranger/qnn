@@ -52,56 +52,56 @@ void GenericGene::mutate()
     }
 }
 
-QList<GenericGene> GenericGene::combine(GenericGene gene1, GenericGene gene2)
+QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2)
 {
-    if(gene1._gene[0].length() != gene2._gene[0].length())
+    if(gene1->_gene[0].length() != gene2->_gene[0].length())
     {
         qWarning() << "Attemted crossover of different type of genes";
-        return QList<GenericGene>();
+        return QList<GenericGene *>();
     }
     QList< QList<int> > newGene1;
     QList< QList<int> > newGene2;
-    int smallerLength = gene1._gene.length() < gene2._gene.length() ? gene1._gene.length() : gene2._gene.length();
-    int largerLength = gene1._gene.length() > gene2._gene.length() ? gene1._gene.length() : gene2._gene.length();
+    int smallerLength = gene1->_gene.length() < gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
+    int largerLength = gene1->_gene.length() > gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
     int outer_crossover = qrand() % smallerLength;
-    int inner_crossover = qrand() % gene1._gene[0].length();
+    int inner_crossover = qrand() % gene1->_gene[0].length();
     int i;
     for(i = 0; i < outer_crossover; ++i)
     {
-        newGene1.append(gene1._gene[i]);
-        newGene2.append(gene2._gene[i]);
+        newGene1.append(gene1->_gene[i]);
+        newGene2.append(gene2->_gene[i]);
     }
     QList<int> crossover1;
     QList<int> crossover2;
-    for(int j = 0; j < gene1._gene[0].length(); ++j)
+    for(int j = 0; j < gene1->_gene[0].length(); ++j)
     {
         if(i < inner_crossover)
         {
-            crossover1.append(gene1._gene[i][j]);
-            crossover2.append(gene2._gene[i][j]);
+            crossover1.append(gene1->_gene[i][j]);
+            crossover2.append(gene2->_gene[i][j]);
         }
         else
         {
-            crossover1.append(gene2._gene[i][j]);
-            crossover2.append(gene1._gene[i][j]);
+            crossover1.append(gene2->_gene[i][j]);
+            crossover2.append(gene1->_gene[i][j]);
         }
     }
     newGene1.append(crossover1);
     newGene2.append(crossover2);
     for(++i; i < largerLength; ++i)
     {
-        if(i < gene2._gene.length())
+        if(i < gene2->_gene.length())
         {
-            newGene1.append(gene2._gene[i]);
+            newGene1.append(gene2->_gene[i]);
         }
-        if(i < gene1._gene.length())
+        if(i < gene1->_gene.length())
         {
-            newGene2.append(gene1._gene[i]);
+            newGene2.append(gene1->_gene[i]);
         }
     }
 
-    QList<GenericGene> geneList;
-    geneList.append(GenericGene(newGene1, gene1._gene[0].length()));
-    geneList.append(GenericGene(newGene2, gene2._gene[0].length()));
+    QList<GenericGene *> geneList;
+    geneList.append(new GenericGene(newGene1, gene1->_gene[0].length()));
+    geneList.append(new GenericGene(newGene2, gene2->_gene[0].length()));
     return geneList;
 }

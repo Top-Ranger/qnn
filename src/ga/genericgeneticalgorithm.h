@@ -33,7 +33,7 @@ private:
         GenericGene* gene;
         AbstractNeuralNetwork *network;
 
-        bool operator<(GeneContainer &other)
+        bool operator<(const GeneContainer &other) const
         {
             return fitness < other.fitness;
         }
