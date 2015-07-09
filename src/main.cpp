@@ -10,7 +10,8 @@ int main(int argc, char *argv[])
     FeedForwardNetwork testFFN(5,1,10,30);
     GenericGene *testGene = testFFN.getRandomGene();
     testFFN.initialise(testGene);
-    GenericSimulation testSimulation(&testFFN);
+    GenericSimulation testSimulation;
+    testSimulation.initialise(&testFFN);
 
     qDebug() << "Score:" << testSimulation.getScore();
 

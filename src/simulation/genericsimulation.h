@@ -6,12 +6,16 @@
 class GenericSimulation
 {
 public:
-    GenericSimulation(AbstractNeuralNetwork *network);
+    GenericSimulation();
     virtual ~GenericSimulation();
 
-    virtual double getScore();
+    void initialise(AbstractNeuralNetwork *network);
+    double getScore();
 
 protected:
+    void _initialise();
+    double _getScore();
+
     AbstractNeuralNetwork *_network;
 };
 
