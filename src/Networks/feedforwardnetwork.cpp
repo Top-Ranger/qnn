@@ -97,7 +97,7 @@ void FeedForwardNetwork::processInput(QList<double> input)
         // Hidden to hidden
         for(int current_hidden = 1; current_hidden < _num_hidden_layer; ++current_hidden)
         {
-            for(int i_output = 0; i_output < _size_hidden; ++i_output)
+            for(int i_output = 0; i_output < _len_output; ++i_output)
             {
                 double sum = 0.0;
                 for(int i_input = 0; i_input < _len_input; ++i_input)

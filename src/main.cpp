@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    qDebug() << FeedForwardNetwork::num_segments(5,1,0,3);
-    GenericGene testGene(FeedForwardNetwork::num_segments(5,1,0,3));
-    FeedForwardNetwork testFFN(testGene,5,1,1,3);
+    qDebug() << FeedForwardNetwork::num_segments(5,1,10,30);
+    GenericGene testGene(FeedForwardNetwork::num_segments(5,1,10,30));
+    FeedForwardNetwork testFFN(testGene,5,1,10,30);
     GenericSimulation testSimulation(&testFFN);
 
     qDebug() << "Score:" << testSimulation.getScore();
