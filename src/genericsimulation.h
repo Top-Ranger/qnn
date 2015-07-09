@@ -3,11 +3,11 @@
 
 #include "Networks/abstractneuralnetwork.h"
 
-class GeneralSimulation
+class GenericSimulation
 {
 public:
-    GeneralSimulation(AbstractNeuralNetwork *network);
-    virtual ~GeneralSimulation();
+    GenericSimulation(AbstractNeuralNetwork *network);
+    virtual ~GenericSimulation();
 
     virtual double getScore() = 0;
 

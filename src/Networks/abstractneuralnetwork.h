@@ -1,13 +1,13 @@
 #ifndef ABSTRACTNEURALNETWORK_H
 #define ABSTRACTNEURALNETWORK_H
 
-#include "generalgene.h"
+#include "genericgene.h"
 #include <QList>
 
 class AbstractNeuralNetwork
 {
 public:
-    AbstractNeuralNetwork(GeneralGene gene, int len_input, int len_output);
+    AbstractNeuralNetwork(GenericGene gene, int len_input, int len_output);
     virtual ~AbstractNeuralNetwork();
 
     virtual void processInput(QList<double> input) = 0;

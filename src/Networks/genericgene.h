@@ -3,20 +3,20 @@
 
 #include <QList>
 
-class GeneralGene
+class GenericGene
 {
 public:
-    GeneralGene(int initialLength, int segment_size = 1);
-    virtual ~GeneralGene();
+    GenericGene(int initialLength, int segment_size = 1);
+    virtual ~GenericGene();
 
     virtual void mutate();
     virtual QList< QList<int> > segments();
 
-    static QList<GeneralGene> combine(GeneralGene gene1, GeneralGene gene2);
+    static QList<GenericGene> combine(GenericGene gene1, GenericGene gene2);
 
 protected:
-    GeneralGene();
-    GeneralGene(QList< QList<int> > gene, int segment_size);
+    GenericGene();
+    GenericGene(QList< QList<int> > gene, int segment_size);
     QList< QList<int> > _gene;
     int _segment_size;
 

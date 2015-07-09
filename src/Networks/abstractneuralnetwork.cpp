@@ -1,6 +1,6 @@
 #include "abstractneuralnetwork.h"
 
-AbstractNeuralNetwork::AbstractNeuralNetwork(GeneralGene gene, int len_input, int len_output) :
+AbstractNeuralNetwork::AbstractNeuralNetwork(GenericGene gene, int len_input, int len_output) :
     _len_input(len_input),
     _len_output(len_output)
 {

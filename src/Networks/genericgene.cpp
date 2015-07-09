@@ -1,12 +1,12 @@
-#include "generalgene.h"
+#include "genericgene.h"
 #include <QDebug>
 #include <cstdlib>
 
-GeneralGene::GeneralGene()
+GenericGene::GenericGene()
 {
 }
 
-GeneralGene::GeneralGene(int initialLength, int segment_size) :
+GenericGene::GenericGene(int initialLength, int segment_size) :
     _gene(),
     _segment_size(segment_size)
 {
@@ -21,23 +21,23 @@ GeneralGene::GeneralGene(int initialLength, int segment_size) :
     }
 }
 
-GeneralGene::GeneralGene(QList< QList<int> > gene, int segment_size) :
+GenericGene::GenericGene(QList< QList<int> > gene, int segment_size) :
     _gene(gene),
     _segment_size(segment_size)
 {
 }
 
-GeneralGene::~GeneralGene()
+GenericGene::~GenericGene()
 {
 }
 
 
-QList< QList<int> > GeneralGene::segments()
+QList< QList<int> > GenericGene::segments()
 {
     return _gene;
 }
 
-void GeneralGene::mutate()
+void GenericGene::mutate()
 {
     //Simple mutation py probability - the chance of mutating a value is the same for every value.
     for(int i = 0; i < _gene.length(); ++i)
@@ -52,12 +52,12 @@ void GeneralGene::mutate()
     }
 }
 
-QList<GeneralGene> GeneralGene::combine(GeneralGene gene1, GeneralGene gene2)
+QList<GenericGene> GenericGene::combine(GenericGene gene1, GenericGene gene2)
 {
     if(gene1._gene[0].length() != gene2._gene[0].length())
     {
         qWarning() << "Attemted crossover of different type of genes";
-        return QList<GeneralGene>();
+        return QList<GenericGene>();
     }
     QList< QList<int> > newGene1;
     QList< QList<int> > newGene2;
@@ -100,8 +100,8 @@ QList<GeneralGene> GeneralGene::combine(GeneralGene gene1, GeneralGene gene2)
         }
     }
 
-    QList<GeneralGene> geneList;
-    geneList.append(GeneralGene(newGene1, gene1._gene[0].length()));
-    geneList.append(GeneralGene(newGene2, gene2._gene[0].length()));
+    QList<GenericGene> geneList;
+    geneList.append(GenericGene(newGene1, gene1._gene[0].length()));
+    geneList.append(GenericGene(newGene2, gene2._gene[0].length()));
     return geneList;
 }

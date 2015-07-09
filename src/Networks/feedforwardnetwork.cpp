@@ -10,7 +10,7 @@ double weight(int gene_input)
 }
 }
 
-FeedForwardNetwork::FeedForwardNetwork(GeneralGene gene, int len_input, int len_output, int hidden_layer, int hidden_size, double (*activision_function)(double)) :
+FeedForwardNetwork::FeedForwardNetwork(GenericGene gene, int len_input, int len_output, int hidden_layer, int hidden_size, double (*activision_function)(double)) :
     AbstractNeuralNetwork(gene, len_input, len_output),
     _num_hidden_layer(hidden_layer),
     _size_hidden(hidden_size),
