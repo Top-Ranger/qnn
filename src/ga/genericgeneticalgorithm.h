@@ -8,6 +8,7 @@ class GenericGeneticAlgorithm
 {
 public:
     GenericGeneticAlgorithm(AbstractNeuralNetwork *network, int population_size, double fitness_to_reach = 0.99, int max_rounds = 200);
+    virtual ~GenericGeneticAlgorithm();
 
     virtual void run_ga();
     double best_fitness();
