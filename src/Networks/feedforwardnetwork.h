@@ -8,7 +8,8 @@
 class FeedForwardNetwork : public AbstractNeuralNetwork
 {
 public:
-    FeedForwardNetwork(GenericGene gene, int len_input, int len_output, int hidden_layer = 1, int hidden_size = 5, double (*activision_function)(double) = &standard_activision_function);
+    FeedForwardNetwork(GenericGene gene, int len_input, int len_output, int hidden_layer = 1, int hidden_size = 5,
+                       double (*activision_function)(double) = &standard_activision_function);
     ~FeedForwardNetwork();
 
     void processInput(QList<double> input);
