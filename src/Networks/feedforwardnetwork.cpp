@@ -10,26 +10,26 @@ double weight(int gene_input)
 }
 }
 
-FeedForwardNetwork::FeedForwardNetwork(GenericGene gene, int len_input, int len_output, int hidden_layer, int hidden_size, double (*activision_function)(double)) :
+FeedForwardNetwork::FeedForwardNetwork(GenericGene gene, int len_input, int len_output, int hidden_layer, int len_hidden, double (*activision_function)(double)) :
     AbstractNeuralNetwork(gene, len_input, len_output),
     _num_hidden_layer(hidden_layer),
-    _size_hidden(hidden_size),
+    _len_hidden(len_hidden),
     _hidden_layers(0),
     _output(0),
     _gene(gene),
     _activision_function(activision_function)
 {
-    if(_gene.segments().length() < num_segments(len_input, len_output, hidden_layer, hidden_size))
+    if(_gene.segments().length() < num_segments(len_input, len_output, hidden_layer, len_hidden))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Wrong gene length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
-    if(_size_hidden > 0)
+    if(_len_hidden > 0)
     {
         _hidden_layers = new double*[_num_hidden_layer];
-        for(int i = 0; i < _size_hidden; ++i)
+        for(int i = 0; i < _len_hidden; ++i)
         {
-            _hidden_layers[i] = new double[_size_hidden];
+            _hidden_layers[i] = new double[_len_hidden];
         }
     }
     _output = new double[_len_output];
@@ -38,7 +38,7 @@ FeedForwardNetwork::FeedForwardNetwork(GenericGene gene, int len_input, int len_
 FeedForwardNetwork::FeedForwardNetwork() :
     AbstractNeuralNetwork(),
     _num_hidden_layer(0),
-    _size_hidden(0),
+    _len_hidden(0),
     _hidden_layers(0),
     _output(0),
     _gene(1),
@@ -48,7 +48,7 @@ FeedForwardNetwork::FeedForwardNetwork() :
 
 FeedForwardNetwork::~FeedForwardNetwork()
 {
-    for(int i = 0; i < _size_hidden; ++i)
+    for(int i = 0; i < _len_hidden; ++i)
     {
         delete [] _hidden_layers[i];
     }
@@ -83,7 +83,7 @@ void FeedForwardNetwork::processInput(QList<double> input)
         int current_segment = 0;
 
         // Input to hidden
-        for(int i_hidden = 0; i_hidden < _size_hidden; ++i_hidden)
+        for(int i_hidden = 0; i_hidden < _len_hidden; ++i_hidden)
         {
             double sum = 0.0;
             for(int i_input = 0; i_input < _len_input; ++i_input)
@@ -113,7 +113,7 @@ void FeedForwardNetwork::processInput(QList<double> input)
         for(int i_output = 0; i_output < _len_output; ++i_output)
         {
             double sum = 0.0;
-            for(int i_hidden = 0; i_hidden < _size_hidden; ++i_hidden)
+            for(int i_hidden = 0; i_hidden < _len_hidden; ++i_hidden)
             {
                 sum += _hidden_layers[_num_hidden_layer-1][i_hidden] * weight(_gene.segments()[current_segment++][0]);
             }
@@ -136,7 +136,7 @@ double FeedForwardNetwork::getNeuronOutput(int i)
     }
 }
 
-int FeedForwardNetwork::num_segments(int len_input, int len_output, int hidden_layer, int hidden_size)
+int FeedForwardNetwork::num_segments(int len_input, int len_output, int hidden_layer, int len_hidden)
 {
     if(hidden_layer == 0)
     {
@@ -144,7 +144,7 @@ int FeedForwardNetwork::num_segments(int len_input, int len_output, int hidden_l
     }
     else
     {
-        return len_input*hidden_size + hidden_size*(hidden_layer-1) + len_output*hidden_size + len_output + hidden_layer*hidden_size;
+        return len_input*len_hidden + len_hidden*(hidden_layer-1) + len_output*len_hidden + len_output + hidden_layer*len_hidden;
     }
 }
 
