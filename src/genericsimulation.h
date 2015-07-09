@@ -6,10 +6,13 @@
 class GeneralSimulation
 {
 public:
-    GeneralSimulation(AbstractNeuralNetwork network);
+    GeneralSimulation(AbstractNeuralNetwork *network);
     virtual ~GeneralSimulation();
 
     virtual void getScore() = 0;
+
+protected:
+    AbstractNeuralNetwork *_network;
 };
 
 #endif // GENERICSIMULATION_H

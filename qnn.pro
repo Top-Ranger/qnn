@@ -20,9 +20,11 @@ INCLUDEPATH += src/
 SOURCES += src/main.cpp \
     src/Networks/abstractneuralnetwork.cpp \
     src/Networks/generalgene.cpp \
-    src/generalsimulation.cpp
+    src/generalsimulation.cpp \
+    src/Networks/feedforwardnetwork.cpp
 
 HEADERS += \
     src/Networks/abstractneuralnetwork.h \
     src/Networks/generalgene.h \
-    src/genericsimulation.h
+    src/genericsimulation.h \
+    src/Networks/feedforwardnetwork.h
