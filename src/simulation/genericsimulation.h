@@ -1,7 +1,7 @@
 #ifndef GENERICSIMULATION_H
 #define GENERICSIMULATION_H
 
-#include "Networks/abstractneuralnetwork.h"
+#include "../network/abstractneuralnetwork.h"
 
 class GenericSimulation
 {

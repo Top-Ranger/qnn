@@ -18,13 +18,15 @@ INCLUDEPATH += src/
 
 
 SOURCES += src/main.cpp \
-    src/Networks/abstractneuralnetwork.cpp \
-    src/Networks/feedforwardnetwork.cpp \
-    src/genericsimulation.cpp \
-    src/Networks/genericgene.cpp
+    src/network/abstractneuralnetwork.cpp \
+    src/network/feedforwardnetwork.cpp \
+    src/simulation/genericsimulation.cpp \
+    src/network/genericgene.cpp \
+    src/ga/genericgeneticalgorithm.cpp
 
 HEADERS += \
-    src/Networks/abstractneuralnetwork.h \
-    src/genericsimulation.h \
-    src/Networks/feedforwardnetwork.h \
-    src/Networks/genericgene.h
+    src/network/abstractneuralnetwork.h \
+    src/simulation/genericsimulation.h \
+    src/network/feedforwardnetwork.h \
+    src/network/genericgene.h \
+    src/ga/genericgeneticalgorithm.h

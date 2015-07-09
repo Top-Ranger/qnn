@@ -1,21 +1,21 @@
-#include <QCoreApplication>
-
-#include "genericsimulation.h"
-#include "Networks/feedforwardnetwork.h"
-#include "Networks/genericgene.h"
+#include "simulation/genericsimulation.h"
+#include "network/feedforwardnetwork.h"
+#include "network/genericgene.h"
 
 #include <QDebug>
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-
     qDebug() << FeedForwardNetwork::num_segments(5,1,10,30);
-    GenericGene testGene(FeedForwardNetwork::num_segments(5,1,10,30));
-    FeedForwardNetwork testFFN(testGene,5,1,10,30);
+    FeedForwardNetwork testFFN(5,1,10,30);
+    GenericGene *testGene = testFFN.getRandomGene();
+    testFFN.initialise(testGene);
     GenericSimulation testSimulation(&testFFN);
 
     qDebug() << "Score:" << testSimulation.getScore();
 
-    return a.exec();
+    delete testGene;
+    testGene = NULL;
+
+    return 0;
 }

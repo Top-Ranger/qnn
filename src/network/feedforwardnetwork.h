@@ -8,15 +8,20 @@
 class FeedForwardNetwork : public AbstractNeuralNetwork
 {
 public:
-    FeedForwardNetwork(GenericGene gene, int len_input, int len_output, int hidden_layer = 1, int len_hidden = 5,
+    FeedForwardNetwork(int len_input, int len_output, int hidden_layer = 1, int len_hidden = 5,
                        double (*activision_function)(double) = &standard_activision_function);
     ~FeedForwardNetwork();
 
-    void processInput(QList<double> input);
-    double getNeuronOutput(int i);
+    GenericGene *getRandomGene();
 
     static int num_segments(int len_input, int len_output, int hidden_layer = 1, int len_hidden = 5);
     static double standard_activision_function(double input);
+
+protected:
+    void _initialise();
+    void _processInput(QList<double> input);
+    double _getNeuronOutput(int i);
+
 private:
     FeedForwardNetwork();
 
@@ -25,7 +30,6 @@ private:
 
     double **_hidden_layers;
     double *_output;
-    GenericGene _gene;
     double (*_activision_function)(double input);
 };
 

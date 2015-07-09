@@ -1,5 +1,5 @@
-#ifndef GENERALGENE_H
-#define GENERALGENE_H
+#ifndef GENERICGENE_H
+#define GENERICGENE_H
 
 #include <QList>
 
@@ -21,7 +21,7 @@ protected:
     int _segment_size;
 
 private:
-    static const float MUTATION_RATE = 0.03;
+    static const double MUTATION_RATE = 0.03;
 };
 
-#endif // GENERALGENE_H
+#endif // GENERICGENE_H
