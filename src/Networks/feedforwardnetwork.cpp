@@ -88,7 +88,7 @@ void FeedForwardNetwork::processInput(QList<double> input)
             double sum = 0.0;
             for(int i_input = 0; i_input < _len_input; ++i_input)
             {
-                sum += input[i_input] * weight(_gene.segments()[current_segment++][0]);
+                sum += input[i_input] * weight(_gene.segments()[current_segment++][0]); 
             }
             sum += 1.0d * weight(_gene.segments()[current_segment++][0]);
             _hidden_layers[0][i_hidden] = _activision_function(sum);
@@ -110,10 +110,10 @@ void FeedForwardNetwork::processInput(QList<double> input)
         }
 
         // Hidden to output
-        for(int i_output = 0; i_output < _size_hidden; ++i_output)
+        for(int i_output = 0; i_output < _len_output; ++i_output)
         {
             double sum = 0.0;
-            for(int i_hidden = 0; i_hidden < _len_input; ++i_hidden)
+            for(int i_hidden = 0; i_hidden < _size_hidden; ++i_hidden)
             {
                 sum += _hidden_layers[_num_hidden_layer-1][i_hidden] * weight(_gene.segments()[current_segment++][0]);
             }

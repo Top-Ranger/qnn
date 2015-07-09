@@ -9,7 +9,7 @@ public:
     GenericSimulation(AbstractNeuralNetwork *network);
     virtual ~GenericSimulation();
 
-    virtual double getScore() = 0;
+    virtual double getScore();
 
 protected:
     AbstractNeuralNetwork *_network;
