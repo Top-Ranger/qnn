@@ -1,5 +1,149 @@
 #include "genericgeneticalgorithm.h"
 
-GenericGeneticAlgorithm::GenericGeneticAlgorithm()
+#include <QThread>
+#include <QtAlgorithms>
+
+namespace {
+class SimulationThread : public QThread
 {
+private:
+    GenericSimulation _simulation;
+    double _fitness;
+
+public:
+    explicit SimulationThread(GenericSimulation simulation, QObject *parent = 0) :
+        QThread(parent),
+        _simulation(simulation),
+        _fitness(0.0d)
+    {
+    }
+
+    void run()
+    {
+        _fitness = _simulation.getScore();
+    }
+
+    double getFitness()
+    {
+        return _fitness;
+    }
+
+};
+}
+
+GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, int population_size, double fitness_to_reach, int max_rounds, QObject *parent) :
+    QObject(parent),
+    _population(),
+    _best(),
+    _network(network),
+    _simulation(simulation),
+    _population_size(population_size),
+    _fitness_to_reach(fitness_to_reach),
+    _max_rounds(max_rounds)
+{
+    _best.fitness = -1.0;
+    _best.gene = NULL;
+    _best.network = NULL;
+}
+
+GenericGeneticAlgorithm::GenericGeneticAlgorithm(QObject *parent) :
+    QObject(parent),
+    _population(),
+    _best(),
+    _network(NULL),
+    _simulation(NULL),
+    _population_size(0),
+    _fitness_to_reach(0.0d),
+    _max_rounds(0)
+{
+    _best.fitness = -1.0;
+    _best.gene = NULL;
+    _best.network = NULL;
+}
+
+GenericGeneticAlgorithm::~GenericGeneticAlgorithm()
+{
+    if(_best.gene != NULL)
+    {
+        delete _best.gene;
+    }
+    if(_best.network != NULL)
+    {
+        delete _best.network;
+    }
+}
+
+void GenericGeneticAlgorithm::run_ga()
+{
+    // Initialise
+    QList<SimulationThread *> threadList;
+    int currentRound = 0;
+
+    for(int i = 0; i < _population_size; ++i)
+    {
+        GeneContainer container;
+        container.fitness = -1.0d;
+        container.gene = _network->getRandomGene();
+        container.network = _network->createConfigCopy();
+        container.network->initialise(container.gene);
+        _population.append(container);
+    }
+
+    for(int i = 0; i < _population_size; ++i)
+    {
+        GenericSimulation simulation = *_simulation;
+        simulation.initialise(_population[i].network);
+        threadList.append(new SimulationThread(simulation));
+        threadList[i]->start();
+    }
+
+    for(int i = 0; i < _population_size; ++i)
+    {
+        threadList[i]->wait();
+        _population[i].fitness = threadList[i]->getFitness();
+    }
+    qDeleteAll(threadList.begin(), threadList.end());
+    threadList.clear();
+
+    // Main loop
+
+    while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
+    {
+        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness);
+        create_children();
+        survivor_selection();
+    }
+
+    // Find the best individuum
+    _best.fitness = _population.last().fitness;
+    _best.gene = _population.last().gene;
+    _best.network = _population.last().network;
+
+    // Clean-up
+    for(int i = 0; i < _population.length()-1; ++i)
+    {
+        delete _population[i].gene;
+        delete _population[i].network;
+    }
+
+}
+
+double GenericGeneticAlgorithm::best_fitness()
+{
+    return _best.fitness;
+}
+
+GenericGene GenericGeneticAlgorithm::best_gene()
+{
+    return *(_best.gene);
+}
+
+void GenericGeneticAlgorithm::create_children()
+{
+
+}
+
+void GenericGeneticAlgorithm::survivor_selection()
+{
+
 }

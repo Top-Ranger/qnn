@@ -15,6 +15,7 @@ public:
     double getNeuronOutput(int i);
 
     virtual GenericGene *getRandomGene() = 0;
+    virtual AbstractNeuralNetwork *createConfigCopy() = 0;
 
 protected:
     AbstractNeuralNetwork();

@@ -13,6 +13,7 @@ public:
     ~FeedForwardNetwork();
 
     GenericGene *getRandomGene();
+    AbstractNeuralNetwork *createConfigCopy();
 
     static int num_segments(int len_input, int len_output, int hidden_layer = 1, int len_hidden = 5);
     static double standard_activision_function(double input);

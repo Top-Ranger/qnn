@@ -165,3 +165,8 @@ GenericGene *FeedForwardNetwork::getRandomGene()
 {
     return new GenericGene(num_segments(_len_input, _len_output, _num_hidden_layer, _len_hidden));
 }
+
+AbstractNeuralNetwork *FeedForwardNetwork::createConfigCopy()
+{
+    return new FeedForwardNetwork(_len_input, _len_output, _num_hidden_layer, _len_hidden, _activision_function);
+}
