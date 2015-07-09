@@ -6,7 +6,7 @@
 class GeneralGene
 {
 public:
-    GeneralGene(int initialLength, int segment_size = 2);
+    GeneralGene(int initialLength, int segment_size = 1);
     virtual ~GeneralGene();
 
     virtual void mutate();
