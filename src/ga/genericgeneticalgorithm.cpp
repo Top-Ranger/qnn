@@ -2,6 +2,7 @@
 
 #include <QThread>
 #include <QtAlgorithms>
+#include <QDebug>
 
 namespace {
 class SimulationThread : public QThread
@@ -158,13 +159,13 @@ void GenericGeneticAlgorithm::create_children()
     QList<GeneContainer> newChildren;
     QList<GenericGene *> childrenGene;
     QList<SimulationThread *> threadList;
-    int num_childs;
 
     while(!_population.empty())
     {
         temp.clear();
         newChildren.clear();
-        num_childs = 0;
+        childrenGene.clear();
+        threadList.clear();
         for(int i = 0; i < 8 && !_population.empty(); ++i)
         {
             temp.append(_population.takeAt(qrand()%_population.length()));
@@ -175,7 +176,6 @@ void GenericGeneticAlgorithm::create_children()
             childrenGene = temp[temp.length()-1].gene->combine(temp[temp.length()-1].gene, temp[temp.length()-2].gene);
             for(int i = 0; i < childrenGene.length(); ++i)
             {
-                ++num_childs;
                 GeneContainer container;
                 container.gene = childrenGene[i];
                 container.network = _network->createConfigCopy();
@@ -187,14 +187,16 @@ void GenericGeneticAlgorithm::create_children()
                 threadList.append(new SimulationThread(simulation));
                 threadList[i]->start();
             }
-            for(int i = 0; i < num_childs; ++i)
+            for(int i = 0; i < childrenGene.length(); ++i)
             {
                 threadList[i]->wait();
                 newChildren[i].fitness = threadList[i]->getFitness();
             }
+            qDeleteAll(threadList);
+            threadList.clear();
             temp.append(newChildren);
             qSort(temp);
-            for(int i = 0; i < num_childs; ++i)
+            for(int i = 0; i < childrenGene.length(); ++i)
             {
                 GeneContainer container = temp.takeFirst();
                 delete container.network;

@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
     ConsoleOutput *output = new ConsoleOutput;
-    FeedForwardNetwork testFFN(5,1,10,30);
+    FeedForwardNetwork testFFN(5,1,10,3);
     GenericSimulation testSimulation;
     GenericGeneticAlgorithm testGa(&testFFN, &testSimulation);
 
