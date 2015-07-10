@@ -44,7 +44,7 @@ void GenericGene::mutate()
     {
         for(int j = 0; j < _gene[i].length(); ++j)
         {
-            if(qrand()/RAND_MAX < MUTATION_RATE)
+            if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
             {
                 _gene[i][j] = qrand();
             }

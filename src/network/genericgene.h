@@ -23,7 +23,7 @@ protected:
     int _segment_size;
 
 private:
-    static const double MUTATION_RATE = 0.03;
+    static const double MUTATION_RATE = 0.03d;
 };
 
 #endif // GENERICGENE_H

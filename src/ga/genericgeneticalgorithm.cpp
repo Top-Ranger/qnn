@@ -177,6 +177,7 @@ void GenericGeneticAlgorithm::create_children()
             childrenGene = temp[temp.length()-1].gene->combine(temp[temp.length()-1].gene, temp[temp.length()-2].gene);
             for(int i = 0; i < childrenGene.length(); ++i)
             {
+                childrenGene[i]->mutate();
                 GeneContainer container;
                 container.gene = childrenGene[i];
                 container.network = _network->createConfigCopy();
