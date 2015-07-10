@@ -78,6 +78,8 @@ void GenericGeneticAlgorithm::run_ga()
     // Initialise
     emit ga_current_round(0, _max_rounds, 0.0d);
 
+    _population.clear();
+
     QList<SimulationThread *> threadList;
     int currentRound = 0;
 
@@ -128,7 +130,7 @@ void GenericGeneticAlgorithm::run_ga()
         delete _population[i].gene;
         delete _population[i].network;
     }
-
+    _population.clear();
 }
 
 double GenericGeneticAlgorithm::best_fitness()
