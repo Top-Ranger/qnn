@@ -52,6 +52,10 @@ void FeedForwardNetwork::_initialise()
     {
         qFatal(QString("FATAL ERROR in %1 %2: Wrong gene length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
+    else if(_len_hidden <= 0 || _num_hidden_layer < 0)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: invalid hidden layer size!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
 
     if(_len_hidden > 0)
     {

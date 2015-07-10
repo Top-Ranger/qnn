@@ -3,8 +3,6 @@
 
 #include "abstractneuralnetwork.h"
 
-// TODO: Bias
-
 class FeedForwardNetwork : public AbstractNeuralNetwork
 {
 public:
