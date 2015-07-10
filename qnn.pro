@@ -29,4 +29,5 @@ HEADERS += \
     src/simulation/genericsimulation.h \
     src/network/feedforwardnetwork.h \
     src/network/genericgene.h \
-    src/ga/genericgeneticalgorithm.h
+    src/ga/genericgeneticalgorithm.h \
+    src/ConsoleOutput.h
