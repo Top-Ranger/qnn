@@ -6,7 +6,7 @@
 namespace {
 double weight(int gene_input)
 {
-    return ((double) gene_input - RAND_MAX/2) * 2 / RAND_MAX;
+    return ((double) gene_input - RAND_MAX/2.0) * 2.0 / RAND_MAX;
 }
 }
 
@@ -81,7 +81,7 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         int current_segment = 0;
         for(int i_output = 0; i_output < _len_output; ++i_output)
         {
-            double sum = 0.0;
+            double sum = 0.0d;
             for(int i_input = 0; i_input < _len_input; ++i_input)
             {
                 sum += input[i_input] * weight(_gene->segments()[current_segment++][0]);
@@ -97,7 +97,7 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         // Input to hidden
         for(int i_hidden = 0; i_hidden < _len_hidden; ++i_hidden)
         {
-            double sum = 0.0;
+            double sum = 0.0d;
             for(int i_input = 0; i_input < _len_input; ++i_input)
             {
                 sum += input[i_input] * weight(_gene->segments()[current_segment++][0]);
@@ -109,10 +109,10 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         // Hidden to hidden
         for(int current_hidden = 1; current_hidden < _num_hidden_layer; ++current_hidden)
         {
-            for(int i_output = 0; i_output < _len_output; ++i_output)
+            for(int i_output = 0; i_output < _len_hidden; ++i_output)
             {
-                double sum = 0.0;
-                for(int i_input = 0; i_input < _len_input; ++i_input)
+                double sum = 0.0d;
+                for(int i_input = 0; i_input < _len_hidden; ++i_input)
                 {
                     sum += _hidden_layers[current_hidden-1][i_input] * weight(_gene->segments()[current_segment++][0]);
                 }
@@ -124,7 +124,7 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         // Hidden to output
         for(int i_output = 0; i_output < _len_output; ++i_output)
         {
-            double sum = 0.0;
+            double sum = 0.0d;
             for(int i_hidden = 0; i_hidden < _len_hidden; ++i_hidden)
             {
                 sum += _hidden_layers[_num_hidden_layer-1][i_hidden] * weight(_gene->segments()[current_segment++][0]);
@@ -156,13 +156,13 @@ int FeedForwardNetwork::num_segments(int len_input, int len_output, int hidden_l
     }
     else
     {
-        return len_input*len_hidden + len_hidden*(hidden_layer-1) + len_output*len_hidden + len_output + hidden_layer*len_hidden;
+        return len_input*len_hidden + len_hidden*len_hidden*(hidden_layer-1) + len_output*len_hidden + len_output + hidden_layer*len_hidden;
     }
 }
 
 double FeedForwardNetwork::standard_activision_function(double input)
 {
-    return 1 / (1 + qExp(-1 * input));
+    return 1.0d / (1.0d + qExp(-1.0d * input));
 }
 
 GenericGene *FeedForwardNetwork::getRandomGene()
