@@ -1,9 +1,11 @@
 #ifndef FEEDFORWARDNETWORK_H
 #define FEEDFORWARDNETWORK_H
 
+#include <qnn-global.h>
+
 #include "abstractneuralnetwork.h"
 
-class FeedForwardNetwork : public AbstractNeuralNetwork
+class QNNSHARED_EXPORT FeedForwardNetwork : public AbstractNeuralNetwork
 {
 public:
     FeedForwardNetwork(int len_input, int len_output, int hidden_layer = 1, int len_hidden = 5,

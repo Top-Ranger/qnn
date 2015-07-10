@@ -1,9 +1,11 @@
 #ifndef GENERICGENE_H
 #define GENERICGENE_H
 
+#include <qnn-global.h>
+
 #include <QList>
 
-class GenericGene
+class QNNSHARED_EXPORT GenericGene
 {
 public:
     GenericGene(int initialLength, int segment_size = 1);

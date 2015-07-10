@@ -9,15 +9,15 @@ QT       += core
 QT       -= gui
 
 TARGET = qnn
-CONFIG   += console
-CONFIG   -= app_bundle
+TEMPLATE = lib
 
-TEMPLATE = app
+DEFINES += QNN_LIBRARY
+VERSION = 0.0.1
 
 INCLUDEPATH += src/
 
 
-SOURCES += src/main.cpp \
+SOURCES += \
     src/network/abstractneuralnetwork.cpp \
     src/network/feedforwardnetwork.cpp \
     src/simulation/genericsimulation.cpp \
@@ -30,4 +30,4 @@ HEADERS += \
     src/network/feedforwardnetwork.h \
     src/network/genericgene.h \
     src/ga/genericgeneticalgorithm.h \
-    src/ConsoleOutput.h
+    src/qnn-global.h

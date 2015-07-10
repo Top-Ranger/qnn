@@ -1,9 +1,11 @@
 #ifndef GENERICSIMULATION_H
 #define GENERICSIMULATION_H
 
+#include <qnn-global.h>
+
 #include "../network/abstractneuralnetwork.h"
 
-class GenericSimulation
+class QNNSHARED_EXPORT GenericSimulation
 {
 public:
     GenericSimulation();

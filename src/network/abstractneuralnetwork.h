@@ -1,10 +1,12 @@
 #ifndef ABSTRACTNEURALNETWORK_H
 #define ABSTRACTNEURALNETWORK_H
 
+#include <qnn-global.h>
+
 #include "genericgene.h"
 #include <QList>
 
-class AbstractNeuralNetwork
+class QNNSHARED_EXPORT AbstractNeuralNetwork
 {
 public:
     AbstractNeuralNetwork(int len_input, int len_output);

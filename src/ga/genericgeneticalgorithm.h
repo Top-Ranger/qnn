@@ -1,12 +1,14 @@
 #ifndef GENERICGENETICALGORITHM_H
 #define GENERICGENETICALGORITHM_H
 
+#include <qnn-global.h>
+
 #include "../network/abstractneuralnetwork.h"
 #include "../simulation/genericsimulation.h"
 #include <QList>
 #include <QObject>
 
-class GenericGeneticAlgorithm : public QObject
+class QNNSHARED_EXPORT GenericGeneticAlgorithm : public QObject
 {
     Q_OBJECT
 
