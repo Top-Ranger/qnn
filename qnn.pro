@@ -31,3 +31,5 @@ HEADERS += \
     src/network/genericgene.h \
     src/ga/genericgeneticalgorithm.h \
     src/qnn-global.h
+
+DESTDIR = $$PWD

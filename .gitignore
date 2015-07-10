@@ -1,3 +1,5 @@
 *.qm
 *.user
 *.user.*
+*.so
+*.so.*
