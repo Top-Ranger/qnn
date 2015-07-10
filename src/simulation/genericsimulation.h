@@ -12,6 +12,8 @@ public:
     void initialise(AbstractNeuralNetwork *network);
     double getScore();
 
+    virtual GenericSimulation *createConfigCopy();
+
 protected:
     void _initialise();
     double _getScore();

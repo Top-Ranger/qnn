@@ -36,6 +36,11 @@ void GenericSimulation::_initialise()
 {
 }
 
+GenericSimulation *GenericSimulation::createConfigCopy()
+{
+    return new GenericSimulation;
+}
+
 double GenericSimulation::_getScore()
 {
     QList<double> input;

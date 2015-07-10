@@ -7,20 +7,28 @@ namespace {
 class SimulationThread : public QThread
 {
 private:
-    GenericSimulation _simulation;
+    GenericSimulation *_simulation;
     double _fitness;
 
 public:
-    explicit SimulationThread(GenericSimulation simulation, QObject *parent = 0) :
+    explicit SimulationThread(GenericSimulation *simulation, QObject *parent = 0) :
         QThread(parent),
         _simulation(simulation),
         _fitness(0.0d)
     {
     }
 
+    ~SimulationThread()
+    {
+        if(_simulation != NULL)
+        {
+            delete _simulation;
+        }
+    }
+
     void run()
     {
-        _fitness = _simulation.getScore();
+        _fitness = _simulation->getScore();
     }
 
     double getFitness()
@@ -95,8 +103,8 @@ void GenericGeneticAlgorithm::run_ga()
 
     for(int i = 0; i < _population_size; ++i)
     {
-        GenericSimulation simulation = *_simulation;
-        simulation.initialise(_population[i].network);
+        GenericSimulation *simulation = _simulation->createConfigCopy();
+        simulation->initialise(_population[i].network);
         threadList.append(new SimulationThread(simulation));
         threadList[i]->start();
     }
@@ -174,8 +182,8 @@ void GenericGeneticAlgorithm::create_children()
                 container.network->initialise(childrenGene[i]);
                 container.fitness = -1.0d;
                 newChildren.append(container);
-                GenericSimulation simulation = *_simulation;
-                simulation.initialise(container.network);
+                GenericSimulation *simulation = _simulation->createConfigCopy();
+                simulation->initialise(container.network);
                 threadList.append(new SimulationThread(simulation));
                 threadList[i]->start();
             }
