@@ -87,6 +87,17 @@ void GenericGeneticAlgorithm::run_ga()
     // Initialise
     emit ga_current_round(0, _max_rounds, 0.0d);
 
+    if(_best.gene != NULL)
+    {
+        delete _best.gene;
+        _best.gene = NULL;
+    }
+    if(_best.network != NULL)
+    {
+        delete _best.network;
+        _best.network = NULL;
+    }
+
     _population.clear();
 
     QList<SimulationThread *> threadList;
