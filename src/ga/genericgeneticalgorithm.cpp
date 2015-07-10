@@ -140,6 +140,7 @@ void GenericGeneticAlgorithm::run_ga()
         delete _population[i].network;
     }
     _population.clear();
+    emit ga_finished(_best.fitness);
 }
 
 double GenericGeneticAlgorithm::best_fitness()

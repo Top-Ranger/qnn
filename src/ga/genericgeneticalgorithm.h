@@ -22,6 +22,7 @@ public:
 
 signals:
     void ga_current_round(int current, int max, double best_fitness_value);
+    void ga_finished(double best_fitness_value);
 
 protected:
     explicit GenericGeneticAlgorithm(QObject *parent = 0);

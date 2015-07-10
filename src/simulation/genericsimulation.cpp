@@ -3,10 +3,12 @@
 #include <QList>
 #include <QString>
 #include <QDebug>
+#include <QTime>
 
 GenericSimulation::GenericSimulation() :
     _network(NULL)
 {
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 }
 
 GenericSimulation::~GenericSimulation()
@@ -30,6 +32,16 @@ double GenericSimulation::getScore()
         qFatal(QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     return _getScore();
+}
+
+int GenericSimulation::needInputLength()
+{
+    return 5;
+}
+
+int GenericSimulation::needOutputLength()
+{
+    return 1;
 }
 
 void GenericSimulation::_initialise()

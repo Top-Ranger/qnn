@@ -13,6 +13,8 @@ public:
 
     void initialise(AbstractNeuralNetwork *network);
     double getScore();
+    virtual int needInputLength();
+    virtual int needOutputLength();
 
     virtual GenericSimulation *createConfigCopy();
 
