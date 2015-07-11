@@ -99,7 +99,7 @@ double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(int i)
 {
     if(_network != NULL && i < _size_network)
     {
-        return _network[i];
+        return sigmoid(_network[i]);
     }
     else
     {
