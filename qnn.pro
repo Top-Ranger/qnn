@@ -22,7 +22,8 @@ SOURCES += \
     src/network/feedforwardnetwork.cpp \
     src/simulation/genericsimulation.cpp \
     src/network/genericgene.cpp \
-    src/ga/genericgeneticalgorithm.cpp
+    src/ga/genericgeneticalgorithm.cpp \
+    src/network/continuoustimerecurrenneuralnetwork.cpp
 
 HEADERS += \
     src/network/abstractneuralnetwork.h \
@@ -30,6 +31,7 @@ HEADERS += \
     src/network/feedforwardnetwork.h \
     src/network/genericgene.h \
     src/ga/genericgeneticalgorithm.h \
-    src/qnn-global.h
+    src/qnn-global.h \
+    src/network/continuoustimerecurrenneuralnetwork.h
 
 DESTDIR = $$PWD
