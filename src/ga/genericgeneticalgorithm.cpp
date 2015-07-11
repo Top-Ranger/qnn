@@ -129,6 +129,8 @@ void GenericGeneticAlgorithm::run_ga()
     qDeleteAll(threadList.begin(), threadList.end());
     threadList.clear();
 
+    qSort(_population);
+
     // Main loop
 
     while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
