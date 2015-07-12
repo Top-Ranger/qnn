@@ -8,7 +8,7 @@
 class QNNSHARED_EXPORT ContinuousTimeRecurrenNeuralNetwork : public AbstractNeuralNetwork
 {
 public:
-    ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, int size_network);
+    ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, int size_network, int max_time_constant = 5, int weight_scalar = 5, int bias_scalar = 5);
     ~ContinuousTimeRecurrenNeuralNetwork();
 
     GenericGene *getRandomGene();
@@ -23,6 +23,9 @@ protected:
 
 private:
     int _size_network;
+    int _max_time_constant;
+    int _weight_scalar;
+    int _bias_scalar;
     double *_network;
 };
 

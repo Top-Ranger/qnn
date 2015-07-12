@@ -6,9 +6,9 @@
 // weight between -5,5
 
 namespace {
-double weight(int gene_input)
+double weight(int gene_input, int scalar)
 {
-    return (((double) gene_input - RAND_MAX/2.0) * 2.0 / RAND_MAX) * 5;
+    return (((double) gene_input - RAND_MAX/2.0) * 2.0 / RAND_MAX) * scalar;
 }
 
 double sigmoid(double d)
@@ -17,20 +17,30 @@ double sigmoid(double d)
 }
 }
 
-ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, int size_network) :
+ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, int size_network, int max_time_constant, int weight_scalar, int bias_scalar) :
     AbstractNeuralNetwork(len_input, len_output),
     _size_network(size_network),
+    _max_time_constant(max_time_constant),
+    _weight_scalar(weight_scalar),
+    _bias_scalar(bias_scalar),
     _network(NULL)
 {
-    if(_size_network < len_input || _size_network < len_output)
+    if(_size_network < len_output)
     {
-        qFatal(QString("FATAL ERROR in %1 %2: size_network must be bigger then len_input and len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal(QString("FATAL ERROR in %1 %2: size_network must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(_max_time_constant < 1)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: max_time_constant must be 1 or bigger!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 }
 
 ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork() :
     AbstractNeuralNetwork(),
     _size_network(0),
+    _max_time_constant(0),
+    _weight_scalar(0),
+    _bias_scalar(0),
     _network(NULL)
 {
 }
@@ -50,7 +60,7 @@ GenericGene *ContinuousTimeRecurrenNeuralNetwork::getRandomGene()
 
 AbstractNeuralNetwork *ContinuousTimeRecurrenNeuralNetwork::createConfigCopy()
 {
-    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, _size_network);
+    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, _size_network, _max_time_constant, _weight_scalar, _bias_scalar);
 }
 
 void ContinuousTimeRecurrenNeuralNetwork::_initialise()
@@ -83,12 +93,12 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
         for(int j = 0; j < _size_network; ++j)
         {
             double d = 0.0d;
-            d += weight(_gene->segments()[j][0]); // θj
+            d += weight(_gene->segments()[j][0], _bias_scalar); // θj
             d += _network[j]; // yj
             d = sigmoid(d);
-            newValue += d * weight(_gene->segments()[i][3+i]); // wij
+            newValue += d * weight(_gene->segments()[i][3+i], _weight_scalar); // wij
         }
-        newNetwork[i] = newValue / ((_gene->segments()[i][2]%4)+1); // τ
+        newNetwork[i] = newValue / ((_gene->segments()[i][2]%_max_time_constant)+1); // τ
     }
 
     delete [] _network;
