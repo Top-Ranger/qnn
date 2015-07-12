@@ -19,8 +19,6 @@ NonParallelGenericGeneticAlgorithm::~NonParallelGenericGeneticAlgorithm()
 void NonParallelGenericGeneticAlgorithm::run_ga()
 {
     // Initialise
-    emit ga_current_round(0, _max_rounds, 0.0d);
-
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
     if(_best.gene != NULL)
@@ -53,6 +51,8 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
 
     qSort(_population);
 
+    emit ga_current_round(0, _max_rounds, _population.last().fitness, calculate_average_fitness());
+
     // Main loop
 
     while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
@@ -60,13 +60,16 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
         create_children();
         survivor_selection();
         qSort(_population);
-        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness);
+        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness, calculate_average_fitness());
     }
 
     // Find the best individuum
     _best.fitness = _population.last().fitness;
     _best.gene = _population.last().gene;
     _best.network = _population.last().network;
+
+    _average_fitness = calculate_average_fitness();
+    _rounds_to_finish = currentRound-1;
 
     // Clean-up
     for(int i = 0; i < _population.length()-1; ++i)
@@ -75,7 +78,7 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
         delete _population[i].network;
     }
     _population.clear();
-    emit ga_finished(_best.fitness);
+    emit ga_finished(_best.fitness, _average_fitness, _rounds_to_finish);
 }
 
 void NonParallelGenericGeneticAlgorithm::create_children()

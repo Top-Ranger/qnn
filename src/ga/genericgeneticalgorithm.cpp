@@ -3,6 +3,7 @@
 #include <QThread>
 #include <QtAlgorithms>
 #include <QTime>
+#include <QDebug>
 
 namespace {
 class SimulationThread : public QThread
@@ -48,7 +49,9 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network,
     _simulation(simulation),
     _population_size(population_size),
     _fitness_to_reach(fitness_to_reach),
-    _max_rounds(max_rounds)
+    _max_rounds(max_rounds),
+    _average_fitness(0),
+    _rounds_to_finish(0)
 {
     _best.fitness = -1.0;
     _best.gene = NULL;
@@ -63,7 +66,9 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(QObject *parent) :
     _simulation(NULL),
     _population_size(0),
     _fitness_to_reach(0.0d),
-    _max_rounds(0)
+    _max_rounds(0),
+    _average_fitness(0),
+    _rounds_to_finish(0)
 {
     _best.fitness = -1.0;
     _best.gene = NULL;
@@ -85,8 +90,6 @@ GenericGeneticAlgorithm::~GenericGeneticAlgorithm()
 void GenericGeneticAlgorithm::run_ga()
 {
     // Initialise
-    emit ga_current_round(0, _max_rounds, 0.0d);
-
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
     if(_best.gene != NULL)
@@ -133,6 +136,9 @@ void GenericGeneticAlgorithm::run_ga()
 
     qSort(_population);
 
+    emit ga_current_round(0, _max_rounds, _population.last().fitness, calculate_average_fitness());
+
+
     // Main loop
 
     while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
@@ -140,13 +146,16 @@ void GenericGeneticAlgorithm::run_ga()
         create_children();
         survivor_selection();
         qSort(_population);
-        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness);
+        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness, calculate_average_fitness());
     }
 
     // Find the best individuum
     _best.fitness = _population.last().fitness;
     _best.gene = _population.last().gene;
     _best.network = _population.last().network;
+
+    _average_fitness = calculate_average_fitness();
+    _rounds_to_finish = currentRound-1;
 
     // Clean-up
     for(int i = 0; i < _population.length()-1; ++i)
@@ -155,7 +164,7 @@ void GenericGeneticAlgorithm::run_ga()
         delete _population[i].network;
     }
     _population.clear();
-    emit ga_finished(_best.fitness);
+    emit ga_finished(_best.fitness, _average_fitness, _rounds_to_finish);
 }
 
 double GenericGeneticAlgorithm::best_fitness()
@@ -166,6 +175,16 @@ double GenericGeneticAlgorithm::best_fitness()
 GenericGene GenericGeneticAlgorithm::best_gene()
 {
     return *(_best.gene);
+}
+
+double GenericGeneticAlgorithm::average_fitness()
+{
+    return _average_fitness;
+}
+
+int GenericGeneticAlgorithm::rounds_to_finish()
+{
+    return _rounds_to_finish;
 }
 
 void GenericGeneticAlgorithm::create_children()
@@ -228,4 +247,20 @@ void GenericGeneticAlgorithm::create_children()
 void GenericGeneticAlgorithm::survivor_selection()
 {
     // Not needed because survivors are selected in create_children
+}
+
+double GenericGeneticAlgorithm::calculate_average_fitness()
+{
+    if(_population.length() == 0)
+    {
+        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": calling calculate_average_fitness with empty population!";
+        return -1.0d;
+    }
+
+    double d = 0.0d;
+    foreach(GeneContainer container, _population)
+    {
+        d += container.fitness;
+    }
+    return d / _population.length();
 }
