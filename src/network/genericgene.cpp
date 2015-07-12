@@ -1,4 +1,5 @@
 #include "genericgene.h"
+#include <QTime>
 #include <QDebug>
 #include <cstdlib>
 
@@ -30,7 +31,6 @@ GenericGene::GenericGene(QList< QList<int> > gene, int segment_size) :
 GenericGene::~GenericGene()
 {
 }
-
 
 QList< QList<int> > GenericGene::segments()
 {

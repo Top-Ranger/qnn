@@ -3,12 +3,10 @@
 #include <QList>
 #include <QString>
 #include <QDebug>
-#include <QTime>
 
 GenericSimulation::GenericSimulation() :
     _network(NULL)
-{
-    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+{ 
 }
 
 GenericSimulation::~GenericSimulation()
@@ -50,7 +48,7 @@ void GenericSimulation::_initialise()
 
 GenericSimulation *GenericSimulation::createConfigCopy()
 {
-    return new GenericSimulation;
+    return new GenericSimulation();
 }
 
 double GenericSimulation::_getScore()

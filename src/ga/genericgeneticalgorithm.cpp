@@ -2,7 +2,7 @@
 
 #include <QThread>
 #include <QtAlgorithms>
-#include <QDebug>
+#include <QTime>
 
 namespace {
 class SimulationThread : public QThread
@@ -86,6 +86,8 @@ void GenericGeneticAlgorithm::run_ga()
 {
     // Initialise
     emit ga_current_round(0, _max_rounds, 0.0d);
+
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
     if(_best.gene != NULL)
     {

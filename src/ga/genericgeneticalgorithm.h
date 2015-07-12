@@ -30,7 +30,6 @@ protected:
     virtual void create_children();
     virtual void survivor_selection();
 
-private:
     struct GeneContainer {
         double fitness;
         GenericGene* gene;
