@@ -5,7 +5,7 @@
 
 #include "genericgeneticalgorithm.h"
 
-class NonParallelGenericGeneticAlgorithm : public GenericGeneticAlgorithm
+class QNNSHARED_EXPORT NonParallelGenericGeneticAlgorithm : public GenericGeneticAlgorithm
 {
 public:
     NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, int population_size = 300, double fitness_to_reach = 0.99, int max_rounds = 200, QObject *parent = 0);
