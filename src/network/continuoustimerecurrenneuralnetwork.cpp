@@ -85,20 +85,20 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
     {
         double newValue = -1 * _network[i]; // -y
 
-        if(_gene->segments()[i][1]%(_len_input+1) != 0)
+        if(_gene->segments()[i][gene_input]%(_len_input+1) != 0)
         {
-            newValue += input[_gene->segments()[i][1]%(_len_input+1)-1];; // input
+            newValue += input[_gene->segments()[i][gene_input]%(_len_input+1)-1];; // input
         }
 
         for(int j = 0; j < _size_network; ++j)
         {
             double d = 0.0d;
-            d += weight(_gene->segments()[j][0], _bias_scalar); // θj
+            d += weight(_gene->segments()[j][gene_bias], _bias_scalar); // θj
             d += _network[j]; // yj
             d = sigmoid(d);
-            newValue += d * weight(_gene->segments()[i][3+i], _weight_scalar); // wij
+            newValue += d * weight(_gene->segments()[i][gene_W_start+i], _weight_scalar); // wij
         }
-        newNetwork[i] = newValue / ((_gene->segments()[i][2]%_max_time_constant)+1); // τ
+        newNetwork[i] = newValue / ((_gene->segments()[i][gene_time_constraint]%_max_time_constant)+1); // τ
     }
 
     delete [] _network;

@@ -17,7 +17,12 @@ public:
 protected:
     ContinuousTimeRecurrenNeuralNetwork();
 
-    void _initialise();
+    enum CTRNNgene_positions {gene_bias = 0,
+                              gene_input = 1,
+                              gene_time_constraint = 2,
+                              gene_W_start = 3};
+
+                             void _initialise();
     void _processInput(QList<double> input);
     double _getNeuronOutput(int i);
 
