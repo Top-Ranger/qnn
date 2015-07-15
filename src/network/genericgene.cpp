@@ -101,7 +101,12 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
     }
 
     QList<GenericGene *> geneList;
-    geneList.append(new GenericGene(newGene1, gene1->_gene[0].length()));
-    geneList.append(new GenericGene(newGene2, gene2->_gene[0].length()));
+    geneList.append(gene1->createGene(newGene1, gene1->_gene[0].length()));
+    geneList.append(gene2->createGene(newGene2, gene2->_gene[0].length()));
     return geneList;
+}
+
+GenericGene *GenericGene::createGene(QList< QList<int> > gene, int segment_size)
+{
+    return new GenericGene(gene, segment_size);
 }

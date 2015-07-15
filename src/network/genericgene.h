@@ -19,6 +19,9 @@ public:
 protected:
     GenericGene();
     GenericGene(QList< QList<int> > gene, int segment_size);
+
+    virtual GenericGene *createGene(QList< QList<int> > gene, int segment_size);
+
     QList< QList<int> > _gene;
     int _segment_size;
 
