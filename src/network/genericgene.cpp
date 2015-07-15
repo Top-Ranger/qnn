@@ -56,7 +56,7 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
 {
     if(gene1->_gene[0].length() != gene2->_gene[0].length())
     {
-        qWarning() << "Attemted crossover of different type of genes";
+        qCritical() << "WARNING in " __FILE__ << " " << __LINE__ << ": Attemted crossover of different type of genes";
         return QList<GenericGene *>();
     }
     QList< QList<int> > newGene1;
@@ -106,7 +106,155 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
     return geneList;
 }
 
+bool GenericGene::saveGene(QIODevice *device)
+{
+    if(device->isOpen())
+    {
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Saving to an open device is not permitted";
+        return false;
+    }
+    if(!device->open(QIODevice::WriteOnly))
+    {
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Can not open device";
+        return false;
+    }
+    QTextStream stream(device);
+
+    stream << identifier() << " ";
+    stream << "segments " << _segment_size << " ";
+    stream << "gene ";
+    foreach(QList<int> segment, _gene)
+    {
+        stream << "genesegment ";
+        foreach(int i, segment)
+        {
+            stream << i << " ";
+        }
+    }
+    stream << "geneend ";
+    bool result = _saveGene(&stream);
+    device->close();
+    return result;
+}
+
+GenericGene *GenericGene::loadGene(QIODevice *device)
+{
+    int segment_size;
+    QList< QList<int> > gene;
+
+    if(device->isOpen())
+    {
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Loading to an open device is not permitted";
+        return NULL;
+    }
+    if(!device->open(QIODevice::ReadOnly) || device->atEnd())
+    {
+        device->close();
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Can not open device";
+        return NULL;
+    }
+    QTextStream stream(device);
+    QString command;
+    stream >> command;
+
+    // Identifier
+    if(command != identifier())
+    {
+        device->close();
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Wrong gene type";
+        return NULL;
+    }
+
+    // segments
+    stream >> command;
+    if(command != "segments")
+    {
+        device->close();
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": No segment size";
+        return NULL;
+    }
+    stream >> segment_size;
+
+    // gene
+    stream >> command;
+    if(command != "gene")
+    {
+        device->close();
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": No segment size";
+        return NULL;
+    }
+
+    bool gene_reading = true;
+    while(gene_reading)
+    {
+        stream >> command;
+        if(command == "genesegment")
+        {
+               QList<int> segment;
+               for(int i = 0; i < segment_size; ++i)
+               {
+                   int value;
+                   stream >> value;
+                   segment.append(value);
+               }
+               gene.append(segment);
+        }
+        else if (command == "geneend")
+        {
+            gene_reading = false;
+        }
+        else
+        {
+            device->close();
+            qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown command" << command;
+            return NULL;
+        }
+    }
+
+    GenericGene *newGene = _loadGene(gene, segment_size, &stream);
+    device->close();
+    return newGene;
+}
+
+bool GenericGene::canLoad(QIODevice *device)
+{
+    if(device->isOpen())
+    {
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Loading to an open device is not permitted";
+        return false;
+    }
+    if(!device->open(QIODevice::ReadOnly) || device->atEnd())
+    {
+        device->close();
+        return false;
+    }
+    QString gene_identifier;
+
+    QTextStream stream(device);
+
+    stream >> gene_identifier;
+
+    device->close();
+
+    return gene_identifier == identifier();
+}
+
 GenericGene *GenericGene::createGene(QList< QList<int> > gene, int segment_size)
+{
+    return new GenericGene(gene, segment_size);
+}
+
+QString GenericGene::identifier()
+{
+    return QString("GenericGene");
+}
+
+bool GenericGene::_saveGene(QTextStream *stream)
+{
+    return true;
+}
+
+GenericGene *GenericGene::_loadGene(QList< QList<int> > gene, int segment_size, QTextStream *stream)
 {
     return new GenericGene(gene, segment_size);
 }
