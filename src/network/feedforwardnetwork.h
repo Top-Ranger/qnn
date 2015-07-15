@@ -8,15 +8,27 @@
 class QNNSHARED_EXPORT FeedForwardNetwork : public AbstractNeuralNetwork
 {
 public:
-    FeedForwardNetwork(int len_input, int len_output, int hidden_layer = 1, int len_hidden = 5,
-                       double (*activision_function)(double) = &standard_activision_function);
+    static int num_segments(int len_input, int len_output, int hidden_layer, int len_hidden);
+    static double standard_activision_function(double input);
+
+    struct FeedForwardNetwork_config {
+        int num_hidden_layer;
+        int len_hidden;
+        double (*activision_function)(double);
+
+        FeedForwardNetwork_config() :
+            num_hidden_layer(2),
+            len_hidden(5),
+            activision_function(&standard_activision_function)
+        {
+        }
+    };
+
+    FeedForwardNetwork(int len_input, int len_output, FeedForwardNetwork_config config = FeedForwardNetwork_config());
     ~FeedForwardNetwork();
 
     GenericGene *getRandomGene();
     AbstractNeuralNetwork *createConfigCopy();
-
-    static int num_segments(int len_input, int len_output, int hidden_layer = 1, int len_hidden = 5);
-    static double standard_activision_function(double input);
 
 protected:
     void _initialise();
@@ -26,12 +38,9 @@ protected:
 private:
     FeedForwardNetwork();
 
-    int _num_hidden_layer;
-    int _len_hidden;
-
+    FeedForwardNetwork_config _config;
     double **_hidden_layers;
     double *_output;
-    double (*_activision_function)(double input);
 };
 
 #endif // FEEDFORWARDNETWORK_H

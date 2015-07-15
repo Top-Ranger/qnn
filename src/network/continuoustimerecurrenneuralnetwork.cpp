@@ -17,19 +17,16 @@ double sigmoid(double d)
 }
 }
 
-ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, int size_network, int max_time_constant, int weight_scalar, int bias_scalar) :
+ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, ContinuousTimeRecurrenNeuralNetwork_config config) :
     AbstractNeuralNetwork(len_input, len_output),
-    _size_network(size_network),
-    _max_time_constant(max_time_constant),
-    _weight_scalar(weight_scalar),
-    _bias_scalar(bias_scalar),
+    _config(config),
     _network(NULL)
 {
-    if(_size_network < len_output)
+    if(_config.size_network < len_output)
     {
         qFatal(QString("FATAL ERROR in %1 %2: size_network must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(_max_time_constant < 1)
+    if(_config.max_time_constant < 1)
     {
         qFatal(QString("FATAL ERROR in %1 %2: max_time_constant must be 1 or bigger!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -37,10 +34,7 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len
 
 ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork() :
     AbstractNeuralNetwork(),
-    _size_network(0),
-    _max_time_constant(0),
-    _weight_scalar(0),
-    _bias_scalar(0),
+    _config(),
     _network(NULL)
 {
 }
@@ -55,22 +49,22 @@ ContinuousTimeRecurrenNeuralNetwork::~ContinuousTimeRecurrenNeuralNetwork()
 
 GenericGene *ContinuousTimeRecurrenNeuralNetwork::getRandomGene()
 {
-    return new GenericGene(_size_network, 3 + _size_network);
+    return new GenericGene(_config.size_network, 3 + _config.size_network);
 }
 
 AbstractNeuralNetwork *ContinuousTimeRecurrenNeuralNetwork::createConfigCopy()
 {
-    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, _size_network, _max_time_constant, _weight_scalar, _bias_scalar);
+    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, _config);
 }
 
 void ContinuousTimeRecurrenNeuralNetwork::_initialise()
 {
-    if(_gene->segments().length() < _size_network || _gene->segments()[0].length() < (3 + _size_network))
+    if(_gene->segments().length() < _config.size_network || _gene->segments()[0].length() < (3 + _config.size_network))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Gene lenght does not fit!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    _network = new double[_size_network];
-    for(int i = 0; i < _size_network; ++i)
+    _network = new double[_config.size_network];
+    for(int i = 0; i < _config.size_network; ++i)
     {
         _network[i] = 0;
     }
@@ -78,10 +72,10 @@ void ContinuousTimeRecurrenNeuralNetwork::_initialise()
 
 void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
 {
-    double *newNetwork = new double[_size_network];
+    double *newNetwork = new double[_config.size_network];
 
     // do calculation
-    for(int i = 0; i < _size_network; ++i)
+    for(int i = 0; i < _config.size_network; ++i)
     {
         double newValue = -1 * _network[i]; // -y
 
@@ -90,15 +84,15 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             newValue += input[_gene->segments()[i][gene_input]%(_len_input+1)-1];; // input
         }
 
-        for(int j = 0; j < _size_network; ++j)
+        for(int j = 0; j < _config.size_network; ++j)
         {
             double d = 0.0d;
-            d += weight(_gene->segments()[j][gene_bias], _bias_scalar); // θj
+            d += weight(_gene->segments()[j][gene_bias], _config.bias_scalar); // θj
             d += _network[j]; // yj
             d = sigmoid(d);
-            newValue += d * weight(_gene->segments()[i][gene_W_start+i], _weight_scalar); // wij
+            newValue += d * weight(_gene->segments()[i][gene_W_start+i], _config.weight_scalar); // wij
         }
-        newNetwork[i] = newValue / ((_gene->segments()[i][gene_time_constraint]%_max_time_constant)+1); // τ
+        newNetwork[i] = newValue / ((_gene->segments()[i][gene_time_constraint]%_config.max_time_constant)+1); // τ
     }
 
     delete [] _network;
@@ -107,7 +101,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
 
 double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(int i)
 {
-    if(_network != NULL && i < _size_network)
+    if(_network != NULL && i < _config.size_network)
     {
         return sigmoid(_network[i]);
     }

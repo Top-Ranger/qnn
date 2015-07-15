@@ -53,7 +53,7 @@ bool areNodesConnected(double x_source, double y_source, double x_target, double
     return angleCone < orientation;
 }
 
-double floatFromGeneInput(int gene_input, int scalar)
+double floatFromGeneInput(int gene_input, double scalar)
 {
     return (double) gene_input/RAND_MAX * scalar;
 }
@@ -77,16 +77,14 @@ double cut(double d)
 }
 }
 
-GasNet::GasNet(int len_input, int len_output, double area_size, double gas_threshhold, double electric_threshhold) :
+GasNet::GasNet(int len_input, int len_output, GasNet_config config) :
     AbstractNeuralNetwork(len_input, len_output),
-    _area_size(area_size),
+    _config(config),
     _network(NULL),
     _gas_emitting(NULL),
-    _P(),
-    _gas_threshhold(gas_threshhold),
-    _electric_threshhold(electric_threshhold)
+    _P()
 {
-    if(area_size <= 0)
+    if(_config.area_size <= 0)
     {
         qFatal(QString("FATAL ERROR in %1 %2: Area needs to be greater then 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -106,12 +104,10 @@ GasNet::GasNet(int len_input, int len_output, double area_size, double gas_thres
 
 GasNet::GasNet() :
     AbstractNeuralNetwork(1,1),
-    _area_size(1.0d),
+    _config(),
     _network(NULL),
     _gas_emitting(NULL),
-    _P(),
-    _gas_threshhold(0.0d),
-    _electric_threshhold(0.0d)
+    _P()
 {
     _P.append(-4.0d);
     _P.append(-2.0d);
@@ -145,7 +141,7 @@ GenericGene *GasNet::getRandomGene()
 
 AbstractNeuralNetwork *GasNet::createConfigCopy()
 {
-    return new GasNet(_len_input, _len_output, _area_size, _gas_threshhold, _electric_threshhold);
+    return new GasNet(_len_input, _len_output, _config);
 }
 
 void GasNet::_initialise()
@@ -181,19 +177,20 @@ void GasNet::_processInput(QList<double> input)
     for(int i = 0; i < _gene->segments().length(); ++i)
     {
         // Calculate gas concentration
+        double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
         if(_gas_emitting[i] > 0.0d && _gene->segments()[i][gene_TypeGas]%3 != 0)
         {
             for(int j = 0; j < _gene->segments().length(); ++j)
             {
-                double distance = calculate_distance(floatFromGeneInput(_gene->segments()[i][gene_x], _area_size),
-                                                     floatFromGeneInput(_gene->segments()[i][gene_y], _area_size),
-                                                     floatFromGeneInput(_gene->segments()[j][gene_x], _area_size),
-                                                     floatFromGeneInput(_gene->segments()[j][gene_y], _area_size));
-                if(distance > _gene->segments()[i][gene_Gas_radius])
+                double distance = calculate_distance(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
+                                                     floatFromGeneInput(_gene->segments()[i][gene_y], _config.area_size),
+                                                     floatFromGeneInput(_gene->segments()[j][gene_x], _config.area_size),
+                                                     floatFromGeneInput(_gene->segments()[j][gene_y], _config.area_size));
+                if(distance > gas_radius)
                 {
                     continue;
                 }
-                double gas_concentration = qExp((-2 * distance)/floatFromGeneInput(_gene->segments()[i][gene_Gas_radius], _area_size) * _gas_emitting[i]);
+                double gas_concentration = qExp((-2 * distance)/gas_radius * _gas_emitting[i]);
                 switch (_gene->segments()[i][gene_TypeGas]%3)
                 {
                 case 1:
@@ -242,21 +239,21 @@ void GasNet::_processInput(QList<double> input)
             {
                 continue;
             }
-            if(areNodesConnected(floatFromGeneInput(_gene->segments()[i][gene_x], _area_size),
-                                 floatFromGeneInput(_gene->segments()[i][gene_y], _area_size),
-                                 floatFromGeneInput(_gene->segments()[j][gene_x], _area_size),
-                                 floatFromGeneInput(_gene->segments()[j][gene_y], _area_size),
-                                 floatFromGeneInput(_gene->segments()[i][gene_PositivConeRadius], _area_size),
+            if(areNodesConnected(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[i][gene_y], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[j][gene_x], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[j][gene_y], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[i][gene_PositivConeRadius], _config.area_size*_config.cone_ratio),
                                  floatFromGeneInput(_gene->segments()[i][gene_PositivConeExt], 2*M_PI),
                                  floatFromGeneInput(_gene->segments()[i][gene_PositivConeOrientation], 2*M_PI)))
             {
                 newValue += _network[j];
             }
-            if(areNodesConnected(floatFromGeneInput(_gene->segments()[i][gene_x], _area_size),
-                                 floatFromGeneInput(_gene->segments()[i][gene_y], _area_size),
-                                 floatFromGeneInput(_gene->segments()[j][gene_x], _area_size),
-                                 floatFromGeneInput(_gene->segments()[j][gene_y], _area_size),
-                                 floatFromGeneInput(_gene->segments()[i][gene_NegativConeRadius], _area_size),
+            if(areNodesConnected(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[i][gene_y], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[j][gene_x], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[j][gene_y], _config.area_size),
+                                 floatFromGeneInput(_gene->segments()[i][gene_NegativConeRadius], _config.area_size*_config.cone_ratio),
                                  floatFromGeneInput(_gene->segments()[i][gene_NegativConeExt], 2*M_PI),
                                  floatFromGeneInput(_gene->segments()[i][gene_NegativConeOrientation], 2*M_PI)))
             {
@@ -303,21 +300,21 @@ void GasNet::_processInput(QList<double> input)
         switch (_gene->segments()[i][gene_WhenGas]%3)
         {
         case 0: // Electric charge
-            if(_network[i] > _electric_threshhold)
+            if(_network[i] > _config.electric_threshhold)
             {
                 emittingGas = true;
             }
             break;
 
         case 1: // Gas1
-            if(gas1[i] > _gas_threshhold)
+            if(gas1[i] > _config.gas_threshhold)
             {
                 emittingGas = true;
             }
             break;
 
         case 2: // Gas2
-            if(gas2[i] > _gas_threshhold)
+            if(gas2[i] > _config.gas_threshhold)
             {
                 emittingGas = true;
             }
