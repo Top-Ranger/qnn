@@ -146,6 +146,10 @@ AbstractNeuralNetwork *GasNet::createConfigCopy()
 
 void GasNet::_initialise()
 {
+    if(_gene->segments().length() < _len_output)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
     if(_gene->segments()[0].length() != 16)
     {
         qFatal(QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
