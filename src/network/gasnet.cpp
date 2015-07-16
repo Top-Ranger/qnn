@@ -296,7 +296,7 @@ void GasNet::_processInput(QList<double> input)
         newNetwork[i] = tanh(newValue);
     }
 
-    delete _network;
+    delete [] _network;
     _network = newNetwork;
 
     for(int i = 0; i < segments.length(); ++i)

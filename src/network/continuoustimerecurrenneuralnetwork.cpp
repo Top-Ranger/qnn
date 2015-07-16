@@ -43,7 +43,7 @@ ContinuousTimeRecurrenNeuralNetwork::~ContinuousTimeRecurrenNeuralNetwork()
 {
     if(_network != NULL)
     {
-        delete _network;
+        delete [] _network;
     }
 }
 

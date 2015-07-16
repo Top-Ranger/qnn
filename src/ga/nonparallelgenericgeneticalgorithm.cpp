@@ -112,6 +112,7 @@ void NonParallelGenericGeneticAlgorithm::create_children()
                 simulation->initialise(container.network);
                 container.fitness = simulation->getScore();
                 newChildren.append(container);
+                delete simulation;
             }
             temp.append(newChildren);
             qSort(temp);
