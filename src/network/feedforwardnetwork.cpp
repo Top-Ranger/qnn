@@ -72,6 +72,8 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         return;
     }
 
+    QList< QList<int> > segments = _gene->segments();
+
     if(_config.num_hidden_layer == 0)
     {
         int current_segment = 0;
@@ -80,9 +82,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(int i_input = 0; i_input < _len_input; ++i_input)
             {
-                sum += input[i_input] * weight(_gene->segments()[current_segment++][0]);
+                sum += input[i_input] * weight(segments[current_segment++][0]);
             }
-            sum += 1.0d * weight(_gene->segments()[current_segment++][0]);
+            sum += 1.0d * weight(segments[current_segment++][0]);
             _output[i_output] = _config.activision_function(sum);
         }
     }
@@ -96,9 +98,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(int i_input = 0; i_input < _len_input; ++i_input)
             {
-                sum += input[i_input] * weight(_gene->segments()[current_segment++][0]);
+                sum += input[i_input] * weight(segments[current_segment++][0]);
             }
-            sum += 1.0d * weight(_gene->segments()[current_segment++][0]);
+            sum += 1.0d * weight(segments[current_segment++][0]);
             _hidden_layers[0][i_hidden] = _config.activision_function(sum);
         }
 
@@ -110,9 +112,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
                 double sum = 0.0d;
                 for(int i_input = 0; i_input < _config.len_hidden; ++i_input)
                 {
-                    sum += _hidden_layers[current_hidden-1][i_input] * weight(_gene->segments()[current_segment++][0]);
+                    sum += _hidden_layers[current_hidden-1][i_input] * weight(segments[current_segment++][0]);
                 }
-                sum += 1.0d * weight(_gene->segments()[current_segment++][0]);
+                sum += 1.0d * weight(segments[current_segment++][0]);
                 _hidden_layers[current_hidden][i_output] = _config.activision_function(sum);
             }
         }
@@ -123,9 +125,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
             {
-                sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(_gene->segments()[current_segment++][0]);
+                sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(segments[current_segment++][0]);
             }
-            sum += 1.0d * weight(_gene->segments()[current_segment++][0]);
+            sum += 1.0d * weight(segments[current_segment++][0]);
             _output[i_output] = _config.activision_function(sum);
         }
     }
