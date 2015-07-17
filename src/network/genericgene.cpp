@@ -108,6 +108,10 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
 
 bool GenericGene::saveGene(QIODevice *device)
 {
+    if(device == NULL)
+    {
+        return false;
+    }
     if(device->isOpen())
     {
         qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Saving to an open device is not permitted";
@@ -139,6 +143,11 @@ bool GenericGene::saveGene(QIODevice *device)
 
 GenericGene *GenericGene::loadGene(QIODevice *device)
 {
+    if(device == NULL)
+    {
+        return NULL;
+    }
+
     int segment_size;
     QList< QList<int> > gene;
 
@@ -218,6 +227,10 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
 
 bool GenericGene::canLoad(QIODevice *device)
 {
+    if(device == NULL)
+    {
+        return false;
+    }
     if(device->isOpen())
     {
         qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Loading to an open device is not permitted";
@@ -237,6 +250,12 @@ bool GenericGene::canLoad(QIODevice *device)
     device->close();
 
     return gene_identifier == identifier();
+}
+
+GenericGene *GenericGene::loadThisGene(QIODevice *device)
+{
+    GenericGene gene;
+    return gene.loadGene(device);
 }
 
 GenericGene *GenericGene::createGene(QList< QList<int> > gene, int segment_size)

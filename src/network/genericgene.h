@@ -22,6 +22,8 @@ public:
     GenericGene *loadGene(QIODevice *device);
     bool canLoad(QIODevice *device);
 
+    static GenericGene *loadThisGene(QIODevice *device);
+
 protected:
     GenericGene();
     GenericGene(QList< QList<int> > gene, int segment_size);
