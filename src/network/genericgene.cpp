@@ -11,6 +11,15 @@ GenericGene::GenericGene(int initialLength, int segment_size) :
     _gene(),
     _segment_size(segment_size)
 {
+    if(initialLength < 0)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: initial length can not be negativ!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(segment_size <= 0)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: segment size must be 1 or greater").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+
     for(int i = 0; i < initialLength; ++i)
     {
         QList<int> list;

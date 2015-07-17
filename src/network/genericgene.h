@@ -37,7 +37,6 @@ protected:
     QList< QList<int> > _gene;
     int _segment_size;
 
-private:
     static const double MUTATION_RATE = 0.03d;
 };
 
