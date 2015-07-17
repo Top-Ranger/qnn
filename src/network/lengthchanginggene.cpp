@@ -6,6 +6,16 @@ LengthChangingGene::LengthChangingGene(int initialLength, int segment_size, Leng
     GenericGene(initialLength, segment_size),
     _config(config)
 {
+    if(_config.min_length == -1)
+    {
+        _config.min_length = initialLength;
+    }
+
+    if(_config.max_length == -1)
+    {
+        _config.min_length = initialLength*4;
+    }
+
     if(config.max_length < config.min_length)
     {
         qFatal(QString("FATAL ERROR in %1 %2: min length must be smaller or equal to max length").arg(__FILE__).arg(__LINE__).toLatin1().data());
