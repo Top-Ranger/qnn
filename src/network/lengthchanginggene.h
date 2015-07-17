@@ -5,7 +5,7 @@
 
 #include "genericgene.h"
 
-class LengthChangingGene : public GenericGene
+class QNNSHARED_EXPORT LengthChangingGene : public GenericGene
 {
 public:
     struct LengthChangingGene_config {
