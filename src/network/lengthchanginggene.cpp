@@ -13,14 +13,14 @@ LengthChangingGene::LengthChangingGene(int initialLength, int segment_size, Leng
 
     if(_config.max_length == -1)
     {
-        _config.min_length = initialLength*4;
+        _config.max_length = initialLength*4;
     }
 
-    if(config.max_length < config.min_length)
+    if(_config.max_length < _config.min_length)
     {
         qFatal(QString("FATAL ERROR in %1 %2: min length must be smaller or equal to max length").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(initialLength < config.min_length || initialLength > config.max_length)
+    if(initialLength < _config.min_length || initialLength > _config.max_length)
     {
         qFatal(QString("FATAL ERROR in %1 %2: initial length must be between min length and max length").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -68,6 +68,11 @@ void LengthChangingGene::mutate()
             _gene.append(newSegment);
         }
     }
+}
+
+GenericGene *LengthChangingGene::createCopy()
+{
+    return new LengthChangingGene(_gene, _segment_size, _config);
 }
 
 GenericGene *LengthChangingGene::loadThisGene(QIODevice *device)

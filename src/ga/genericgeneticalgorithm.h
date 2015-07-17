@@ -18,7 +18,7 @@ public:
 
     virtual void run_ga();
     double best_fitness();
-    GenericGene best_gene();
+    GenericGene *best_gene();
     double average_fitness();
     int rounds_to_finish();
 

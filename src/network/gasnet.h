@@ -15,6 +15,8 @@ public:
         double cone_ratio;
         double offset_gas_radius;
         double range_gas_radius;
+        int min_size;
+        int max_size;
 
         GasNet_config() :
             area_size(1.0d),
@@ -22,7 +24,9 @@ public:
             electric_threshhold(0.1d),
             cone_ratio(0.5d),
             offset_gas_radius(0.1d),
-            range_gas_radius(0.5d)
+            range_gas_radius(0.5d),
+            min_size(-1),
+            max_size(-1)
         {
         }
     };

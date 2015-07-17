@@ -172,9 +172,9 @@ double GenericGeneticAlgorithm::best_fitness()
     return _best.fitness;
 }
 
-GenericGene GenericGeneticAlgorithm::best_gene()
+GenericGene *GenericGeneticAlgorithm::best_gene()
 {
-    return *(_best.gene);
+    return _best.gene->createCopy();
 }
 
 double GenericGeneticAlgorithm::average_fitness()

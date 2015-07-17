@@ -1,5 +1,7 @@
 #include "gasnet.h"
 
+#include "lengthchanginggene.h"
+
 #include <QtCore/qmath.h>
 #include <QString>
 #include <QDebug>
@@ -136,7 +138,38 @@ GasNet::~GasNet()
 
 GenericGene *GasNet::getRandomGene()
 {
-    return new GenericGene(_len_output*2, 16);
+    LengthChangingGene::LengthChangingGene_config config;
+    config.min_length = _config.min_size;
+    config.max_length = _config.max_size;
+
+    int initial_length;
+
+    if(config.min_length == -1 || config.max_length == -1)
+    {
+        initial_length = _len_output;
+    }
+    else
+    {
+        if(config.min_length > config.max_length)
+        {
+            qCritical() << "CRITICAL ERROR in " << __FILE__ << " " << __LINE__ << ": min_length is not smaller then max_length";
+            initial_length = _len_output;
+        }
+        else
+        {
+            int diff = config.max_length - config.min_length;
+            if(diff == 0)
+            {
+                initial_length = config.min_length;
+            }
+            else
+            {
+                initial_length = qrand()%diff + config.min_length;
+            }
+        }
+    }
+
+    return new LengthChangingGene(initial_length, 16, config);
 }
 
 AbstractNeuralNetwork *GasNet::createConfigCopy()

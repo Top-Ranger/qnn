@@ -46,6 +46,11 @@ QList< QList<int> > GenericGene::segments()
     return _gene;
 }
 
+GenericGene *GenericGene::createCopy()
+{
+    return new GenericGene(_gene, _segment_size);
+}
+
 void GenericGene::mutate()
 {
     //Simple mutation py probability - the chance of mutating a value is the same for every value.

@@ -15,6 +15,7 @@ public:
 
     virtual void mutate();
     virtual QList< QList<int> > segments();
+    virtual GenericGene *createCopy();
 
     static QList<GenericGene *> combine(GenericGene *gene1, GenericGene *gene2);
 

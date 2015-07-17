@@ -23,6 +23,7 @@ public:
     ~LengthChangingGene();
 
     void mutate();
+    GenericGene *createCopy();
 
     static GenericGene *loadThisGene(QIODevice *device);
 
