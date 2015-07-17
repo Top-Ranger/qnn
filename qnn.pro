@@ -25,7 +25,8 @@ SOURCES += \
     src/ga/genericgeneticalgorithm.cpp \
     src/network/continuoustimerecurrenneuralnetwork.cpp \
     src/ga/nonparallelgenericgeneticalgorithm.cpp \
-    src/network/gasnet.cpp
+    src/network/gasnet.cpp \
+    src/network/lengthchanginggene.cpp
 
 HEADERS += \
     src/network/abstractneuralnetwork.h \
@@ -36,6 +37,7 @@ HEADERS += \
     src/qnn-global.h \
     src/network/continuoustimerecurrenneuralnetwork.h \
     src/ga/nonparallelgenericgeneticalgorithm.h \
-    src/network/gasnet.h
+    src/network/gasnet.h \
+    src/network/lengthchanginggene.h
 
 DESTDIR = $$PWD
