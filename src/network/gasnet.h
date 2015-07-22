@@ -10,6 +10,7 @@ class QNNSHARED_EXPORT GasNet : public AbstractNeuralNetwork
 public:
     struct GasNet_config {
         double area_size;
+        double bias_scalar;
         double gas_threshhold;
         double electric_threshhold;
         double cone_ratio;
@@ -20,6 +21,7 @@ public:
 
         GasNet_config() :
             area_size(1.0d),
+            bias_scalar(1.0d),
             gas_threshhold(0.1d),
             electric_threshhold(0.1d),
             cone_ratio(0.5d),

@@ -1,21 +1,15 @@
 #include "continuoustimerecurrenneuralnetwork.h"
+
+#include "commonnetworkfunctions.h"
+
 #include <QDebug>
 #include <QtCore/qmath.h>
 
 // GENE ENCODING: θ, input, τ, W
 // weight between -5,5
 
-namespace {
-double weight(int gene_input, int scalar)
-{
-    return (((double) gene_input - RAND_MAX/2.0) * 2.0 / RAND_MAX) * scalar;
-}
-
-double sigmoid(double d)
-{
-    return 1.0d / (1.0d + qExp(-1.0d * d));
-}
-}
+using CommonNetworkFunctions::sigmoid;
+using CommonNetworkFunctions::weight;
 
 ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, ContinuousTimeRecurrenNeuralNetwork_config config) :
     AbstractNeuralNetwork(len_input, len_output),

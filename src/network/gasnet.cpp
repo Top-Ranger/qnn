@@ -1,14 +1,19 @@
 #include "gasnet.h"
 
 #include "lengthchanginggene.h"
+#include "commonnetworkfunctions.h"
 
-#include <QtCore/qmath.h>
 #include <QString>
 #include <QDebug>
+#include <QtCore/qmath.h>
+
 #include <math.h>
 
 // GENE ENCODING: x, y, Rp, Rext, Rort, Rn, Rext, Rort, input, recurrent, WhenGas, TypeGas, Rate of gas (1-11), radius, basis index, bias
 //                0  1   2   3      4    5    6     7     8     9             10     12               13        14         15        16
+
+using CommonNetworkFunctions::floatFromGeneInput;
+using CommonNetworkFunctions::weight;
 
 namespace {
 bool calculate_distance(double x_source, double y_source, double x_target, double y_target)
@@ -53,16 +58,6 @@ bool areNodesConnected(double x_source, double y_source, double x_target, double
     }
 
     return angleCone < orientation;
-}
-
-double floatFromGeneInput(int gene_input, double scalar)
-{
-    return (double) gene_input/RAND_MAX * scalar;
-}
-
-double weight(int gene_input)
-{
-    return (((double) gene_input - RAND_MAX/2.0) * 2.0 / RAND_MAX);
 }
 
 double cut(double d)
@@ -323,7 +318,7 @@ void GasNet::_processInput(QList<double> input)
         newValue *= k[i];
 
         // Bias
-        newValue += weight(segments[i][gene_bias]);
+        newValue += weight(segments[i][gene_bias], _config.bias_scalar);
 
         // tanh
         newNetwork[i] = tanh(newValue);

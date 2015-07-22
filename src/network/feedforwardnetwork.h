@@ -15,11 +15,13 @@ public:
         int num_hidden_layer;
         int len_hidden;
         double (*activision_function)(double);
+        double weight_scalar;
 
         FeedForwardNetwork_config() :
             num_hidden_layer(2),
             len_hidden(5),
-            activision_function(&standard_activision_function)
+            activision_function(&standard_activision_function),
+            weight_scalar(1.0d)
         {
         }
     };

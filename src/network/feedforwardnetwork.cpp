@@ -1,14 +1,12 @@
 #include "feedforwardnetwork.h"
+
+#include "commonnetworkfunctions.h"
+
 #include <QDebug>
 #include <QtCore/qmath.h>
-#include <cstdlib>
 
-namespace {
-double weight(int gene_input)
-{
-    return ((double) gene_input - RAND_MAX/2.0) * 2.0 / RAND_MAX;
-}
-}
+using CommonNetworkFunctions::weight;
+using CommonNetworkFunctions::sigmoid;
 
 FeedForwardNetwork::FeedForwardNetwork(int len_input, int len_output, FeedForwardNetwork_config config) :
     AbstractNeuralNetwork(len_input, len_output),
@@ -82,9 +80,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(int i_input = 0; i_input < _len_input; ++i_input)
             {
-                sum += input[i_input] * weight(segments[current_segment++][0]);
+                sum += input[i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(segments[current_segment++][0]);
+            sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
             _output[i_output] = _config.activision_function(sum);
         }
     }
@@ -98,9 +96,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(int i_input = 0; i_input < _len_input; ++i_input)
             {
-                sum += input[i_input] * weight(segments[current_segment++][0]);
+                sum += input[i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(segments[current_segment++][0]);
+            sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
             _hidden_layers[0][i_hidden] = _config.activision_function(sum);
         }
 
@@ -112,9 +110,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
                 double sum = 0.0d;
                 for(int i_input = 0; i_input < _config.len_hidden; ++i_input)
                 {
-                    sum += _hidden_layers[current_hidden-1][i_input] * weight(segments[current_segment++][0]);
+                    sum += _hidden_layers[current_hidden-1][i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
                 }
-                sum += 1.0d * weight(segments[current_segment++][0]);
+                sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
                 _hidden_layers[current_hidden][i_output] = _config.activision_function(sum);
             }
         }
@@ -125,9 +123,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
             {
-                sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(segments[current_segment++][0]);
+                sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(segments[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(segments[current_segment++][0]);
+            sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
             _output[i_output] = _config.activision_function(sum);
         }
     }
@@ -160,7 +158,7 @@ int FeedForwardNetwork::num_segments(int len_input, int len_output, int hidden_l
 
 double FeedForwardNetwork::standard_activision_function(double input)
 {
-    return 1.0d / (1.0d + qExp(-1.0d * input));
+    return sigmoid(input);
 }
 
 GenericGene *FeedForwardNetwork::getRandomGene()
