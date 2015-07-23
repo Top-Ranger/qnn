@@ -23,7 +23,7 @@ public:
             area_size(1.0d),
             bias_scalar(1.0d),
             gas_threshhold(0.1d),
-            electric_threshhold(0.1d),
+            electric_threshhold(0.5d),
             cone_ratio(0.5d),
             offset_gas_radius(0.1d),
             range_gas_radius(0.5d),

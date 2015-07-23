@@ -10,69 +10,13 @@
 #include <math.h>
 
 // GENE ENCODING: x, y, Rp, Rext, Rort, Rn, Rext, Rort, input, recurrent, WhenGas, TypeGas, Rate of gas (1-11), radius, basis index, bias
-//                0  1   2   3      4    5    6     7     8     9             10     12               13        14         15        16
+//                0  1   2   3      4    5    6     7     8     9             10     11               12        13         14        15
 
 using CommonNetworkFunctions::floatFromGeneInput;
 using CommonNetworkFunctions::weight;
-
-namespace {
-bool calculate_distance(double x_source, double y_source, double x_target, double y_target)
-{
-    double difference_x = x_source - x_target;
-    double difference_y = y_source - y_target;
-    return qSqrt((difference_x * difference_x) + (difference_y * difference_y));
-}
-
-bool areNodesConnected(double x_source, double y_source, double x_target, double y_target, double radius, double angularExtend, double orientation)
-{
-    if(x_source == x_target && y_source == y_target)
-    {
-        return false;
-    }
-
-    double difference_x = x_source - x_target;
-    double difference_y = y_source - y_target;
-    double distance = calculate_distance(x_source, y_source, x_target, y_target);
-
-    if(distance > radius)
-    {
-        return false;
-    }
-
-    double angleCone = qAsin(difference_x / distance);
-
-    if(difference_y < 0.0d)
-    {
-        angleCone = M_PI - angleCone;
-    }
-    else if (angleCone < 0.0d)
-    {
-        angleCone = 2.0d * M_PI + angleCone;
-    }
-
-    angleCone -= angularExtend;
-
-    if (angleCone < 0.0d)
-    {
-        angleCone = 2.0d * M_PI + angleCone;
-    }
-
-    return angleCone < orientation;
-}
-
-double cut(double d)
-{
-    if(d > 1.0d)
-    {
-        return 1.0d;
-    }
-    else if(d < 0.0d)
-    {
-        return 0.0d;
-    }
-    return d;
-}
-}
+using CommonNetworkFunctions::calculate_distance;
+using CommonNetworkFunctions::areNodesConnected;
+using CommonNetworkFunctions::cut01;
 
 GasNet::GasNet(int len_input, int len_output, GasNet_config config) :
     AbstractNeuralNetwork(len_input, len_output),
@@ -100,7 +44,7 @@ GasNet::GasNet(int len_input, int len_output, GasNet_config config) :
 }
 
 GasNet::GasNet() :
-    AbstractNeuralNetwork(1,1),
+    AbstractNeuralNetwork(),
     _config(),
     _network(NULL),
     _gas_emitting(NULL),
@@ -227,6 +171,10 @@ void GasNet::_processInput(QList<double> input)
                 double gas_concentration = qExp((-2 * distance)/gas_radius * _gas_emitting[i]);
                 switch (segments[i][gene_TypeGas]%3)
                 {
+                case 0:
+                    // No Gas is emitted
+                    break;
+
                 case 1:
                     gas1[j] += gas_concentration;
                     break;
@@ -361,11 +309,11 @@ void GasNet::_processInput(QList<double> input)
 
         if(emittingGas)
         {
-            _gas_emitting[i] = cut((_gas_emitting[i] + 1.0d) / segments[i][gene_Rate_of_gas]);
+            _gas_emitting[i] = cut01((_gas_emitting[i] + 1.0d) / segments[i][gene_Rate_of_gas]);
         }
         else
         {
-            _gas_emitting[i] = cut((_gas_emitting[i] - 1.0d) / segments[i][gene_Rate_of_gas]);
+            _gas_emitting[i] = cut01((_gas_emitting[i] - 1.0d) / segments[i][gene_Rate_of_gas]);
         }
     }
 }
