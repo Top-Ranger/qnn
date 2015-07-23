@@ -3,7 +3,7 @@
 #include "commonnetworkfunctions.h"
 
 #include <QDebug>
-#include <QtCore/qmath.h>
+#include <math.h>
 
 // GENE ENCODING: θ, input, τ, W
 // weight between -5,5
@@ -88,7 +88,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             d = sigmoid(d);
             newValue += d * weight(segments[i][gene_W_start+i], _config.weight_scalar); // wij
         }
-        newNetwork[i] = newValue / ((segments[i][gene_time_constraint]%_config.max_time_constant)+1); // τ
+        newNetwork[i] = tanh(newValue / ((segments[i][gene_time_constraint]%_config.max_time_constant)+1)); // τ
     }
 
     delete [] _network;
@@ -99,7 +99,7 @@ double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(int i)
 {
     if(_network != NULL && i < _config.size_network)
     {
-        return sigmoid(_network[i]);
+        return _network[i];
     }
     else
     {
