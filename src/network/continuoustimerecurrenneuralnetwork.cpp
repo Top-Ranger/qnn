@@ -85,10 +85,10 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             double d = 0.0d;
             d += weight(segments[j][gene_bias], _config.bias_scalar); // θj
             d += _network[j]; // yj
-            d = sigmoid(d);
+            d = _config.activision_function(d);
             newValue += d * weight(segments[i][gene_W_start+i], _config.weight_scalar); // wij
         }
-        newNetwork[i] = tanh(newValue / ((segments[i][gene_time_constraint]%_config.max_time_constant)+1)); // τ
+        newNetwork[i] = newValue / ((segments[i][gene_time_constraint]%_config.max_time_constant)+1); // τ
     }
 
     delete [] _network;
@@ -99,11 +99,16 @@ double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(int i)
 {
     if(_network != NULL && i < _config.size_network)
     {
-        return _network[i];
+        return _config.activision_function(_network[i] + weight(_gene->segments()[i][gene_bias], _config.bias_scalar));
     }
     else
     {
         qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": i out of bound";
         return -1.0d;
     }
+}
+
+double ContinuousTimeRecurrenNeuralNetwork::standard_activision_function(double input)
+{
+    return sigmoid(input);
 }

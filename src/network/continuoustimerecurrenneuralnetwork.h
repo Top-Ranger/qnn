@@ -8,17 +8,21 @@
 class QNNSHARED_EXPORT ContinuousTimeRecurrenNeuralNetwork : public AbstractNeuralNetwork
 {
 public:
+    static double standard_activision_function(double input);
+
     struct config {
         int size_network;
         int max_time_constant;
         int weight_scalar;
         int bias_scalar;
+        double (*activision_function)(double);
 
         config() :
             size_network(7),
             max_time_constant(5),
             weight_scalar(5),
-            bias_scalar(5)
+            bias_scalar(5),
+            activision_function(&standard_activision_function)
         {
         }
     };
