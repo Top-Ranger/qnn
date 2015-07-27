@@ -29,6 +29,10 @@ GasNet::GasNet(int len_input, int len_output, config config) :
     {
         qFatal(QString("FATAL ERROR in %1 %2: Area needs to be greater then 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
+    if(_config.min_size < _len_output)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: min_size_network must not be smaller then output lenght!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
 
     _P.append(-4.0d);
     _P.append(-2.0d);
