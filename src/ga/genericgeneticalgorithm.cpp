@@ -114,14 +114,13 @@ void GenericGeneticAlgorithm::run_ga()
         container.fitness = -1.0d;
         container.gene = _network->getRandomGene();
         container.network = _network->createConfigCopy();
-        container.network->initialise(container.gene);
         _population.append(container);
     }
 
     for(int i = 0; i < _population_size; ++i)
     {
         GenericSimulation *simulation = _simulation->createConfigCopy();
-        simulation->initialise(_population[i].network);
+        simulation->initialise(_population[i].network, _population[i].gene);
         threadList.append(new SimulationThread(simulation));
         threadList[i]->start();
     }
@@ -215,11 +214,10 @@ void GenericGeneticAlgorithm::create_children()
                 GeneContainer container;
                 container.gene = childrenGene[i];
                 container.network = _network->createConfigCopy();
-                container.network->initialise(childrenGene[i]);
                 container.fitness = -1.0d;
                 newChildren.append(container);
                 GenericSimulation *simulation = _simulation->createConfigCopy();
-                simulation->initialise(container.network);
+                simulation->initialise(container.network, container.gene);
                 threadList.append(new SimulationThread(simulation));
                 threadList[i]->start();
             }

@@ -5,7 +5,8 @@
 #include <QDebug>
 
 GenericSimulation::GenericSimulation() :
-    _network(NULL)
+    _network(NULL),
+    _gene(NULL)
 { 
 }
 
@@ -13,19 +14,25 @@ GenericSimulation::~GenericSimulation()
 {
 }
 
-void GenericSimulation::initialise(AbstractNeuralNetwork *network)
+void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *gene)
 {
-    if(_network != NULL)
+    if(_network != NULL || _gene != NULL)
     {
         qFatal(QString("FATAL ERROR in %1 %2: Simulation already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
+    if(network == NULL || gene == NULL)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Trying to initialise with NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+
     _network = network;
+    _gene = gene;
     _initialise();
 }
 
 double GenericSimulation::getScore()
 {
-    if(_network == NULL)
+    if(_network == NULL || _gene == NULL)
     {
         qFatal(QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -44,6 +51,7 @@ int GenericSimulation::needOutputLength()
 
 void GenericSimulation::_initialise()
 {
+    _network->initialise(_gene);
 }
 
 GenericSimulation *GenericSimulation::createConfigCopy()

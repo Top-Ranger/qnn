@@ -41,9 +41,8 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
         GeneContainer container;
         container.gene = _network->getRandomGene();
         container.network = _network->createConfigCopy();
-        container.network->initialise(container.gene);
         GenericSimulation *simulation = _simulation->createConfigCopy();
-        simulation->initialise(container.network);
+        simulation->initialise(container.network, container.gene);
         container.fitness = simulation->getScore();
         delete simulation;
         _population.append(container);
@@ -107,9 +106,8 @@ void NonParallelGenericGeneticAlgorithm::create_children()
                 GeneContainer container;
                 container.gene = childrenGene[i];
                 container.network = _network->createConfigCopy();
-                container.network->initialise(childrenGene[i]);
                 GenericSimulation *simulation = _simulation->createConfigCopy();
-                simulation->initialise(container.network);
+                simulation->initialise(container.network, container.gene);
                 container.fitness = simulation->getScore();
                 newChildren.append(container);
                 delete simulation;
