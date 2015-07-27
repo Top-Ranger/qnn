@@ -20,8 +20,8 @@ public:
     virtual GenericSimulation *createConfigCopy();
 
 protected:
-    void _initialise();
-    double _getScore();
+    virtual void _initialise();
+    virtual double _getScore();
 
     AbstractNeuralNetwork *_network;
     GenericGene *_gene;

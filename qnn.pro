@@ -28,7 +28,8 @@ SOURCES += \
     src/network/gasnet.cpp \
     src/network/lengthchanginggene.cpp \
     src/network/commonnetworkfunctions.cpp \
-    src/network/modulatedspikingneuronsnetwork.cpp
+    src/network/modulatedspikingneuronsnetwork.cpp \
+    src/simulation/tmazesimulation.cpp
 
 HEADERS += \
     src/network/abstractneuralnetwork.h \
@@ -42,6 +43,7 @@ HEADERS += \
     src/network/gasnet.h \
     src/network/lengthchanginggene.h \
     src/network/commonnetworkfunctions.h \
-    src/network/modulatedspikingneuronsnetwork.h
+    src/network/modulatedspikingneuronsnetwork.h \
+    src/simulation/tmazesimulation.h
 
 DESTDIR = $$PWD
