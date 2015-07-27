@@ -8,7 +8,7 @@
 using CommonNetworkFunctions::weight;
 using CommonNetworkFunctions::sigmoid;
 
-FeedForwardNetwork::FeedForwardNetwork(int len_input, int len_output, FeedForwardNetwork_config config) :
+FeedForwardNetwork::FeedForwardNetwork(int len_input, int len_output, config config) :
     AbstractNeuralNetwork(len_input, len_output),
     _config(config),
     _hidden_layers(NULL),

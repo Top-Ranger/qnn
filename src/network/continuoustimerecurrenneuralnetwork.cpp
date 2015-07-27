@@ -11,7 +11,7 @@
 using CommonNetworkFunctions::sigmoid;
 using CommonNetworkFunctions::weight;
 
-ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, ContinuousTimeRecurrenNeuralNetwork_config config) :
+ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, config config) :
     AbstractNeuralNetwork(len_input, len_output),
     _config(config),
     _network(NULL)

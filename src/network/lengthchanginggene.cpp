@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-LengthChangingGene::LengthChangingGene(int initialLength, int segment_size, LengthChangingGene_config config) :
+LengthChangingGene::LengthChangingGene(int initialLength, int segment_size, config config) :
     GenericGene(initialLength, segment_size),
     _config(config)
 {
@@ -36,7 +36,7 @@ LengthChangingGene::LengthChangingGene() :
 {
 }
 
-LengthChangingGene::LengthChangingGene(QList< QList<int> > gene, int segment_size, LengthChangingGene_config config) :
+LengthChangingGene::LengthChangingGene(QList< QList<int> > gene, int segment_size, config config) :
     GenericGene(gene, segment_size),
     _config(config)
 {
@@ -100,7 +100,7 @@ bool LengthChangingGene::_saveGene(QTextStream *stream)
 
 GenericGene *LengthChangingGene::_loadGene(QList< QList<int> > gene, int segment_size, QTextStream *stream)
 {
-    LengthChangingGene_config config;
+    config config;
 
     QString command;
 

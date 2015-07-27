@@ -18,7 +18,7 @@ using CommonNetworkFunctions::calculate_distance;
 using CommonNetworkFunctions::areNodesConnected;
 using CommonNetworkFunctions::cut01;
 
-GasNet::GasNet(int len_input, int len_output, GasNet_config config) :
+GasNet::GasNet(int len_input, int len_output, config config) :
     AbstractNeuralNetwork(len_input, len_output),
     _config(config),
     _network(NULL),
@@ -77,7 +77,7 @@ GasNet::~GasNet()
 
 GenericGene *GasNet::getRandomGene()
 {
-    LengthChangingGene::LengthChangingGene_config config;
+    LengthChangingGene::config config;
     config.min_length = _config.min_size;
     config.max_length = _config.max_size;
 

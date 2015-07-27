@@ -8,7 +8,7 @@
 class QNNSHARED_EXPORT ModulatedSpikingNeuronsNetwork : public AbstractNeuralNetwork
 {
 public:
-    struct ModulatedSpikingNeuronsNetwork_config {
+    struct config {
         double area_size;
         double bias_scalar;
         double gas_threshhold;
@@ -24,7 +24,7 @@ public:
         bool d_modulated;
         double timestep_size;
 
-        ModulatedSpikingNeuronsNetwork_config() :
+        config() :
             area_size(1.0d),
             bias_scalar(1.0d),
             gas_threshhold(0.1d),
@@ -44,7 +44,7 @@ public:
         }
     };
 
-    ModulatedSpikingNeuronsNetwork(int len_input, int len_output, ModulatedSpikingNeuronsNetwork_config config = ModulatedSpikingNeuronsNetwork_config());
+    ModulatedSpikingNeuronsNetwork(int len_input, int len_output, config config = config());
     ~ModulatedSpikingNeuronsNetwork();
 
     GenericGene *getRandomGene();
@@ -77,7 +77,7 @@ protected:
     void _processInput(QList<double> input);
     double _getNeuronOutput(int i);
 
-    ModulatedSpikingNeuronsNetwork_config _config;
+    config _config;
     double *_network;
     double *_gas_emitting;
     double *_u;

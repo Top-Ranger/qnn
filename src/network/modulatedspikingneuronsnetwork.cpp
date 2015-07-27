@@ -43,7 +43,7 @@ double getModulatedValue(bool modulation_applied, double gasPos, double gasNeg, 
 }
 
 
-ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork(int len_input, int len_output, ModulatedSpikingNeuronsNetwork_config config) :
+ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork(int len_input, int len_output, config config) :
     AbstractNeuralNetwork(len_input, len_output),
     _config(config),
     _network(NULL),
@@ -163,7 +163,7 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
 
 GenericGene *ModulatedSpikingNeuronsNetwork::getRandomGene()
 {
-    LengthChangingGene::LengthChangingGene_config config;
+    LengthChangingGene::config config;
     config.min_length = _config.min_size;
     config.max_length = _config.max_size;
 

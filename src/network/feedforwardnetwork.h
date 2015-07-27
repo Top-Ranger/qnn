@@ -11,13 +11,13 @@ public:
     static int num_segments(int len_input, int len_output, int hidden_layer, int len_hidden);
     static double standard_activision_function(double input);
 
-    struct FeedForwardNetwork_config {
+    struct config {
         int num_hidden_layer;
         int len_hidden;
         double (*activision_function)(double);
         double weight_scalar;
 
-        FeedForwardNetwork_config() :
+        config() :
             num_hidden_layer(2),
             len_hidden(5),
             activision_function(&standard_activision_function),
@@ -26,7 +26,7 @@ public:
         }
     };
 
-    FeedForwardNetwork(int len_input, int len_output, FeedForwardNetwork_config config = FeedForwardNetwork_config());
+    FeedForwardNetwork(int len_input, int len_output, config config = config());
     ~FeedForwardNetwork();
 
     GenericGene *getRandomGene();
@@ -40,7 +40,7 @@ protected:
 private:
     FeedForwardNetwork();
 
-    FeedForwardNetwork_config _config;
+    config _config;
     double **_hidden_layers;
     double *_output;
 };

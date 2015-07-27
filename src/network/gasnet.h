@@ -8,7 +8,7 @@
 class QNNSHARED_EXPORT GasNet : public AbstractNeuralNetwork
 {
 public:
-    struct GasNet_config {
+    struct config {
         double area_size;
         double bias_scalar;
         double gas_threshhold;
@@ -19,7 +19,7 @@ public:
         int min_size;
         int max_size;
 
-        GasNet_config() :
+        config() :
             area_size(1.0d),
             bias_scalar(1.0d),
             gas_threshhold(0.1d),
@@ -33,7 +33,7 @@ public:
         }
     };
 
-    GasNet(int len_input, int len_output, GasNet_config config = GasNet_config());
+    GasNet(int len_input, int len_output, config config = config());
     ~GasNet();
 
     GenericGene *getRandomGene();
@@ -62,7 +62,7 @@ protected:
     void _processInput(QList<double> input);
     double _getNeuronOutput(int i);
 
-    GasNet_config _config;
+    config _config;
     double *_network;
     double *_gas_emitting;
     QList<double> _P;
