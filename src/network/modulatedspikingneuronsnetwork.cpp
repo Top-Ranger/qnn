@@ -256,8 +256,8 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
 
         double a;
         double b;
-        double c;
-        double d;
+        double c[segments.length()]; // This both parameter have to be cached
+        double d[segments.length()];
 
         for(int i = 0; i < segments.length(); ++i)
         {
@@ -340,8 +340,8 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             // Calculate a,b,c,d
             a = getModulatedValue(_config.a_modulated, gasAPos[i], gasANeg[i], segments[i][gene_a]%_Pa.length(), _Pa);
             b = getModulatedValue(_config.b_modulated, gasBPos[i], gasBNeg[i], segments[i][gene_b]%_Pb.length(), _Pb);
-            c = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], segments[i][gene_c]%_Pc.length(), _Pc);
-            d = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], segments[i][gene_d]%_Pd.length(), _Pd);
+            c[i] = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], segments[i][gene_c]%_Pc.length(), _Pc);
+            d[i] = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], segments[i][gene_d]%_Pd.length(), _Pd);
 
 
             // Calculate new input
@@ -414,8 +414,8 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             // Check if fired
             if(_network[i] >= 30.0d)
             {
-                _network[i] = c;
-                _u[i] = _u[i] + d;
+                _network[i] = c[i];
+                _u[i] = _u[i] + d[i];
                 ++_firecount[i];
             }
         }
