@@ -12,13 +12,17 @@ public:
 
     struct config {
         int size_network;
+        bool size_changing;
+        int max_size_network;
         int max_time_constant;
         int weight_scalar;
         int bias_scalar;
         double (*activision_function)(double);
 
         config() :
-            size_network(7),
+            size_network(-1),
+            size_changing(false),
+            max_size_network(-1),
             max_time_constant(5),
             weight_scalar(5),
             bias_scalar(5),

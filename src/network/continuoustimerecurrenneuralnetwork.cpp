@@ -1,6 +1,7 @@
 #include "continuoustimerecurrenneuralnetwork.h"
 
 #include "commonnetworkfunctions.h"
+#include "lengthchanginggene.h"
 
 #include <QDebug>
 #include <math.h>
@@ -16,6 +17,17 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len
     _config(config),
     _network(NULL)
 {
+    if(_config.size_network == -1)
+    {
+        _config.size_network = 0;
+        do {
+            _config.size_network += 7;
+        } while(_config.size_network < len_output);
+    }
+    if(_config.size_changing && _config.max_size_network == -1)
+    {
+        _config.max_size_network = _config.size_network * 4;
+    }
     if(_config.size_network < len_output)
     {
         qFatal(QString("FATAL ERROR in %1 %2: size_network must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
@@ -23,6 +35,10 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len
     if(_config.max_time_constant < 1)
     {
         qFatal(QString("FATAL ERROR in %1 %2: max_time_constant must be 1 or bigger!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(_config.size_changing && _config.max_size_network < _config.size_network)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: max_size_network must not be smaller than size_network!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 }
 
@@ -43,7 +59,17 @@ ContinuousTimeRecurrenNeuralNetwork::~ContinuousTimeRecurrenNeuralNetwork()
 
 GenericGene *ContinuousTimeRecurrenNeuralNetwork::getRandomGene()
 {
-    return new GenericGene(_config.size_network, 3 + _config.size_network);
+    if(_config.size_changing)
+    {
+        LengthChangingGene::config gene_config;
+        gene_config.min_length = _config.size_network;
+        gene_config.max_length = _config.max_size_network;
+        return new LengthChangingGene(_config.size_network, 3 + _config.max_size_network, gene_config);
+    }
+    else
+    {
+        return new GenericGene(_config.size_network, 3 + _config.size_network);
+    }
 }
 
 AbstractNeuralNetwork *ContinuousTimeRecurrenNeuralNetwork::createConfigCopy()
@@ -57,8 +83,12 @@ void ContinuousTimeRecurrenNeuralNetwork::_initialise()
     {
         qFatal(QString("FATAL ERROR in %1 %2: Gene lenght does not fit!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    _network = new double[_config.size_network];
-    for(int i = 0; i < _config.size_network; ++i)
+    if(_config.size_changing && _gene->segments()[0].length() < (3 + _config.max_size_network))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Gene lenght does not fit max_size_network!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    _network = new double[_gene->segments().length()];
+    for(int i = 0; i < _gene->segments().length(); ++i)
     {
         _network[i] = 0;
     }
@@ -68,10 +98,10 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
 {
     QList< QList<int> > segments = _gene->segments();
 
-    double *newNetwork = new double[_config.size_network];
+    double *newNetwork = new double[segments.length()];
 
     // do calculation
-    for(int i = 0; i < _config.size_network; ++i)
+    for(int i = 0; i < segments.length(); ++i)
     {
         double newValue = -1 * _network[i]; // -y
 
@@ -80,7 +110,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             newValue += input[segments[i][gene_input]%(_len_input+1)-1];; // input
         }
 
-        for(int j = 0; j < _config.size_network; ++j)
+        for(int j = 0; j < segments.length(); ++j)
         {
             double d = 0.0d;
             d += weight(segments[j][gene_bias], _config.bias_scalar); // θj
@@ -97,7 +127,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
 
 double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(int i)
 {
-    if(_network != NULL && i < _config.size_network)
+    if(_network != NULL && i < _len_output)
     {
         return _config.activision_function(_network[i] + weight(_gene->segments()[i][gene_bias], _config.bias_scalar));
     }
