@@ -20,7 +20,7 @@ public:
 
         config() :
             trials(24),
-            max_timesteps(500),
+            max_timesteps(50),
             generateTMaze(&generateStandardTMaze),
             G1Correct(&standardG1Correct)
         {
