@@ -16,6 +16,8 @@ public:
         double cone_ratio;
         double offset_gas_radius;
         double range_gas_radius;
+        double offset_rate_of_gas;
+        double range_rate_of_gas;
         int min_size;
         int max_size;
 
@@ -27,6 +29,8 @@ public:
             cone_ratio(0.5d),
             offset_gas_radius(0.1d),
             range_gas_radius(0.5d),
+            offset_rate_of_gas(1.0d),
+            range_rate_of_gas(10.0d),
             min_size(-1),
             max_size(-1)
         {

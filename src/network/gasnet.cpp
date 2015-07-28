@@ -33,6 +33,10 @@ GasNet::GasNet(int len_input, int len_output, config config) :
     {
         qFatal(QString("FATAL ERROR in %1 %2: min_size_network must not be smaller then output lenght!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
+    if(_config.offset_rate_of_gas <= 0.0d)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: offset_rate_of_gas must be greater than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
 
     _P.append(-4.0d);
     _P.append(-2.0d);
@@ -172,7 +176,7 @@ void GasNet::_processInput(QList<double> input)
                 {
                     continue;
                 }
-                double gas_concentration = qExp((-2 * distance)/gas_radius * _gas_emitting[i]);
+                double gas_concentration = qExp((-2 * distance)/gas_radius) * _gas_emitting[i];
                 switch (segments[i][gene_TypeGas]%3)
                 {
                 case 0:
@@ -313,11 +317,11 @@ void GasNet::_processInput(QList<double> input)
 
         if(emittingGas)
         {
-            _gas_emitting[i] = cut01((_gas_emitting[i] + 1.0d) / segments[i][gene_Rate_of_gas]);
+            _gas_emitting[i] = cut01((_gas_emitting[i] + 1.0d) / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
         }
         else
         {
-            _gas_emitting[i] = cut01((_gas_emitting[i] - 1.0d) / segments[i][gene_Rate_of_gas]);
+            _gas_emitting[i] = cut01((_gas_emitting[i] - 1.0d) / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
         }
     }
 }
