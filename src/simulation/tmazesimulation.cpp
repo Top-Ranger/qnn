@@ -63,7 +63,7 @@ double TMazeSimulation::_getScore()
             input << TMaze[position];
             network->processInput(input);
 
-            for(int i = 0; i < 4 && direction != none_direction; ++i)
+            for(int i = 0; i < 4; ++i)
             {
                 if(network->getNeuronOutput(i) > max_output)
                 {
