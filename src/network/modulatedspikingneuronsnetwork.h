@@ -86,6 +86,8 @@ protected:
     double *_gas_emitting;
     double *_u;
     double *_firecount;
+    double **_distances;
+    double **_weights;
     QList<double> _Pa;
     QList<double> _Pb;
     QList<double> _Pc;

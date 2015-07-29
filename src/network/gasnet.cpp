@@ -23,6 +23,8 @@ GasNet::GasNet(int len_input, int len_output, config config) :
     _config(config),
     _network(NULL),
     _gas_emitting(NULL),
+    _distances(NULL),
+    _weights(NULL),
     _P()
 {
     if(_config.area_size <= 0)
@@ -56,6 +58,8 @@ GasNet::GasNet() :
     _config(),
     _network(NULL),
     _gas_emitting(NULL),
+    _distances(NULL),
+    _weights(NULL),
     _P()
 {
     _P.append(-4.0d);
@@ -80,6 +84,22 @@ GasNet::~GasNet()
     if(_gas_emitting != NULL)
     {
         delete [] _gas_emitting;
+    }
+    if(_distances != NULL && _gene != NULL)
+    {
+        for(int i = 0; i < _gene->segments().length(); ++i)
+        {
+            delete [] _distances[i];
+        }
+        delete [] _distances;
+    }
+    if(_weights != NULL && _gene != NULL)
+    {
+        for(int i = 0; i < _gene->segments().length(); ++i)
+        {
+            delete [] _weights[i];
+        }
+        delete [] _distances;
     }
 }
 
@@ -126,21 +146,84 @@ AbstractNeuralNetwork *GasNet::createConfigCopy()
 
 void GasNet::_initialise()
 {
-    if(_gene->segments().length() < _len_output)
+    QList< QList<int> > segments = _gene->segments();
+
+    if(segments.length() < _len_output)
     {
         qFatal(QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(_gene->segments()[0].length() != 16)
+    if(segments[0].length() != 16)
     {
         qFatal(QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    _network = new double[_gene->segments().length()];
-    _gas_emitting = new double[_gene->segments().length()];
+    _network = new double[segments.length()];
+    _gas_emitting = new double[segments.length()];
 
-    for(int i = 0; i < _gene->segments().length(); ++i)
+    for(int i = 0; i < segments.length(); ++i)
     {
         _network[i] = 0;
         _gas_emitting[i] = 0;
+    }
+
+
+    // Cache distances and connection for faster calculation later
+    _distances = new double*[segments.length()];
+    _weights = new double*[segments.length()];
+
+    for(int i = 0; i < segments.length(); ++i)
+    {
+        _distances[i] = new double[segments.length()];
+        _weights[i] = new double[segments.length()];
+        for(int j = 0; j < segments.length(); ++j)
+        {
+            // distance
+            _distances[i][j] = calculate_distance(floatFromGeneInput(segments[i][gene_x], _config.area_size),
+                                                  floatFromGeneInput(segments[i][gene_y], _config.area_size),
+                                                  floatFromGeneInput(segments[j][gene_x], _config.area_size),
+                                                  floatFromGeneInput(segments[j][gene_y], _config.area_size));
+
+            // weight
+            if(i == j)
+            {
+                // recurrent connection
+                switch(segments[i][gene_recurrent]%3)
+                {
+                case 1:
+                    _weights[i][j] = 1.0d;
+                    break;
+                case 2:
+                    _weights[i][j] = -1.0d;
+                    break;
+                default:
+                    _weights[i][j] = 0.0d;
+                    break;
+                }
+            }
+            else if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
+                                      floatFromGeneInput(segments[i][gene_y], _config.area_size),
+                                      floatFromGeneInput(segments[j][gene_x], _config.area_size),
+                                      floatFromGeneInput(segments[j][gene_y], _config.area_size),
+                                      floatFromGeneInput(segments[i][gene_PositivConeRadius], _config.area_size*_config.cone_ratio),
+                                      floatFromGeneInput(segments[i][gene_PositivConeExt], 2*M_PI),
+                                      floatFromGeneInput(segments[i][gene_PositivConeOrientation], 2*M_PI)))
+            {
+                _weights[i][j] = 1.0d;
+            }
+            else if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
+                                      floatFromGeneInput(segments[i][gene_y], _config.area_size),
+                                      floatFromGeneInput(segments[j][gene_x], _config.area_size),
+                                      floatFromGeneInput(segments[j][gene_y], _config.area_size),
+                                      floatFromGeneInput(segments[i][gene_NegativConeRadius], _config.area_size*_config.cone_ratio),
+                                      floatFromGeneInput(segments[i][gene_NegativConeExt], 2*M_PI),
+                                      floatFromGeneInput(segments[i][gene_NegativConeOrientation], 2*M_PI)))
+            {
+                _weights[i][j] = -1.0d;
+            }
+            else
+            {
+                _weights[i][j] = 0.0d;
+            }
+        }
     }
 }
 
@@ -168,15 +251,11 @@ void GasNet::_processInput(QList<double> input)
         {
             for(int j = 0; j < segments.length(); ++j)
             {
-                double distance = calculate_distance(floatFromGeneInput(segments[i][gene_x], _config.area_size),
-                                                     floatFromGeneInput(segments[i][gene_y], _config.area_size),
-                                                     floatFromGeneInput(segments[j][gene_x], _config.area_size),
-                                                     floatFromGeneInput(segments[j][gene_y], _config.area_size));
-                if(distance > gas_radius)
+                if(_distances[i][j] > gas_radius)
                 {
                     continue;
                 }
-                double gas_concentration = qExp((-2 * distance)/gas_radius) * _gas_emitting[i];
+                double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
                 switch (segments[i][gene_TypeGas]%3)
                 {
                 case 0:
@@ -225,43 +304,7 @@ void GasNet::_processInput(QList<double> input)
         // Connections
         for(int j = 0; j < segments.length(); ++j)
         {
-            if(i == j)
-            {
-                continue;
-            }
-            if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
-                                 floatFromGeneInput(segments[i][gene_y], _config.area_size),
-                                 floatFromGeneInput(segments[j][gene_x], _config.area_size),
-                                 floatFromGeneInput(segments[j][gene_y], _config.area_size),
-                                 floatFromGeneInput(segments[i][gene_PositivConeRadius], _config.area_size*_config.cone_ratio),
-                                 floatFromGeneInput(segments[i][gene_PositivConeExt], 2*M_PI),
-                                 floatFromGeneInput(segments[i][gene_PositivConeOrientation], 2*M_PI)))
-            {
-                newValue += _network[j];
-            }
-            if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
-                                 floatFromGeneInput(segments[i][gene_y], _config.area_size),
-                                 floatFromGeneInput(segments[j][gene_x], _config.area_size),
-                                 floatFromGeneInput(segments[j][gene_y], _config.area_size),
-                                 floatFromGeneInput(segments[i][gene_NegativConeRadius], _config.area_size*_config.cone_ratio),
-                                 floatFromGeneInput(segments[i][gene_NegativConeExt], 2*M_PI),
-                                 floatFromGeneInput(segments[i][gene_NegativConeOrientation], 2*M_PI)))
-            {
-                newValue -= _network[j] * -1;
-            }
-        }
-
-        // Recurrent connection
-        switch(segments[i][gene_recurrent]%3)
-        {
-        case 1:
-            newValue += _network[i];
-            break;
-        case 2:
-            newValue -= _network[i] * -1;
-            break;
-        default:
-            break;
+            newValue += _network[j] * _weights[i][j];
         }
 
         // Input

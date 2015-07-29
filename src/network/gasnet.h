@@ -69,6 +69,8 @@ protected:
     config _config;
     double *_network;
     double *_gas_emitting;
+    double **_distances;
+    double **_weights;
     QList<double> _P;
 };
 
