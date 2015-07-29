@@ -300,35 +300,59 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                         break;
 
                     case 1:
-                        gasAPos[j] += gas_concentration;
+                        if(_config.a_modulated)
+                        {
+                            gasAPos[j] += gas_concentration;
+                        }
                         break;
 
                     case 2:
-                        gasANeg[j] += gas_concentration;
+                        if(_config.a_modulated)
+                        {
+                            gasANeg[j] += gas_concentration;
+                        }
                         break;
 
                     case 3:
-                        gasBPos[j] += gas_concentration;
+                        if(_config.b_modulated)
+                        {
+                            gasBPos[j] += gas_concentration;
+                        }
                         break;
 
                     case 4:
-                        gasBNeg[j] += gas_concentration;
+                        if(_config.b_modulated)
+                        {
+                            gasBNeg[j] += gas_concentration;
+                        }
                         break;
 
                     case 5:
-                        gasCPos[j] += gas_concentration;
+                        if(_config.c_modulated)
+                        {
+                            gasCPos[j] += gas_concentration;
+                        }
                         break;
 
                     case 6:
-                        gasCNeg[j] += gas_concentration;
+                        if(_config.c_modulated)
+                        {
+                            gasCNeg[j] += gas_concentration;
+                        }
                         break;
 
                     case 7:
-                        gasDPos[j] += gas_concentration;
+                        if(_config.d_modulated)
+                        {
+                            gasDPos[j] += gas_concentration;
+                        }
                         break;
 
                     case 8:
-                        gasDNeg[j] += gas_concentration;
+                        if(_config.d_modulated)
+                        {
+                            gasDNeg[j] += gas_concentration;
+                        }
                         break;
 
                     default:
@@ -404,25 +428,13 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             newNetwork[i] = _network[i] + 0.04d * _network[i] * _network[i] + 5.0d * _network[i] + 140.0d - _u[i] + newValue;
 
             // Calculate U
-            newU[i] = _u[i] * a * (b * _network[i] - _u[i]);
+            newU[i] = _u[i] + a * (b * _network[i] - _u[i]);
         }
 
         delete [] _network;
         _network = newNetwork;
         delete [] _u;
         _u = newU;
-
-
-        for(int i = 0; i < segments.length(); ++i)
-        {
-            // Check if fired
-            if(_network[i] >= 30.0d)
-            {
-                _network[i] = c[i];
-                _u[i] = _u[i] + d[i];
-                ++_firecount[i];
-            }
-        }
 
         for(int i = 0; i < segments.length(); ++i)
         {
@@ -438,61 +450,60 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                 break;
 
             case 1:
-                if(gasAPos[i] > _config.gas_threshhold && _config.a_modulated)
+                if(gasAPos[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
 
             case 2:
-                if(gasANeg[i] > _config.gas_threshhold && _config.a_modulated)
+                if(gasANeg[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
 
             case 3:
-                if(gasBPos[i] > _config.gas_threshhold && _config.b_modulated)
+                if(gasBPos[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
 
             case 4:
-                if(gasBNeg[i] > _config.gas_threshhold && _config.b_modulated)
+                if(gasBNeg[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
 
             case 5:
-                if(gasCPos[i] > _config.gas_threshhold && _config.c_modulated)
+                if(gasCPos[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
 
             case 6:
-                if(gasCNeg[i] > _config.gas_threshhold && _config.c_modulated)
+                if(gasCNeg[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
 
             case 7:
-                if(gasDPos[i] > _config.gas_threshhold && _config.d_modulated)
+                if(gasDPos[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
 
             case 8:
-                if(gasDNeg[i] > _config.gas_threshhold && _config.d_modulated)
+                if(gasDNeg[i] > _config.gas_threshhold)
                 {
                     emittingGas = true;
                 }
                 break;
-
 
             default:
                 qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
@@ -506,6 +517,17 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             else
             {
                 _gas_emitting[i] = cut01((_gas_emitting[i] - 1.0d) / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
+            }
+        }
+
+        for(int i = 0; i < segments.length(); ++i)
+        {
+            // Check if fired
+            if(_network[i] >= 30.0d)
+            {
+                _network[i] = c[i];
+                _u[i] = _u[i] + d[i];
+                ++_firecount[i];
             }
         }
     }
