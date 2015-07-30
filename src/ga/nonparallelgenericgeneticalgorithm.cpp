@@ -73,8 +73,8 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
     // Clean-up
     for(int i = 0; i < _population.length()-1; ++i)
     {
-        delete _population[i].gene;
         delete _population[i].network;
+        delete _population[i].gene;
     }
     _population.clear();
     emit ga_finished(_best.fitness, _average_fitness, _rounds_to_finish);

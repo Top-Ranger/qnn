@@ -77,13 +77,13 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(QObject *parent) :
 
 GenericGeneticAlgorithm::~GenericGeneticAlgorithm()
 {
-    if(_best.gene != NULL)
-    {
-        delete _best.gene;
-    }
     if(_best.network != NULL)
     {
         delete _best.network;
+    }
+    if(_best.gene != NULL)
+    {
+        delete _best.gene;
     }
 }
 
@@ -159,8 +159,8 @@ void GenericGeneticAlgorithm::run_ga()
     // Clean-up
     for(int i = 0; i < _population.length()-1; ++i)
     {
-        delete _population[i].gene;
         delete _population[i].network;
+        delete _population[i].gene;
     }
     _population.clear();
     emit ga_finished(_best.fitness, _average_fitness, _rounds_to_finish);

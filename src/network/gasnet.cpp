@@ -99,7 +99,7 @@ GasNet::~GasNet()
         {
             delete [] _weights[i];
         }
-        delete [] _distances;
+        delete [] _weights;
     }
 }
 

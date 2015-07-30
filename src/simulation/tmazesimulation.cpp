@@ -124,6 +124,7 @@ double TMazeSimulation::_getScore()
                 break;
             }
         }
+        delete network;
     }
 
     return score / _config.trials;
