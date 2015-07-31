@@ -17,6 +17,7 @@ public:
         int max_time_constant;
         int weight_scalar;
         int bias_scalar;
+        int network_default_size_grow;
         double (*activision_function)(double);
 
         config() :
@@ -26,6 +27,7 @@ public:
             max_time_constant(5),
             weight_scalar(5),
             bias_scalar(5),
+            network_default_size_grow(7),
             activision_function(&standard_activision_function)
         {
         }
@@ -45,7 +47,7 @@ protected:
                               gene_time_constraint = 2,
                               gene_W_start = 3};
 
-                             void _initialise();
+    void _initialise();
     void _processInput(QList<double> input);
     double _getNeuronOutput(int i);
 

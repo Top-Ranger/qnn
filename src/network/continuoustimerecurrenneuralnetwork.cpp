@@ -17,11 +17,15 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len
     _config(config),
     _network(NULL)
 {
+    if(_config.network_default_size_grow <= 0)
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: max_time_constant must be greater than 0!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
     if(_config.size_network == -1)
     {
         _config.size_network = 0;
         do {
-            _config.size_network += 7;
+            _config.size_network += _config.network_default_size_grow;
         } while(_config.size_network < len_output);
     }
     if(_config.size_changing && _config.max_size_network == -1)
