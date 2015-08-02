@@ -47,3 +47,7 @@ HEADERS += \
     src/simulation/tmazesimulation.h
 
 DESTDIR = $$PWD
+
+OTHER_FILES += \
+    LICENSE.LGPL3 \
+    LICENSE.GPL3
