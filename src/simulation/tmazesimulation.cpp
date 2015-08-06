@@ -43,7 +43,7 @@ TMazeSimulation::~TMazeSimulation()
 
 int TMazeSimulation::needInputLength()
 {
-    return 1;
+    return _config.range_input;
 }
 
 int TMazeSimulation::needOutputLength()
@@ -66,7 +66,7 @@ double TMazeSimulation::_getScore()
 
     for(int trial = 0; trial < _config.trials; ++trial)
     {
-        QList<double> TMaze = _config.generateTMaze();
+        QList<int> TMaze = _config.generateTMaze();
         int position = 0;
         bool goalNotReached = true;
 
@@ -78,7 +78,18 @@ double TMazeSimulation::_getScore()
             double max_output = -10.0d;
 
             QList<double> input;
-            input << TMaze[position];
+            for(int i = 0; i < _config.range_input; ++i)
+            {
+                input << 0.0d;
+            }
+            if(TMaze[position] != 0)
+            {
+                if(TMaze[position] > _config.range_input)
+                {
+                    qFatal(QString("FATAL ERROR in %1 %2: Value out of range!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+                }
+                input[TMaze[position]-1] = 1.0d;
+            }
             network->processInput(input);
 
             for(int i = 0; i < 4; ++i)
@@ -148,10 +159,10 @@ double TMazeSimulation::_getScore()
     return score / _config.trials;
 }
 
-QList<double> TMazeSimulation::generateStandardTMaze()
+QList<int> TMazeSimulation::generateStandardTMaze()
 {
-    QList<double> list;
-    double number = (qrand()%10)+1;
+    QList<int> list;
+    int number = (qrand()%5)+1;
     list << number;
     for(int i = 0; i < 5; ++i)
     {
@@ -163,12 +174,12 @@ QList<double> TMazeSimulation::generateStandardTMaze()
     }
     else
     {
-        list << (qrand()%10)+1;
+        list << (qrand()%5)+1;
     }
     return list;
 }
 
-bool TMazeSimulation::standardG1Correct(QList<double> list)
+bool TMazeSimulation::standardG1Correct(QList<int> list)
 {
     if(list.length() < 2)
     {

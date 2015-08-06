@@ -27,18 +27,20 @@
 class QNNSHARED_EXPORT TMazeSimulation : public GenericSimulation
 {
 public:
-    static QList<double> generateStandardTMaze();
-    static bool standardG1Correct(QList<double> list);
+    static QList<int> generateStandardTMaze();
+    static bool standardG1Correct(QList<int> list);
 
     struct config {
         int trials;
         int max_timesteps;
-        QList<double> (*generateTMaze)();
-        bool (*G1Correct)(QList<double> list);
+        int range_input;
+        QList<int> (*generateTMaze)();
+        bool (*G1Correct)(QList<int> list);
 
         config() :
             trials(24),
             max_timesteps(50),
+            range_input(5),
             generateTMaze(&generateStandardTMaze),
             G1Correct(&standardG1Correct)
         {
