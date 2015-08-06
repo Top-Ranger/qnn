@@ -490,10 +490,10 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             }
 
             // Calculate potential
-            newNetwork[i] = 0.04d * _network[i] * _network[i] + 5.0d * _network[i] + 140.0d - _u[i] + newValue;
+            newNetwork[i] = _network[i] + (0.04d * _network[i] * _network[i] + 5.0d * _network[i] + 140.0d - _u[i] + newValue);
 
             // Calculate U
-            newU[i] = a * (b * _network[i] - _u[i]);
+            newU[i] = _u[i] + (a * (b * _network[i] - _u[i]));
         }
 
         delete [] _network;
