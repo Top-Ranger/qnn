@@ -65,3 +65,34 @@ double AbstractNeuralNetwork::getNeuronOutput(int i)
     }
     return _getNeuronOutput(i);
 }
+
+bool AbstractNeuralNetwork::saveNetworkConfig(QIODevice *device)
+{
+    if(device == NULL)
+    {
+        return false;
+    }
+
+    if(_gene == NULL)
+    {
+        qCritical() << "WARNING in " __FILE__ << " " << __LINE__ << ": Network not initialised";
+        return false;
+    }
+
+    if(device->isOpen())
+    {
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Saving to an open device is not permitted";
+        return false;
+    }
+    if(!device->open(QIODevice::WriteOnly))
+    {
+        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Can not open device";
+        return false;
+    }
+
+    QXmlStreamWriter stream(device);
+    bool result = _saveNetworkConfig(&stream);
+    result = result && !stream.hasError();
+    device->close();
+    return result;
+}

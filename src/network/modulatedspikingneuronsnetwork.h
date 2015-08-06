@@ -99,6 +99,8 @@ protected:
     void _processInput(QList<double> input);
     double _getNeuronOutput(int i);
 
+    bool _saveNetworkConfig(QXmlStreamWriter *stream);
+
     config _config;
     double *_network;
     double *_gas_emitting;

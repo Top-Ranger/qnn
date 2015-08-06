@@ -19,12 +19,17 @@
 #include "feedforwardnetwork.h"
 
 #include "commonnetworkfunctions.h"
+#include "networktoxml.h"
 
 #include <QDebug>
 #include <QtCore/qmath.h>
 
 using CommonNetworkFunctions::weight;
 using CommonNetworkFunctions::sigmoid;
+
+using NetworkToXML::writeConfigStart;
+using NetworkToXML::writeConfigNeuron;
+using NetworkToXML::writeConfigEnd;
 
 FeedForwardNetwork::FeedForwardNetwork(int len_input, int len_output, config config) :
     AbstractNeuralNetwork(len_input, len_output),
@@ -160,6 +165,90 @@ double FeedForwardNetwork::_getNeuronOutput(int i)
         qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": i out of bound";
         return -1.0;
     }
+}
+
+bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
+{
+    QMap<QString, QVariant> config_network;
+    config_network["num_hidden_layer"] = _config.num_hidden_layer;
+    config_network["len_hidden"] = _config.len_hidden;
+    config_network["activision_function"] = _config.activision_function == &standard_activision_function ? "standard" : "non-standard";
+    config_network["weight_scalar"] = _config.weight_scalar;
+    config_network["len_input"] = _len_input;
+    config_network["len_output"] = _len_output;
+
+    writeConfigStart("FeedForwardNetwork", config_network, stream);
+
+    for(int i = 0; i < _len_input; ++i)
+    {
+        QMap<QString, QVariant> config_neuron;
+        QMap<int, double> connections_neuron;
+
+        writeConfigNeuron(i, config_neuron, connections_neuron, stream);
+    }
+
+    QList< QList<int> > segments = _gene->segments();
+
+    if(_config.num_hidden_layer == 0)
+    {
+        int current_segment = 0;
+        for(int i_output = 0; i_output < _len_output; ++i_output)
+        {
+            QMap<QString, QVariant> config_neuron;
+            QMap<int, double> connections_neuron;
+            for(int i_input = 0; i_input < _len_input; ++i_input)
+            {
+                connections_neuron[i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
+            }
+            writeConfigNeuron(_len_input+i_output, config_neuron, connections_neuron, stream);
+        }
+    }
+    else
+    {
+        int current_segment = 0;
+
+        // Input to hidden
+        for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
+        {
+            QMap<QString, QVariant> config_neuron;
+            QMap<int, double> connections_neuron;
+            for(int i_input = 0; i_input < _len_input; ++i_input)
+            {
+                connections_neuron[i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
+            }
+            writeConfigNeuron(_len_input+i_hidden, config_neuron, connections_neuron, stream);
+        }
+
+        // Hidden to hidden
+        for(int current_hidden = 1; current_hidden < _config.num_hidden_layer; ++current_hidden)
+        {
+            for(int i_output = 0; i_output < _config.len_hidden; ++i_output)
+            {
+                QMap<QString, QVariant> config_neuron;
+                QMap<int, double> connections_neuron;
+                for(int i_input = 0; i_input < _config.len_hidden; ++i_input)
+                {
+                    connections_neuron[_config.len_hidden*(current_hidden-1)+_len_input+i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
+                }
+                writeConfigNeuron(_config.len_hidden*current_hidden+_len_input+i_output, config_neuron, connections_neuron, stream);
+            }
+        }
+
+        // Hidden to output
+        for(int i_output = 0; i_output < _len_output; ++i_output)
+        {
+            QMap<QString, QVariant> config_neuron;
+            QMap<int, double> connections_neuron;
+            for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
+            {
+                connections_neuron[_config.len_hidden*(_config.num_hidden_layer-1)+_len_input+i_hidden] = weight(segments[current_segment++][0], _config.weight_scalar);
+            }
+            writeConfigNeuron(_config.len_hidden*_config.num_hidden_layer+_len_input+i_output, config_neuron, connections_neuron, stream);
+        }
+    }
+
+    writeConfigEnd(stream);
+    return true;
 }
 
 int FeedForwardNetwork::num_segments(int len_input, int len_output, int hidden_layer, int len_hidden)

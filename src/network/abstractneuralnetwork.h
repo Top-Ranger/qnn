@@ -22,7 +22,9 @@
 #include <qnn-global.h>
 
 #include "genericgene.h"
+
 #include <QList>
+#include <QXmlStreamWriter>
 
 class QNNSHARED_EXPORT AbstractNeuralNetwork
 {
@@ -34,6 +36,8 @@ public:
     void processInput(QList<double> input);
     double getNeuronOutput(int i);
 
+    bool saveNetworkConfig(QIODevice *device);
+
     virtual GenericGene *getRandomGene() = 0;
     virtual AbstractNeuralNetwork *createConfigCopy() = 0;
 
@@ -43,6 +47,8 @@ protected:
     virtual void _initialise() = 0;
     virtual void _processInput(QList<double> input) = 0;
     virtual double _getNeuronOutput(int i) = 0;
+
+    virtual bool _saveNetworkConfig(QXmlStreamWriter *stream) = 0;
 
     int _len_input;
     int _len_output;

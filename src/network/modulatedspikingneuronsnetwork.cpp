@@ -20,6 +20,7 @@
 
 #include "lengthchanginggene.h"
 #include "commonnetworkfunctions.h"
+#include "networktoxml.h"
 
 #include <QString>
 #include <QDebug>
@@ -35,6 +36,10 @@ using CommonNetworkFunctions::weight;
 using CommonNetworkFunctions::calculate_distance;
 using CommonNetworkFunctions::areNodesConnected;
 using CommonNetworkFunctions::cut01;
+
+using NetworkToXML::writeConfigStart;
+using NetworkToXML::writeConfigNeuron;
+using NetworkToXML::writeConfigEnd;
 
 namespace {
 double getModulatedValue(bool modulation_applied, double gasPos, double gasNeg, int basis_index, QList<double> &array)
@@ -606,3 +611,151 @@ double ModulatedSpikingNeuronsNetwork::_getNeuronOutput(int i)
     }
 }
 
+bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
+{
+    QMap<QString, QVariant> network_config;
+
+    network_config["area_size"] = _config.area_size;
+    network_config["bias_scalar"] = _config.bias_scalar;
+    network_config["gas_threshhold"] = _config.gas_threshhold;
+    network_config["electric_threshhold"] = _config.electric_threshhold;
+    network_config["cone_ratio"] = _config.cone_ratio;
+    network_config["offset_gas_radius"] = _config.offset_gas_radius;
+    network_config["range_gas_radius"] = _config.range_gas_radius;
+    network_config["offset_rate_of_gas"] = _config.offset_rate_of_gas;
+    network_config["range_rate_of_gas"] = _config.range_rate_of_gas;
+    network_config["min_size"] = _config.min_size;
+    network_config["max_size"] = _config.max_size;
+    network_config["a_modulated"] = _config.a_modulated;
+    network_config["b_modulated"] = _config.b_modulated;
+    network_config["c_modulated"] = _config.c_modulated;
+    network_config["d_modulated"] = _config.d_modulated;
+    network_config["timestep_size"] = _config.timestep_size;
+
+    writeConfigStart("ModulatedSpikingNeuronsNetwork", network_config, stream);
+
+    QList< QList<int> > segments = _gene->segments();
+
+    for(int i = 0; i < segments.length(); ++i)
+    {
+        QMap<QString, QVariant> config_neuron;
+        QMap<int, double> connections_neuron;
+
+        config_neuron["pos_x"] = floatFromGeneInput(segments[i][gene_x], _config.area_size);
+        config_neuron["pos_y"] = floatFromGeneInput(segments[i][gene_y], _config.area_size);
+        config_neuron["positiv_cone_radius"] = floatFromGeneInput(segments[i][gene_PositivConeRadius], _config.area_size*_config.cone_ratio);
+        config_neuron["positiv_cone_extension"] = floatFromGeneInput(segments[i][gene_PositivConeExt], 2*M_PI);
+        config_neuron["positiv_cone_orientation"] = floatFromGeneInput(segments[i][gene_PositivConeOrientation], 2*M_PI);
+        config_neuron["negativ_cone_radius"] = floatFromGeneInput(segments[i][gene_NegativConeRadius], _config.area_size*_config.cone_ratio);
+        config_neuron["negativ_cone_extension"] = floatFromGeneInput(segments[i][gene_NegativConeExt], 2*M_PI);
+        config_neuron["negativ_cone_orientation"] = floatFromGeneInput(segments[i][gene_NegativConeOrientation], 2*M_PI);
+
+        switch (segments[i][gene_WhenGas]%9)
+        {
+        case 0: // Electric charge
+            config_neuron["when_gas_emitting"] = "electric charge";
+            break;
+
+        case 1:
+            config_neuron["when_gas_emitting"] = "gasAPositiv concentration";
+            break;
+
+        case 2:
+            config_neuron["when_gas_emitting"] = "gasANegativ concentration";
+            break;
+
+        case 3:
+            config_neuron["when_gas_emitting"] = "gasBPositiv concentration";
+            break;
+
+        case 4:
+            config_neuron["when_gas_emitting"] = "gasBNegativ concentration";
+            break;
+
+        case 5:
+            config_neuron["when_gas_emitting"] = "gasCPositiv concentration";
+            break;
+
+        case 6:
+            config_neuron["when_gas_emitting"] = "gasCNegativ concentration";
+            break;
+
+        case 7:
+            config_neuron["when_gas_emitting"] = "gasDPositiv concentration";
+            break;
+
+        case 8:
+            config_neuron["when_gas_emitting"] = "gasDNegativ concentration";
+            break;
+
+        default:
+            qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
+            break;
+        }
+
+        switch (segments[i][gene_TypeGas]%9)
+        {
+        case 0:
+            config_neuron["gas_type"] = "No gas";
+            break;
+
+        case 1:
+            config_neuron["gas_type"] = "gasAPositiv";
+            break;
+
+        case 2:
+            config_neuron["gas_type"] = "gasANegativ";
+            break;
+
+        case 3:
+            config_neuron["gas_type"] = "gasBPositiv";
+            break;
+
+        case 4:
+            config_neuron["gas_type"] = "gasBNegativ";
+            break;
+
+        case 5:
+            config_neuron["gas_type"] = "gasCPositiv";
+            break;
+
+        case 6:
+            config_neuron["gas_type"] = "gasCNegativ";
+            break;
+
+        case 7:
+            config_neuron["gas_type"] = "gasDPositiv";
+            break;
+
+        case 8:
+            config_neuron["gas_type"] = "gasDNegativ";
+            break;
+
+        default:
+            qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
+            break;
+        }
+
+        config_neuron["rate_of_gas"] = (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas));
+        config_neuron["gas_radius"] = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
+        config_neuron["a_basis"] = _Pa[segments[i][gene_a]%_Pa.length()];
+        config_neuron["b_basis"] = _Pb[segments[i][gene_b]%_Pb.length()];;
+        config_neuron["c_basis"] = _Pc[segments[i][gene_c]%_Pc.length()];;
+        config_neuron["d_basis"] = _Pd[segments[i][gene_d]%_Pd.length()];;
+        config_neuron["internal_charge"] = _network[i];
+        config_neuron["fire_output"] = _firecount[i] * _config.timestep_size;
+
+        for(int j = 0; j < segments.length(); ++j)
+        {
+            if(_weights[i][j] != 0)
+            {
+                connections_neuron[j] = _weights[i][j];
+            }
+        }
+
+        writeConfigNeuron(i, config_neuron, connections_neuron, stream);
+    }
+
+    writeConfigEnd(stream);
+    return false;
+}

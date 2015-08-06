@@ -20,6 +20,7 @@
 
 #include "commonnetworkfunctions.h"
 #include "lengthchanginggene.h"
+#include "networktoxml.h"
 
 #include <QDebug>
 #include <math.h>
@@ -29,6 +30,10 @@
 
 using CommonNetworkFunctions::sigmoid;
 using CommonNetworkFunctions::weight;
+
+using NetworkToXML::writeConfigStart;
+using NetworkToXML::writeConfigNeuron;
+using NetworkToXML::writeConfigEnd;
 
 ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, config config) :
     AbstractNeuralNetwork(len_input, len_output),
@@ -158,6 +163,50 @@ double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(int i)
         qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": i out of bound";
         return -1.0d;
     }
+}
+
+bool ContinuousTimeRecurrenNeuralNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
+{
+    QMap<QString, QVariant> config_network;
+    config_network["size_network"] = _config.size_network;
+    config_network["size_changing"] = _config.size_changing;
+    config_network["max_size_network"] = _config.max_size_network;
+    config_network["max_time_constant"] = _config.max_time_constant;
+    config_network["weight_scalar"] = _config.weight_scalar;
+    config_network["bias_scalar"] = _config.bias_scalar;
+    config_network["network_default_size_grow"] = _config.network_default_size_grow;
+    config_network["activision_function"] = _config.activision_function == &standard_activision_function ? "standard" : "non-standard";
+    config_network["len_input"] = _len_input;
+    config_network["len_output"] = _len_output;
+
+    writeConfigStart("ContinuousTimeRecurrenNeuralNetwork", config_network, stream);
+
+    QList< QList<int> > segments = _gene->segments();
+
+    for(int i = 0; i < segments.length(); ++i)
+    {
+        QMap<QString, QVariant> config_neuron;
+        QMap<int, double> connection_neuron;
+
+        config_neuron["internal_value"] = _network[i];
+        config_neuron["bias"] = weight(segments[i][gene_bias], _config.bias_scalar);
+        config_neuron["time_constant"] = (segments[i][gene_time_constraint]%_config.max_time_constant)+1;
+
+        if(segments[i][gene_input]%(_len_input+1) != 0)
+        {
+            config_neuron["input"] =segments[i][gene_input]%(_len_input+1)-1;
+        }
+
+        for(int j = 0; j < segments.length(); ++j)
+        {
+            connection_neuron[j] = weight(segments[i][gene_W_start+j], _config.weight_scalar);
+        }
+
+        writeConfigNeuron(i, config_neuron, connection_neuron, stream);
+    }
+
+    writeConfigEnd(stream);
+    return true;
 }
 
 double ContinuousTimeRecurrenNeuralNetwork::standard_activision_function(double input)
