@@ -143,7 +143,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             d += weight(segments[j][gene_bias], _config.bias_scalar); // θj
             d += _network[j]; // yj
             d = _config.activision_function(d);
-            newValue += d * weight(segments[i][gene_W_start+i], _config.weight_scalar); // wij
+            newValue += d * weight(segments[i][gene_W_start+j], _config.weight_scalar); // wij
         }
         newNetwork[i] = newValue / ((segments[i][gene_time_constraint]%_config.max_time_constant)+1); // τ
     }
