@@ -30,6 +30,14 @@ GenericSimulation::GenericSimulation() :
 
 GenericSimulation::~GenericSimulation()
 {
+    if(_network != NULL)
+    {
+        delete _network;
+    }
+    if(_gene != NULL)
+    {
+        delete _gene;
+    }
 }
 
 void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *gene)
@@ -43,8 +51,8 @@ void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *
         qFatal(QString("FATAL ERROR in %1 %2: Trying to initialise with NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
-    _network = network;
-    _gene = gene;
+    _network = network->createConfigCopy();
+    _gene = gene->createCopy();
     _initialise();
 }
 

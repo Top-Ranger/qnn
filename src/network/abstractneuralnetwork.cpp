@@ -36,6 +36,10 @@ AbstractNeuralNetwork::AbstractNeuralNetwork() :
 
 AbstractNeuralNetwork::~AbstractNeuralNetwork()
 {
+    if(_gene != NULL)
+    {
+        delete _gene;
+    }
 }
 
 void AbstractNeuralNetwork::initialise(GenericGene *gene)
@@ -44,7 +48,7 @@ void AbstractNeuralNetwork::initialise(GenericGene *gene)
     {
         qFatal(QString("FATAL ERROR in %1 %2: Network already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    _gene = gene;
+    _gene = gene->createCopy();
     _initialise();
 }
 
