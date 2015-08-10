@@ -385,7 +385,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         {
             // Calculate gas concentration
             double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
-            if(_gas_emitting[i] > 0.0d && segments[i][gene_TypeGas]%3 != 0)
+            if(_gas_emitting[i] > 0.0d && segments[i][gene_TypeGas]%9 != 0)
             {
                 for(int j = 0; j < segments.length(); ++j)
                 {
@@ -636,6 +636,115 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
 
     QList< QList<int> > segments = _gene->segments();
 
+    // Gas concentration
+
+    double gasAPos[segments.length()];
+    double gasANeg[segments.length()];
+    double gasBPos[segments.length()];
+    double gasBNeg[segments.length()];
+    double gasCPos[segments.length()];
+    double gasCNeg[segments.length()];
+    double gasDPos[segments.length()];
+    double gasDNeg[segments.length()];
+
+    for(int i = 0; i < segments.length(); ++i)
+    {
+        // Initiation
+        gasAPos[i] = 0;
+        gasANeg[i] = 0;
+        gasBPos[i] = 0;
+        gasBNeg[i] = 0;
+        gasCPos[i] = 0;
+        gasCNeg[i] = 0;
+        gasDPos[i] = 0;
+        gasDNeg[i] = 0;
+    }
+
+    for(int i = 0; i < segments.length(); ++i)
+    {
+        // Calculate gas concentration
+        double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
+        if(_gas_emitting[i] > 0.0d && segments[i][gene_TypeGas]%9 != 0)
+        {
+            for(int j = 0; j < segments.length(); ++j)
+            {
+                if(_distances[i][j] > gas_radius)
+                {
+                    continue;
+                }
+                double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
+                switch (segments[i][gene_TypeGas]%9)
+                {
+                case 0:
+                    // No Gas is emitted
+                    break;
+
+                case 1:
+                    if(_config.a_modulated)
+                    {
+                        gasAPos[j] += gas_concentration;
+                    }
+                    break;
+
+                case 2:
+                    if(_config.a_modulated)
+                    {
+                        gasANeg[j] += gas_concentration;
+                    }
+                    break;
+
+                case 3:
+                    if(_config.b_modulated)
+                    {
+                        gasBPos[j] += gas_concentration;
+                    }
+                    break;
+
+                case 4:
+                    if(_config.b_modulated)
+                    {
+                        gasBNeg[j] += gas_concentration;
+                    }
+                    break;
+
+                case 5:
+                    if(_config.c_modulated)
+                    {
+                        gasCPos[j] += gas_concentration;
+                    }
+                    break;
+
+                case 6:
+                    if(_config.c_modulated)
+                    {
+                        gasCNeg[j] += gas_concentration;
+                    }
+                    break;
+
+                case 7:
+                    if(_config.d_modulated)
+                    {
+                        gasDPos[j] += gas_concentration;
+                    }
+                    break;
+
+                case 8:
+                    if(_config.d_modulated)
+                    {
+                        gasDNeg[j] += gas_concentration;
+                    }
+                    break;
+
+                default:
+                    qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
+                    break;
+                }
+            }
+        }
+    }
+
+    // Write neuron config
+
     for(int i = 0; i < segments.length(); ++i)
     {
         QMap<QString, QVariant> config_neuron;
@@ -649,6 +758,15 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         config_neuron["negativ_cone_radius"] = floatFromGeneInput(segments[i][gene_NegativConeRadius], _config.area_size*_config.cone_ratio);
         config_neuron["negativ_cone_extension"] = floatFromGeneInput(segments[i][gene_NegativConeExt], 2*M_PI);
         config_neuron["negativ_cone_orientation"] = floatFromGeneInput(segments[i][gene_NegativConeOrientation], 2*M_PI);
+        config_neuron["gasAPos_concentration"] = gasAPos[i];
+        config_neuron["gasBPos_concentration"] = gasBPos[i];
+        config_neuron["gasCPos_concentration"] = gasCPos[i];
+        config_neuron["gasDPos_concentration"] = gasDPos[i];
+        config_neuron["gasANeg_concentration"] = gasANeg[i];
+        config_neuron["gasBNeg_concentration"] = gasBNeg[i];
+        config_neuron["gasCNeg_concentration"] = gasCNeg[i];
+        config_neuron["gasDNeg_concentration"] = gasDNeg[i];
+
 
         switch (segments[i][gene_WhenGas]%9)
         {
@@ -739,9 +857,13 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         config_neuron["rate_of_gas"] = (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas));
         config_neuron["gas_radius"] = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
         config_neuron["a_basis"] = _Pa[segments[i][gene_a]%_Pa.length()];
-        config_neuron["b_basis"] = _Pb[segments[i][gene_b]%_Pb.length()];;
-        config_neuron["c_basis"] = _Pc[segments[i][gene_c]%_Pc.length()];;
-        config_neuron["d_basis"] = _Pd[segments[i][gene_d]%_Pd.length()];;
+        config_neuron["b_basis"] = _Pb[segments[i][gene_b]%_Pb.length()];
+        config_neuron["c_basis"] = _Pc[segments[i][gene_c]%_Pc.length()];
+        config_neuron["d_basis"] = _Pd[segments[i][gene_d]%_Pd.length()];
+        config_neuron["a_modulated"] = getModulatedValue(_config.a_modulated, gasAPos[i], gasANeg[i], segments[i][gene_a]%_Pa.length(), _Pa);
+        config_neuron["b_modulated"] = getModulatedValue(_config.b_modulated, gasBPos[i], gasBNeg[i], segments[i][gene_b]%_Pb.length(), _Pb);
+        config_neuron["c_modulated"] = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], segments[i][gene_c]%_Pc.length(), _Pc);
+        config_neuron["d_modulated"] = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], segments[i][gene_d]%_Pd.length(), _Pd);
         config_neuron["internal_charge"] = _network[i];
         config_neuron["fire_output"] = _firecount[i] * _config.timestep_size;
 
