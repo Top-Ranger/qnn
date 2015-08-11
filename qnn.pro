@@ -30,7 +30,8 @@ SOURCES += \
     src/network/commonnetworkfunctions.cpp \
     src/network/modulatedspikingneuronsnetwork.cpp \
     src/simulation/tmazesimulation.cpp \
-    src/network/networktoxml.cpp
+    src/network/networktoxml.cpp \
+    src/simulation/rebergrammarsimulation.cpp
 
 HEADERS += \
     src/network/abstractneuralnetwork.h \
@@ -46,7 +47,8 @@ HEADERS += \
     src/network/commonnetworkfunctions.h \
     src/network/modulatedspikingneuronsnetwork.h \
     src/simulation/tmazesimulation.h \
-    src/network/networktoxml.h
+    src/network/networktoxml.h \
+    src/simulation/rebergrammarsimulation.h
 
 DESTDIR = $$PWD
 
