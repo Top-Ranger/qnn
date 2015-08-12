@@ -648,6 +648,7 @@ double ReberGrammarSimulation::_getScore()
             }
             break;
         }
+        delete network;
     }
     return score / max_trials;
 }
