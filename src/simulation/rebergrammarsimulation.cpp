@@ -557,12 +557,24 @@ double ReberGrammarSimulation::_getScore()
         reber_function = &reber;
     }
 
-    for(int trial = 0; trial < _config.trials; ++trial)
+    int max_trials = 0;
+
+    switch (_config.mode) {
+    case DetectGrammar:
+        max_trials = _config.trials_detect;
+        break;
+    case CreateWords:
+        max_trials = _config.trials_create;
+        break;
+    }
+
+    for(int trial = 0; trial < max_trials; ++trial)
     {
         AbstractNeuralNetwork *network = _network->createConfigCopy();
         network->initialise(_gene);
 
         QString word;
+        QString input_word;
         bool result = false;
         do {
             result = reber_function(word, reber_create_random_word, _config.max_depth);
@@ -572,13 +584,17 @@ double ReberGrammarSimulation::_getScore()
         case DetectGrammar:
             if(qrand()%2)
             {
-                // Replace some characters to hopefully get an ivalid word
-                for(int i = 0; i < 3; ++i)
-                {
+                // Replace some characters to get an ivalid word
+                bool valid;
+                QString temp_word;
+                do {
                     word.replace(qrand()%word.length(), 1, QChar(getRandomReberChar()));
-                }
+                    temp_word = word;
+                    valid = reber_function(temp_word, reber_verify_word, _config.max_depth);
+                } while(valid);
+            }
 
-                QString input_word = word;
+                input_word = word;
 
                 while(input_word.length() != 0)
                 {
@@ -590,7 +606,6 @@ double ReberGrammarSimulation::_getScore()
                 {
                     score += 1.0d;
                 }
-            }
             break;
 
         case CreateWords:
@@ -634,5 +649,5 @@ double ReberGrammarSimulation::_getScore()
             break;
         }
     }
-    return score / _config.trials;
+    return score / max_trials;
 }

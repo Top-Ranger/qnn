@@ -17,15 +17,17 @@ public:
     struct config {
         SimulationMode mode;
         bool embedded;
-        int trials;
+        int trials_detect;
+        int trials_create;
         double detect_threshold;
         int max_depth;
 
         config() :
             mode(DetectGrammar),
             embedded(false),
-            trials(24),
-            detect_threshold(0.75d),
+            trials_detect(500),
+            trials_create(50),
+            detect_threshold(0.50d),
             max_depth(50)
         {
         }
