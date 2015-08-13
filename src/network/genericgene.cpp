@@ -302,10 +302,12 @@ QString GenericGene::identifier()
 
 bool GenericGene::_saveGene(QTextStream *stream)
 {
+    Q_UNUSED(stream);
     return true;
 }
 
 GenericGene *GenericGene::_loadGene(QList< QList<int> > gene, int segment_size, QTextStream *stream)
 {
+    Q_UNUSED(stream);
     return new GenericGene(gene, segment_size);
 }
