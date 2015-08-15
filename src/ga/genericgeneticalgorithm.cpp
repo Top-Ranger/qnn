@@ -29,12 +29,14 @@ class SimulationThread : public QThread
 private:
     GenericSimulation *_simulation;
     double _fitness;
+    int _rand_seed;
 
 public:
     explicit SimulationThread(GenericSimulation *simulation, QObject *parent = 0) :
         QThread(parent),
         _simulation(simulation),
-        _fitness(0.0d)
+        _fitness(0.0d),
+        _rand_seed(qrand())
     {
     }
 
@@ -48,6 +50,8 @@ public:
 
     void run()
     {
+        // We need to seed RNG on each thread to get different random values in the simulations
+        qsrand(_rand_seed);
         _fitness = _simulation->getScore();
     }
 
