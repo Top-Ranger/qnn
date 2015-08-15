@@ -146,6 +146,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             newValue += d * weight(segments[i][gene_W_start+j], _config.weight_scalar); // wij
         }
         newNetwork[i] = newValue / ((segments[i][gene_time_constraint]%_config.max_time_constant)+1); // τ
+        newNetwork[i] += _network[i];
     }
 
     delete [] _network;
