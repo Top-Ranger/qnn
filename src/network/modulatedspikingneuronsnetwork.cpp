@@ -577,11 +577,11 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
 
             if(emittingGas)
             {
-                _gas_emitting[i] = cut01((_gas_emitting[i] + 1.0d) / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
+                _gas_emitting[i] = cut01(_gas_emitting[i] + 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
             }
             else
             {
-                _gas_emitting[i] = cut01((_gas_emitting[i] - 1.0d) / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
+                _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
             }
         }
 
