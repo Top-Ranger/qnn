@@ -616,7 +616,7 @@ double ReberGrammarSimulation::_getScore()
 
                 while(input_word.length() != 0)
                 {
-                    QList<double> input = reberCharToInput(input_word.at(0).toAscii());
+                    QList<double> input = reberCharToInput(input_word.at(0).toLatin1());
                     input_word.remove(0,1);
                     network->processInput(input);
                 }
@@ -638,7 +638,7 @@ double ReberGrammarSimulation::_getScore()
             }
             for(QString::Iterator input_iter = input_word.begin(); input_iter !=input_word.end(); ++input_iter)
             {
-                QList<double> input = reberCharToInput((*input_iter).toAscii());
+                QList<double> input = reberCharToInput((*input_iter).toLatin1());
                 network->processInput(input);
                 c_output = networkToReberOutput(network);
             }
