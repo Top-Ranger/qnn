@@ -37,7 +37,7 @@ NonParallelGenericGeneticAlgorithm::~NonParallelGenericGeneticAlgorithm()
 void NonParallelGenericGeneticAlgorithm::run_ga()
 {
     // Initialise
-    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    qsrand(QTime(0,0,0).msecsTo(QTime::currentTime()));
 
     if(_best.network != NULL)
     {
