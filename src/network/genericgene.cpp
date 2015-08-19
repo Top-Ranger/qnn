@@ -43,7 +43,7 @@ GenericGene::GenericGene(int initialLength, int segment_size) :
         QList<int> list;
         for(int j = 0; j < _segment_size; ++j)
         {
-            list.append(qrand());
+            list.append(getIndependentRandomInt());
         }
         _gene.append(list);
     }
@@ -78,7 +78,7 @@ void GenericGene::mutate()
         {
             if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
             {
-                _gene[i][j] = qrand();
+                _gene[i][j] = getIndependentRandomInt();
             }
         }
     }
@@ -288,6 +288,12 @@ GenericGene *GenericGene::loadThisGene(QIODevice *device)
 {
     GenericGene gene;
     return gene.loadGene(device);
+}
+
+int GenericGene::getIndependentRandomInt()
+{
+    // Because the range of the RNG in different libraries does not need to be equal we have to calculate a platform-independent value to make genes platform-independent
+    return MAX_GENE_VALUE * ((double) qrand() / (double) RAND_MAX);
 }
 
 GenericGene *GenericGene::createGene(QList< QList<int> > gene, int segment_size)

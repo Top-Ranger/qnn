@@ -23,12 +23,12 @@
 namespace CommonNetworkFunctions {
 double floatFromGeneInput(int gene_input, double scalar)
 {
-    return (double) gene_input/RAND_MAX * scalar;
+    return (double) gene_input/MAX_GENE_VALUE * scalar;
 }
 
 double weight(int gene_input, double scalar)
 {
-    return (((double) gene_input - RAND_MAX/2.0) * 2.0 / RAND_MAX) * scalar;
+    return (((double) gene_input - MAX_GENE_VALUE/2.0) * 2.0 / MAX_GENE_VALUE) * scalar;
 }
 
 double sigmoid(double d)

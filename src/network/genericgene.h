@@ -43,6 +43,8 @@ public:
 
     static GenericGene *loadThisGene(QIODevice *device);
 
+    static int getIndependentRandomInt();
+
 protected:
     GenericGene();
     GenericGene(QList< QList<int> > gene, int segment_size);

@@ -19,6 +19,8 @@
 #ifndef COMMONNETWORKFUNCTIONS_H
 #define COMMONNETWORKFUNCTIONS_H
 
+#include <qnn-global.h>
+
 namespace CommonNetworkFunctions {
 
 // Transforms gene input to [0, scalar]

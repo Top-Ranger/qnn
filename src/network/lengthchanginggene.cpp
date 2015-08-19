@@ -81,7 +81,7 @@ void LengthChangingGene::mutate()
             QList<int> newSegment;
             for(int j = 0; j < _segment_size; ++j)
             {
-                newSegment.append(qrand());
+                newSegment.append(getIndependentRandomInt());
             }
             _gene.append(newSegment);
         }
