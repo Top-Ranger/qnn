@@ -21,6 +21,21 @@
 #include <QDebug>
 #include <cstdlib>
 
+namespace {
+static int random_exponent = 0;
+static double random_divisor = RAND_MAX;
+void calculateRandomFactor()
+{
+    random_exponent = 1;
+    double random_divisor = RAND_MAX;
+    while(random_divisor < MAX_GENE_VALUE)
+    {
+        ++random_exponent;
+        random_divisor *= RAND_MAX;
+    }
+}
+}
+
 GenericGene::GenericGene()
 {
 }
@@ -284,16 +299,26 @@ bool GenericGene::canLoad(QIODevice *device)
     return gene_identifier == identifier();
 }
 
+int GenericGene::getIndependentRandomInt()
+{
+    // Because the range of the RNG in different libraries does not need to be equal we have to calculate a platform-independent value to make genes platform-independent
+    if(Q_UNLIKELY(random_exponent == 0))
+    {
+        calculateRandomFactor();
+    }
+    double d = 0;
+    for(int i = 0; i < random_exponent; ++i)
+    {
+        d *= RAND_MAX;
+        d += qrand();
+    }
+    return MAX_GENE_VALUE * (d / random_divisor);
+}
+
 GenericGene *GenericGene::loadThisGene(QIODevice *device)
 {
     GenericGene gene;
     return gene.loadGene(device);
-}
-
-int GenericGene::getIndependentRandomInt()
-{
-    // Because the range of the RNG in different libraries does not need to be equal we have to calculate a platform-independent value to make genes platform-independent
-    return MAX_GENE_VALUE * ((double) qrand() / (double) RAND_MAX);
 }
 
 GenericGene *GenericGene::createGene(QList< QList<int> > gene, int segment_size)

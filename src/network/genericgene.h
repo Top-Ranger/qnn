@@ -41,9 +41,9 @@ public:
     GenericGene *loadGene(QIODevice *device);
     bool canLoad(QIODevice *device);
 
-    static GenericGene *loadThisGene(QIODevice *device);
+    int getIndependentRandomInt();
 
-    static int getIndependentRandomInt();
+    static GenericGene *loadThisGene(QIODevice *device);
 
 protected:
     GenericGene();
