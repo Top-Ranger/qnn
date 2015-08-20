@@ -39,6 +39,8 @@
  *  - _loadGene(QList< QList<qint32> > gene qint32 segment_size, QTextStream *stream)
  *  - createGene(QList< QList<qint32> > gene, qint32 segment_size)
  *  - createCopy()
+ *
+ *
  * Each implementation should also provide the following static methods:
  *  - static GenericGene *loadThisGene(QIODevice *device)
  */
