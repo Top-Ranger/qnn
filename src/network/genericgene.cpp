@@ -321,6 +321,11 @@ qint32 GenericGene::getIndependentRandomInt()
         // Overflow has occured
         result = MAX_GENE_VALUE;
     }
+    else if(result < 0)
+    {
+        // negativ value has occured
+        result = 0;
+    }
     return result;
 }
 
