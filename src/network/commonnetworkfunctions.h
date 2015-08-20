@@ -21,17 +21,71 @@
 
 #include <qnn-global.h>
 
+/*!
+ * \brief This namespace contains some functions which are commonly used by networks.
+ */
 namespace CommonNetworkFunctions {
 
-// Transforms gene input to [0, scalar]
+/*!
+ * \brief Transforms an integer from a gene to a double in the range [0, scalar]
+ * \param gene_input Integer to transform
+ * \param scalar Scalar of the output
+ * \return Double [0, scalar]
+ */
 double floatFromGeneInput(qint32 gene_input, double scalar);
 
-// Transforms gene input to [-scalar, scalar]
+/*!
+ * \brief Transforms an integer from a gene to a double in the range [-scalar, scalar]
+ * \param gene_input Integer to transform
+ * \param scalar Scalar of the output
+ * \return Double [-scalar, scalar]
+ */
 double weight(qint32 gene_input, double scalar);
 
+/*!
+ * \brief Sigmoid function
+ *
+ * The sigmoid function is defined as 1/(1+e^(-d))
+ *
+ * \param d Input double
+ * \return Sigmoid of input
+ */
 double sigmoid(double d);
+
+/*!
+ * \brief Calculates the euclidean distance between to points
+ * \param x_source X coordinates of source
+ * \param y_source Y coordinates of source
+ * \param x_target X coordinates of target
+ * \param y_target Y coordinates of target
+ * \return Euclidean distance
+ */
 double calculate_distance(double x_source, double y_source, double x_target, double y_target);
+
+/*!
+ * \brief Calculates if a node is located in a cone
+ *
+ * More information: Phil Husbands, Tom Smith, Nick Jakobi, and Michael O’Shea. Better Living Through Chemistry: Evolving GasNets for Robot Control. 1998.
+ *
+ * \param x_source X coordinates of source
+ * \param y_source Y coordinates of source
+ * \param x_target X coordinates of target
+ * \param y_target Y coordinates of target
+ * \param radius Radius of the cone
+ * \param angularExtend Angular extend of the cone
+ * \param orientation Orientation of the cone
+ * \return True if nodes are connected
+ */
 bool areNodesConnected(double x_source, double y_source, double x_target, double y_target, double radius, double angularExtend, double orientation);
+
+/*!
+ * \brief Cuts a value to [0,1]
+ *
+ * Returns 0 if d<0, 1 if d>1, else d
+ *
+ * \param d Value to cut
+ * \return Cutted value
+ */
 double cut01(double d);
 }
 

@@ -45,8 +45,8 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network,
     _population_size(population_size),
     _fitness_to_reach(fitness_to_reach),
     _max_rounds(max_rounds),
-    _average_fitness(0),
-    _rounds_to_finish(0)
+    _average_fitness(-1.0d),
+    _rounds_to_finish(-1)
 {
     _best.fitness = -1.0;
     _best.gene = NULL;
@@ -166,6 +166,10 @@ double GenericGeneticAlgorithm::best_fitness()
 
 GenericGene *GenericGeneticAlgorithm::best_gene()
 {
+    if(_best.gene == NULL)
+    {
+        return NULL;
+    }
     return _best.gene->createCopy();
 }
 

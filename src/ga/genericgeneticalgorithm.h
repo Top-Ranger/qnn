@@ -26,51 +26,191 @@
 #include <QList>
 #include <QObject>
 
+/*!
+ * \brief The GenericGeneticAlgorithm class is the base class of all genetic algorithms.
+ *
+ * A genetic algorithm is a way to optimise networks. The idea of the algorithm is based on the natural evolution.
+ *
+ * The algorithm is easily customizable by overwriting create_children or survivor_selection although you can also override run_ga to change the behaviour compleately.
+ */
 class QNNSHARED_EXPORT GenericGeneticAlgorithm : public QObject
 {
     Q_OBJECT
 
 public:
+    /*!
+     * \brief Constructor of GenericGeneticAlgorithm
+     * \param network The network which should be optimised
+     * \param simulation The simulation for which the network should be optimised
+     * \param population_size The population size
+     * \param fitness_to_reach The fitness which should be reached. Once it has been reached the genetic algorithm will finish
+     * \param max_rounds The maximum amount of rounds. The genetic algorithm will abort after the amount of rounds
+     * \param parent The parent of the object
+     */
     explicit GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, QObject *parent = 0);
+
+    /*!
+     * \brief Deconstructor
+     */
     virtual ~GenericGeneticAlgorithm();
 
+    /*!
+     * \brief This method starts the genetic algorithm
+     */
     virtual void run_ga();
+
+    /*!
+     * \brief Return the best fitness of the last run.
+     *
+     * This function will return -1 if no genetic algorithm has be started.
+     *
+     * \return Best fitness
+     */
     double best_fitness();
+
+    /*!
+     * \brief Return the best gene of the last run.
+     *
+     * This function will return NULL if no genetic algorithm has be started.
+     *
+     * \return Best gene. The caller must delete the gene
+     */
     GenericGene *best_gene();
+
+    /*!
+     * \brief Return the average fitness of the last run.
+     *
+     * This function will return -1 if no genetic algorithm has be started.
+     *
+     * \return Best fitness
+     */
     double average_fitness();
+
+    /*!
+     * \brief Return the number of rounds of the last run.
+     *
+     * This function will return -1 if no genetic algorithm has be started.
+     *
+     * \return Best fitness
+     */
     qint32 rounds_to_finish();
 
 signals:
+    /*!
+     * \brief ga_current_round is emittet after each rounds.
+     * \param current Current round
+     * \param max Maximum rounds
+     * \param best_fitness_value Best current fitness
+     * \param average_fitness_value Average current fitness
+     */
     void ga_current_round(qint32 current, qint32 max, double best_fitness_value, double average_fitness_value);
+
+    /*!
+     * \brief ga_finished is emitted after all rounds have finished.
+     * \param best_fitness_value Best fitness
+     * \param average_fitness_value Average fitness
+     * \param rounds Number of rounds the genetic algorithm run
+     */
     void ga_finished(double best_fitness_value, double average_fitness_value, qint32 rounds);
 
 protected:
+    /*!
+     * \brief Empty constructor.
+     *
+     * This constructor may be useful for subclasses.
+     */
     explicit GenericGeneticAlgorithm(QObject *parent = 0);
 
+    /*!
+     * \brief In this function the children in the genetic algorithm are created.
+     */
     virtual void create_children();
+
+    /*!
+     * \brief In this function the survivors are created.
+     */
     virtual void survivor_selection();
 
+    /*!
+     * \brief Calculates the average fitness of the population
+     * \return Average fitness
+     */
     double calculate_average_fitness();
 
+    /*!
+     * \brief A simple container used in the population
+     */
     struct GeneContainer {
+
+        /*!
+         * \brief fitness
+         */
         double fitness;
+
+        /*!
+         * \brief gene
+         */
         GenericGene* gene;
+
+        /*!
+         * \brief network
+         */
         AbstractNeuralNetwork *network;
 
+        /*!
+         * \brief A container is greater if the fitness is smaller
+         * \param other Other container
+         * \return True if this container is greater
+         */
         bool operator<(const GeneContainer &other) const
         {
             return fitness < other.fitness;
         }
     };
 
+    /*!
+     * \brief The population.
+     */
     QList<GeneContainer> _population;
+
+    /*!
+     * \brief The best result from the last run.
+     */
     GeneContainer _best;
+
+    /*!
+     * \brief The network which should be optimised
+     */
     AbstractNeuralNetwork *_network;
+
+    /*!
+     * \brief The simulation which is used for the optimisation
+     */
     GenericSimulation *_simulation;
+
+    /*!
+     * \brief The size of the population
+     */
     qint32 _population_size;
+
+    /*!
+     * \brief The fitness which should be reached
+     */
     double _fitness_to_reach;
+
+    /*!
+     * \brief The maximum amount of runs
+     */
     qint32 _max_rounds;
+
+    /*!
+     * \brief The average fitness of the last run
+     */
     double _average_fitness;
+
+    /*!
+     * \brief The rounds needed for the last run
+     */
     qint32 _rounds_to_finish;
 };
 

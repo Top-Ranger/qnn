@@ -24,9 +24,40 @@
 #include <QMap>
 #include <QXmlStreamWriter>
 
+/*!
+ * \brief This namespace contains some function which should make it easy to save a network configuration as XML
+ */
 namespace NetworkToXML {
+/*!
+ * \brief Writes the beginning of a configuration.
+ *
+ * This method should only be called once per file.
+ *
+ * \param type The type of the network
+ * \param config A map containing the configuration of the network in the form QMap<key, value>
+ * \param stream The QXmlStreamWriter to which write the output
+ */
 void writeConfigStart(QString type, QMap<QString, QVariant> config, QXmlStreamWriter *stream);
+
+/*!
+ * \brief Writes a single neuron into the XML file.
+ *
+ * This method should be called after writeConfigStart and before writeConfigEnd.
+ *
+ * \param id The id of the neuron. Each neuron should have a unique id
+ * \param config A map containing the configuration of the neuron in the form QMap<key, value>
+ * \param connections A map containing all incoming connections in the form QMap<source neuron id, weight of connection>
+ * \param stream The QXmlStreamWriter to which write the output
+ */
 void writeConfigNeuron(qint32 id, QMap<QString, QVariant> config, QMap<qint32, double> connections, QXmlStreamWriter *stream);
+
+/*!
+ * \brief Completes the XML file.
+ *
+ * This method should only be called once per file. After this method is called there should be no other writes to the XML file.
+ *
+ * \param stream The QXmlStreamWriter to which write the output
+ */
 void writeConfigEnd(QXmlStreamWriter *stream);
 }
 

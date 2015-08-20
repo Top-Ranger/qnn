@@ -27,6 +27,9 @@
 #  define QNNSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
+/*!
+ * \brief MAX_GENE_VALUE contains the maximum value in a gene segment.
+ */
 static const qint32 MAX_GENE_VALUE = 0x7FFFFFFF; // Should be MAX_INT on 32 bit
 
 #endif // QNN_GLOBAL_H

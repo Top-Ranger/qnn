@@ -23,22 +23,85 @@
 
 #include "abstractneuralnetwork.h"
 
+/*!
+ * \brief The GasNet class represents a GasNet.
+ *
+ * For more information see:
+ * Phil Husbands, Tom Smith, Nick Jakobi, and Michael O’Shea. Better Living Through Chemistry: Evolving GasNets for Robot Control. 1998.
+ */
 class QNNSHARED_EXPORT GasNet : public AbstractNeuralNetwork
 {
 public:
+    /*!
+     * \brief This struct contains all configuration option of GasNets
+     */
     struct config {
+        /*!
+         * \brief area_size contains the size of the area.
+         *
+         * A lot of values scale with the size of the area.
+         */
         double area_size;
+        /*!
+         * \brief bias_scalar sets the scalar for the bias.
+         *
+         * The bias will be in the range [-bias_scalar, bias_scalar]
+         */
         double bias_scalar;
+        /*!
+         * \brief gas_threshhold sets the threshold for emitting gas.
+         *
+         * If the gas concentration of the correct gas is higher then the threshold then the neuron will emit gas.
+         */
         double gas_threshhold;
+        /*!
+         * \brief electric_threshhold sets the threshold for emitting gas.
+         *
+         * If the gas electric charge of the neuron is high enough then the neuron will emit gas.
+         */
         double electric_threshhold;
+        /*!
+         * \brief cone_ratio hold the percent of area size which will be used for the cone length.
+         */
         double cone_ratio;
+        /*!
+         * \brief offset_gas_radius sets the minimum size of the gas radius.
+         */
         double offset_gas_radius;
+        /*!
+         * \brief range_gas_radius sets the growth of the gas radius.
+         *
+         * Minimum gas radius = offset_gas_radius
+         * Maximum gas radius = offset_gas_radius + range_gas_radius
+         */
         double range_gas_radius;
+        /*!
+         * \brief offset_rate_of_gas sets the minimum value of which the gas will be emitted.
+         */
         double offset_rate_of_gas;
+        /*!
+         * \brief range_rate_of_gas sets the growth of the value of which the gas will be emitted.
+         *
+         * Minimum emitting = offset_rate_of_gas
+         * Maximum emitting = offset_rate_of_gas + range_rate_of_gas
+         */
         double range_rate_of_gas;
+        /*!
+         * \brief min_size holds the minimum size of the network.
+         *
+         * If set to -1 the minimum size will be the output length
+         */
         qint32 min_size;
+        /*!
+         * \brief max_size holds the maximum size of the network.
+         *
+         * If set to -1 the maximum size will be set to a default size
+         */
         qint32 max_size;
 
+        /*!
+         * \brief Constructor for standard values
+         */
         config() :
             area_size(1.0d),
             bias_scalar(1.0d),
@@ -55,15 +118,42 @@ public:
         }
     };
 
+    /*!
+     * \brief Constructor
+     * \param len_input Length of the input
+     * \param len_output Length of the output
+     * \param config Configuration of the GasNet
+     */
     GasNet(qint32 len_input, qint32 len_output, config config = config());
+
+    /*!
+     * \brief Destructor
+     */
     ~GasNet();
 
+    /*!
+     * \brief Returns a random gene which may be used with the current network configuration
+     * \return Random gene. The caller must delete the gene
+     */
     GenericGene *getRandomGene();
+
+    /*!
+     * \brief Creates a uninitialised copy of the network
+     * \return Copy of the network. The caller must delete the gene
+     */
     AbstractNeuralNetwork *createConfigCopy();
 
 protected:
+    /*!
+     * \brief Empty constructor
+     *
+     * This constructor may be useful for subclasses
+     */
     GasNet();
 
+    /*!
+     * \brief This enum contains the gene position of the different values.
+     */
     enum GasNet_gene_positions {gene_x = 0,
                                 gene_y = 1,
                                 gene_PositivConeRadius = 2,
@@ -80,17 +170,60 @@ protected:
                                 gene_Gas_radius = 13,
                                 gene_basis_index = 14,
                                 gene_bias= 15};
+
+    /*!
+     * \brief Overwritten function to initialise the network.
+     */
     void _initialise();
+
+    /*!
+     * \brief Overwritten method to process input
+     * \param input Input to process
+     */
     void _processInput(QList<double> input);
+
+    /*!
+     * \brief Overwritten function to get output
+     * \param i Number of neuron (0 <= i < len_output)
+     * \return Output of neuron i
+     */
     double _getNeuronOutput(qint32 i);
 
+    /*!
+     * \brief Overwritten function to save network config
+     * \param stream Stream to save config to. Stream is guaranteed to be a valid pointer
+     * \return True if save is successfull
+     */
     bool _saveNetworkConfig(QXmlStreamWriter *stream);
 
+    /*!
+     * \brief The configuration of the network
+     */
     config _config;
+
+    /*!
+     * \brief The actual network
+     */
     double *_network;
+
+    /*!
+     * \brief Holds the strength of which the neurons are emitting at t timesteps
+     */
     double *_gas_emitting;
+
+    /*!
+     * \brief Holds precalculated distances
+     */
     double **_distances;
+
+    /*!
+     * \brief Holds precalculated weights
+     */
     double **_weights;
+
+    /*!
+     * \brief P array as defined by Husbands
+     */
     QList<double> _P;
 };
 
