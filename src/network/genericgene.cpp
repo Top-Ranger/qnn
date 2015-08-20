@@ -312,7 +312,15 @@ int GenericGene::getIndependentRandomInt()
         d *= RAND_MAX;
         d += qrand();
     }
-    return MAX_GENE_VALUE * (d / random_divisor);
+    d /= random_divisor;
+
+    // Sometimes d might be slightly bigger then 1 because of float imprecision
+
+    if(d > 1.0d)
+    {
+        d = 1.0d;
+    }
+    return MAX_GENE_VALUE * d;
 }
 
 GenericGene *GenericGene::loadThisGene(QIODevice *device)
