@@ -312,15 +312,16 @@ qint32 GenericGene::getIndependentRandomInt()
         d *= RAND_MAX;
         d += qrand();
     }
-    d /= random_divisor;
 
     // Sometimes d might be slightly bigger then 1 because of float imprecision
-
-    if(d > 1.0d)
+    // Therefore we have to check for overflows
+    qint64 result = MAX_GENE_VALUE * (d / random_divisor);
+    if(result > MAX_GENE_VALUE)
     {
-        d = 1.0d;
+        // Overflow has occured
+        result = MAX_GENE_VALUE;
     }
-    return MAX_GENE_VALUE * d;
+    return result;
 }
 
 GenericGene *GenericGene::loadThisGene(QIODevice *device)
