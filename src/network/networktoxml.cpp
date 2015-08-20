@@ -21,13 +21,6 @@
 #include <QDebug>
 
 namespace NetworkToXML {
-
-/*!
- * \brief Writes a single XML element
- * \param key The key of the element
- * \param value The value of the element
- * \param stream The stream to write the element to
- */
 void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
 {
     if(stream == NULL)

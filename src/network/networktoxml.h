@@ -28,6 +28,15 @@
  * \brief This namespace contains some function which should make it easy to save a network configuration as XML
  */
 namespace NetworkToXML {
+
+/*!
+ * \brief Writes a single XML element
+ * \param key The key of the element
+ * \param value The value of the element
+ * \param stream The stream to write the element to
+ */
+void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream);
+
 /*!
  * \brief Writes the beginning of a configuration.
  *
