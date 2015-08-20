@@ -35,10 +35,10 @@ public:
     struct config {
         SimulationMode mode;
         bool embedded;
-        int trials_detect;
-        int trials_create;
+        qint32 trials_detect;
+        qint32 trials_create;
         double detect_threshold;
-        int max_depth;
+        qint32 max_depth;
 
         config() :
             mode(DetectGrammar),
@@ -54,8 +54,8 @@ public:
     ReberGrammarSimulation(config config = config());
     ~ReberGrammarSimulation();
 
-    int needInputLength();
-    int needOutputLength();
+    qint32 needInputLength();
+    qint32 needOutputLength();
 
     GenericSimulation *createConfigCopy();
 

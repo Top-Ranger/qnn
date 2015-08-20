@@ -31,7 +31,7 @@ using NetworkToXML::writeConfigStart;
 using NetworkToXML::writeConfigNeuron;
 using NetworkToXML::writeConfigEnd;
 
-FeedForwardNetwork::FeedForwardNetwork(int len_input, int len_output, config config) :
+FeedForwardNetwork::FeedForwardNetwork(qint32 len_input, qint32 len_output, config config) :
     AbstractNeuralNetwork(len_input, len_output),
     _config(config),
     _hidden_layers(NULL),
@@ -51,7 +51,7 @@ FeedForwardNetwork::~FeedForwardNetwork()
 {
     if(_hidden_layers != NULL)
     {
-        for(int i = 0; i < _config.num_hidden_layer; ++i)
+        for(qint32 i = 0; i < _config.num_hidden_layer; ++i)
         {
             delete [] _hidden_layers[i];
         }
@@ -77,7 +77,7 @@ void FeedForwardNetwork::_initialise()
     if(_config.len_hidden > 0)
     {
         _hidden_layers = new double*[_config.num_hidden_layer];
-        for(int i = 0; i < _config.num_hidden_layer; ++i)
+        for(qint32 i = 0; i < _config.num_hidden_layer; ++i)
         {
             _hidden_layers[i] = new double[_config.len_hidden];
         }
@@ -93,15 +93,15 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         return;
     }
 
-    QList< QList<int> > segments = _gene->segments();
+    QList< QList<qint32> > segments = _gene->segments();
 
     if(_config.num_hidden_layer == 0)
     {
-        int current_segment = 0;
-        for(int i_output = 0; i_output < _len_output; ++i_output)
+        qint32 current_segment = 0;
+        for(qint32 i_output = 0; i_output < _len_output; ++i_output)
         {
             double sum = 0.0d;
-            for(int i_input = 0; i_input < _len_input; ++i_input)
+            for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
                 sum += input[i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
             }
@@ -111,13 +111,13 @@ void FeedForwardNetwork::_processInput(QList<double> input)
     }
     else
     {
-        int current_segment = 0;
+        qint32 current_segment = 0;
 
         // Input to hidden
-        for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
+        for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
         {
             double sum = 0.0d;
-            for(int i_input = 0; i_input < _len_input; ++i_input)
+            for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
                 sum += input[i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
             }
@@ -126,12 +126,12 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         }
 
         // Hidden to hidden
-        for(int current_hidden = 1; current_hidden < _config.num_hidden_layer; ++current_hidden)
+        for(qint32 current_hidden = 1; current_hidden < _config.num_hidden_layer; ++current_hidden)
         {
-            for(int i_output = 0; i_output < _config.len_hidden; ++i_output)
+            for(qint32 i_output = 0; i_output < _config.len_hidden; ++i_output)
             {
                 double sum = 0.0d;
-                for(int i_input = 0; i_input < _config.len_hidden; ++i_input)
+                for(qint32 i_input = 0; i_input < _config.len_hidden; ++i_input)
                 {
                     sum += _hidden_layers[current_hidden-1][i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
                 }
@@ -141,10 +141,10 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         }
 
         // Hidden to output
-        for(int i_output = 0; i_output < _len_output; ++i_output)
+        for(qint32 i_output = 0; i_output < _len_output; ++i_output)
         {
             double sum = 0.0d;
-            for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
+            for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
             {
                 sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(segments[current_segment++][0], _config.weight_scalar);
             }
@@ -154,7 +154,7 @@ void FeedForwardNetwork::_processInput(QList<double> input)
     }
 }
 
-double FeedForwardNetwork::_getNeuronOutput(int i)
+double FeedForwardNetwork::_getNeuronOutput(qint32 i)
 {
     if(i >= 0 && i < _len_output)
     {
@@ -179,24 +179,24 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
 
     writeConfigStart("FeedForwardNetwork", config_network, stream);
 
-    for(int i = 0; i < _len_input; ++i)
+    for(qint32 i = 0; i < _len_input; ++i)
     {
         QMap<QString, QVariant> config_neuron;
-        QMap<int, double> connections_neuron;
+        QMap<qint32, double> connections_neuron;
 
         writeConfigNeuron(i, config_neuron, connections_neuron, stream);
     }
 
-    QList< QList<int> > segments = _gene->segments();
+    QList< QList<qint32> > segments = _gene->segments();
 
     if(_config.num_hidden_layer == 0)
     {
-        int current_segment = 0;
-        for(int i_output = 0; i_output < _len_output; ++i_output)
+        qint32 current_segment = 0;
+        for(qint32 i_output = 0; i_output < _len_output; ++i_output)
         {
             QMap<QString, QVariant> config_neuron;
-            QMap<int, double> connections_neuron;
-            for(int i_input = 0; i_input < _len_input; ++i_input)
+            QMap<qint32, double> connections_neuron;
+            for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
                 connections_neuron[i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
             }
@@ -205,14 +205,14 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
     }
     else
     {
-        int current_segment = 0;
+        qint32 current_segment = 0;
 
         // Input to hidden
-        for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
+        for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
         {
             QMap<QString, QVariant> config_neuron;
-            QMap<int, double> connections_neuron;
-            for(int i_input = 0; i_input < _len_input; ++i_input)
+            QMap<qint32, double> connections_neuron;
+            for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
                 connections_neuron[i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
             }
@@ -220,13 +220,13 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
         }
 
         // Hidden to hidden
-        for(int current_hidden = 1; current_hidden < _config.num_hidden_layer; ++current_hidden)
+        for(qint32 current_hidden = 1; current_hidden < _config.num_hidden_layer; ++current_hidden)
         {
-            for(int i_output = 0; i_output < _config.len_hidden; ++i_output)
+            for(qint32 i_output = 0; i_output < _config.len_hidden; ++i_output)
             {
                 QMap<QString, QVariant> config_neuron;
-                QMap<int, double> connections_neuron;
-                for(int i_input = 0; i_input < _config.len_hidden; ++i_input)
+                QMap<qint32, double> connections_neuron;
+                for(qint32 i_input = 0; i_input < _config.len_hidden; ++i_input)
                 {
                     connections_neuron[_config.len_hidden*(current_hidden-1)+_len_input+i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
                 }
@@ -235,11 +235,11 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
         }
 
         // Hidden to output
-        for(int i_output = 0; i_output < _len_output; ++i_output)
+        for(qint32 i_output = 0; i_output < _len_output; ++i_output)
         {
             QMap<QString, QVariant> config_neuron;
-            QMap<int, double> connections_neuron;
-            for(int i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
+            QMap<qint32, double> connections_neuron;
+            for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
             {
                 connections_neuron[_config.len_hidden*(_config.num_hidden_layer-1)+_len_input+i_hidden] = weight(segments[current_segment++][0], _config.weight_scalar);
             }
@@ -251,7 +251,7 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
     return true;
 }
 
-int FeedForwardNetwork::num_segments(int len_input, int len_output, int hidden_layer, int len_hidden)
+qint32 FeedForwardNetwork::num_segments(qint32 len_input, qint32 len_output, qint32 hidden_layer, qint32 len_hidden)
 {
     if(hidden_layer == 0)
     {

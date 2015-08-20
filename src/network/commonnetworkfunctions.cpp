@@ -21,12 +21,12 @@
 #include <QtCore/qmath.h>
 
 namespace CommonNetworkFunctions {
-double floatFromGeneInput(int gene_input, double scalar)
+double floatFromGeneInput(qint32 gene_input, double scalar)
 {
     return (double) gene_input/MAX_GENE_VALUE * scalar;
 }
 
-double weight(int gene_input, double scalar)
+double weight(qint32 gene_input, double scalar)
 {
     return (((double) gene_input - MAX_GENE_VALUE/2.0) * 2.0 / MAX_GENE_VALUE) * scalar;
 }

@@ -22,7 +22,7 @@
 #include <cstdlib>
 
 namespace {
-static int random_exponent = 0;
+static qint32 random_exponent = 0;
 static double random_divisor = RAND_MAX;
 void calculateRandomFactor()
 {
@@ -40,7 +40,7 @@ GenericGene::GenericGene()
 {
 }
 
-GenericGene::GenericGene(int initialLength, int segment_size) :
+GenericGene::GenericGene(qint32 initialLength, qint32 segment_size) :
     _gene(),
     _segment_size(segment_size)
 {
@@ -53,10 +53,10 @@ GenericGene::GenericGene(int initialLength, int segment_size) :
         qFatal(QString("FATAL ERROR in %1 %2: segment size must be 1 or greater").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
-    for(int i = 0; i < initialLength; ++i)
+    for(qint32 i = 0; i < initialLength; ++i)
     {
-        QList<int> list;
-        for(int j = 0; j < _segment_size; ++j)
+        QList<qint32> list;
+        for(qint32 j = 0; j < _segment_size; ++j)
         {
             list.append(getIndependentRandomInt());
         }
@@ -64,7 +64,7 @@ GenericGene::GenericGene(int initialLength, int segment_size) :
     }
 }
 
-GenericGene::GenericGene(QList< QList<int> > gene, int segment_size) :
+GenericGene::GenericGene(QList< QList<qint32> > gene, qint32 segment_size) :
     _gene(gene),
     _segment_size(segment_size)
 {
@@ -74,7 +74,7 @@ GenericGene::~GenericGene()
 {
 }
 
-QList< QList<int> > GenericGene::segments()
+QList< QList<qint32> > GenericGene::segments()
 {
     return _gene;
 }
@@ -87,9 +87,9 @@ GenericGene *GenericGene::createCopy()
 void GenericGene::mutate()
 {
     //Simple mutation py probability - the chance of mutating a value is the same for every value.
-    for(int i = 0; i < _gene.length(); ++i)
+    for(qint32 i = 0; i < _gene.length(); ++i)
     {
-        for(int j = 0; j < _gene[i].length(); ++j)
+        for(qint32 j = 0; j < _gene[i].length(); ++j)
         {
             if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
             {
@@ -106,21 +106,21 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
         qCritical() << "WARNING in " __FILE__ << " " << __LINE__ << ": Attemted crossover of different type of genes";
         return QList<GenericGene *>();
     }
-    QList< QList<int> > newGene1;
-    QList< QList<int> > newGene2;
-    int smallerLength = gene1->_gene.length() < gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
-    int largerLength = gene1->_gene.length() > gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
-    int outer_crossover = qrand() % smallerLength;
-    int inner_crossover = qrand() % gene1->_gene[0].length();
-    int i;
+    QList< QList<qint32> > newGene1;
+    QList< QList<qint32> > newGene2;
+    qint32 smallerLength = gene1->_gene.length() < gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
+    qint32 largerLength = gene1->_gene.length() > gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
+    qint32 outer_crossover = qrand() % smallerLength;
+    qint32 inner_crossover = qrand() % gene1->_gene[0].length();
+    qint32 i;
     for(i = 0; i < outer_crossover; ++i)
     {
         newGene1.append(gene1->_gene[i]);
         newGene2.append(gene2->_gene[i]);
     }
-    QList<int> crossover1;
-    QList<int> crossover2;
-    for(int j = 0; j < gene1->_gene[0].length(); ++j)
+    QList<qint32> crossover1;
+    QList<qint32> crossover2;
+    for(qint32 j = 0; j < gene1->_gene[0].length(); ++j)
     {
         if(i < inner_crossover)
         {
@@ -174,10 +174,10 @@ bool GenericGene::saveGene(QIODevice *device)
     stream << identifier() << " ";
     stream << "segments " << _segment_size << " ";
     stream << "gene ";
-    foreach(QList<int> segment, _gene)
+    foreach(QList<qint32> segment, _gene)
     {
         stream << "genesegment ";
-        foreach(int i, segment)
+        foreach(qint32 i, segment)
         {
             stream << i << " ";
         }
@@ -195,8 +195,8 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
         return NULL;
     }
 
-    int segment_size;
-    QList< QList<int> > gene;
+    qint32 segment_size;
+    QList< QList<qint32> > gene;
 
     if(device->isOpen())
     {
@@ -246,10 +246,10 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
         stream >> command;
         if(command == "genesegment")
         {
-               QList<int> segment;
-               for(int i = 0; i < segment_size; ++i)
+               QList<qint32> segment;
+               for(qint32 i = 0; i < segment_size; ++i)
                {
-                   int value;
+                   qint32 value;
                    stream >> value;
                    segment.append(value);
                }
@@ -299,7 +299,7 @@ bool GenericGene::canLoad(QIODevice *device)
     return gene_identifier == identifier();
 }
 
-int GenericGene::getIndependentRandomInt()
+qint32 GenericGene::getIndependentRandomInt()
 {
     // Because the range of the RNG in different libraries does not need to be equal we have to calculate a platform-independent value to make genes platform-independent
     if(Q_UNLIKELY(random_exponent == 0))
@@ -307,7 +307,7 @@ int GenericGene::getIndependentRandomInt()
         calculateRandomFactor();
     }
     double d = 0;
-    for(int i = 0; i < random_exponent; ++i)
+    for(qint32 i = 0; i < random_exponent; ++i)
     {
         d *= RAND_MAX;
         d += qrand();
@@ -329,7 +329,7 @@ GenericGene *GenericGene::loadThisGene(QIODevice *device)
     return gene.loadGene(device);
 }
 
-GenericGene *GenericGene::createGene(QList< QList<int> > gene, int segment_size)
+GenericGene *GenericGene::createGene(QList< QList<qint32> > gene, qint32 segment_size)
 {
     return new GenericGene(gene, segment_size);
 }
@@ -345,7 +345,7 @@ bool GenericGene::_saveGene(QTextStream *stream)
     return true;
 }
 
-GenericGene *GenericGene::_loadGene(QList< QList<int> > gene, int segment_size, QTextStream *stream)
+GenericGene *GenericGene::_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream)
 {
     Q_UNUSED(stream);
     return new GenericGene(gene, segment_size);

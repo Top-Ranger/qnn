@@ -20,7 +20,7 @@
 
 #include <QTime>
 
-NonParallelGenericGeneticAlgorithm::NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, int population_size, double fitness_to_reach, int max_rounds, QObject *parent) :
+NonParallelGenericGeneticAlgorithm::NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
     GenericGeneticAlgorithm(network, simulation, population_size, fitness_to_reach, max_rounds, parent)
 {
 }
@@ -52,9 +52,9 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
 
     _population.clear();
 
-    int currentRound = 0;
+    qint32 currentRound = 0;
 
-    for(int i = 0; i < _population_size; ++i)
+    for(qint32 i = 0; i < _population_size; ++i)
     {
         GeneContainer container;
         container.gene = _network->getRandomGene();
@@ -89,7 +89,7 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
     _rounds_to_finish = currentRound-1;
 
     // Clean-up
-    for(int i = 0; i < _population.length()-1; ++i)
+    for(qint32 i = 0; i < _population.length()-1; ++i)
     {
         delete _population[i].network;
         delete _population[i].gene;
@@ -110,7 +110,7 @@ void NonParallelGenericGeneticAlgorithm::create_children()
         temp.clear();
         newChildren.clear();
         childrenGene.clear();
-        for(int i = 0; i < 8 && !_population.empty(); ++i)
+        for(qint32 i = 0; i < 8 && !_population.empty(); ++i)
         {
             temp.append(_population.takeAt(qrand()%_population.length()));
         }
@@ -118,7 +118,7 @@ void NonParallelGenericGeneticAlgorithm::create_children()
         if(temp.length() >= 2)
         {
             childrenGene = temp[temp.length()-1].gene->combine(temp[temp.length()-1].gene, temp[temp.length()-2].gene);
-            for(int i = 0; i < childrenGene.length(); ++i)
+            for(qint32 i = 0; i < childrenGene.length(); ++i)
             {
                 childrenGene[i]->mutate();
                 GeneContainer container;
@@ -132,7 +132,7 @@ void NonParallelGenericGeneticAlgorithm::create_children()
             }
             temp.append(newChildren);
             qSort(temp);
-            for(int i = 0; i < childrenGene.length(); ++i)
+            for(qint32 i = 0; i < childrenGene.length(); ++i)
             {
                 GeneContainer container = temp.takeFirst();
                 delete container.network;

@@ -29,13 +29,13 @@ public:
     static double standard_activision_function(double input);
 
     struct config {
-        int size_network;
+        qint32 size_network;
         bool size_changing;
-        int max_size_network;
-        int max_time_constant;
-        int weight_scalar;
-        int bias_scalar;
-        int network_default_size_grow;
+        qint32 max_size_network;
+        qint32 max_time_constant;
+        qint32 weight_scalar;
+        qint32 bias_scalar;
+        qint32 network_default_size_grow;
         double (*activision_function)(double);
 
         config() :
@@ -51,7 +51,7 @@ public:
         }
     };
 
-    ContinuousTimeRecurrenNeuralNetwork(int len_input, int len_output, config config = config());
+    ContinuousTimeRecurrenNeuralNetwork(qint32 len_input, qint32 len_output, config config = config());
     ~ContinuousTimeRecurrenNeuralNetwork();
 
     GenericGene *getRandomGene();
@@ -62,12 +62,12 @@ protected:
 
     enum CTRNNgene_positions {gene_bias = 0,
                               gene_input = 1,
-                              gene_time_constraint = 2,
+                              gene_time_constraqint32 = 2,
                               gene_W_start = 3};
 
     void _initialise();
     void _processInput(QList<double> input);
-    double _getNeuronOutput(int i);
+    double _getNeuronOutput(qint32 i);
 
     bool _saveNetworkConfig(QXmlStreamWriter *stream);
 

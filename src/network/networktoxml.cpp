@@ -42,7 +42,7 @@ void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
         stream->writeStartElement("double");
         break;
     case QVariant::Int:
-        stream->writeStartElement("int");
+        stream->writeStartElement("qint32");
         break;
     case QVariant::String:
         stream->writeStartElement("QString");
@@ -79,7 +79,7 @@ void writeConfigStart(QString type, QMap<QString, QVariant> config, QXmlStreamWr
     stream->writeEndElement(); // config
 }
 
-void writeConfigNeuron(int id, QMap<QString, QVariant> config, QMap<int, double> connections, QXmlStreamWriter *stream)
+void writeConfigNeuron(qint32 id, QMap<QString, QVariant> config, QMap<qint32, double> connections, QXmlStreamWriter *stream)
 {
     if(stream == NULL)
     {
@@ -95,7 +95,7 @@ void writeConfigNeuron(int id, QMap<QString, QVariant> config, QMap<int, double>
     }
 
     stream->writeStartElement("input_connections");
-    foreach (int i, connections.keys())
+    foreach (qint32 i, connections.keys())
     {
         stream->writeStartElement("connection");
         stream->writeAttribute("target", QString("%1").arg(i));

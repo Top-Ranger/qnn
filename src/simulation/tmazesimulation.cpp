@@ -41,12 +41,12 @@ TMazeSimulation::~TMazeSimulation()
 {
 }
 
-int TMazeSimulation::needInputLength()
+qint32 TMazeSimulation::needInputLength()
 {
     return _config.range_input;
 }
 
-int TMazeSimulation::needOutputLength()
+qint32 TMazeSimulation::needOutputLength()
 {
     return 4;
 }
@@ -64,21 +64,21 @@ double TMazeSimulation::_getScore()
 {
     double score = 0.0d;
 
-    for(int trial = 0; trial < _config.trials; ++trial)
+    for(qint32 trial = 0; trial < _config.trials; ++trial)
     {
-        QList<int> TMaze = _config.generateTMaze();
-        int position = 0;
+        QList<qint32> TMaze = _config.generateTMaze();
+        qint32 position = 0;
         bool goalNotReached = true;
 
         AbstractNeuralNetwork *network = _network->createConfigCopy();
         network->initialise(_gene);
-        for(int timestep = 0; timestep < _config.max_timesteps && goalNotReached; ++timestep)
+        for(qint32 timestep = 0; timestep < _config.max_timesteps && goalNotReached; ++timestep)
         {
             Direction direction = start_direction;
             double max_output = -10.0d;
 
             QList<double> input;
-            for(int i = 0; i < _config.range_input; ++i)
+            for(qint32 i = 0; i < _config.range_input; ++i)
             {
                 input << 0.0d;
             }
@@ -92,7 +92,7 @@ double TMazeSimulation::_getScore()
             }
             network->processInput(input);
 
-            for(int i = 0; i < 4; ++i)
+            for(qint32 i = 0; i < 4; ++i)
             {
                 if(network->getNeuronOutput(i) > max_output)
                 {
@@ -159,12 +159,12 @@ double TMazeSimulation::_getScore()
     return score / _config.trials;
 }
 
-QList<int> TMazeSimulation::generateStandardTMaze()
+QList<qint32> TMazeSimulation::generateStandardTMaze()
 {
-    QList<int> list;
-    int number = (qrand()%5)+1;
+    QList<qint32> list;
+    qint32 number = (qrand()%5)+1;
     list << number;
-    for(int i = 0; i < 5; ++i)
+    for(qint32 i = 0; i < 5; ++i)
     {
         list << 0;
     }
@@ -179,7 +179,7 @@ QList<int> TMazeSimulation::generateStandardTMaze()
     return list;
 }
 
-bool TMazeSimulation::standardG1Correct(QList<int> list)
+bool TMazeSimulation::standardG1Correct(QList<qint32> list)
 {
     if(list.length() < 2)
     {

@@ -26,12 +26,12 @@
 class QNNSHARED_EXPORT FeedForwardNetwork : public AbstractNeuralNetwork
 {
 public:
-    static int num_segments(int len_input, int len_output, int hidden_layer, int len_hidden);
+    static qint32 num_segments(qint32 len_input, qint32 len_output, qint32 hidden_layer, qint32 len_hidden);
     static double standard_activision_function(double input);
 
     struct config {
-        int num_hidden_layer;
-        int len_hidden;
+        qint32 num_hidden_layer;
+        qint32 len_hidden;
         double (*activision_function)(double);
         double weight_scalar;
 
@@ -44,7 +44,7 @@ public:
         }
     };
 
-    FeedForwardNetwork(int len_input, int len_output, config config = config());
+    FeedForwardNetwork(qint32 len_input, qint32 len_output, config config = config());
     ~FeedForwardNetwork();
 
     GenericGene *getRandomGene();
@@ -53,7 +53,7 @@ public:
 protected:
     void _initialise();
     void _processInput(QList<double> input);
-    double _getNeuronOutput(int i);
+    double _getNeuronOutput(qint32 i);
 
     bool _saveNetworkConfig(QXmlStreamWriter *stream);
 

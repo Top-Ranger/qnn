@@ -27,14 +27,14 @@ enum ReberMode {
     reber_verify_word
 };
 
-bool reber_state0(QString &s, ReberMode mode, int &depth);
-bool reber_state1(QString &s, ReberMode mode, int &depth);
-bool reber_state2(QString &s, ReberMode mode, int &depth);
-bool reber_state3(QString &s, ReberMode mode, int &depth);
-bool reber_state4(QString &s, ReberMode mode, int &depth);
-bool reber_state5(QString &s, ReberMode mode, int &depth);
-bool reber(QString &s, ReberMode mode, int max_depth = 50);
-bool embedded_reber(QString &s, ReberMode mode, int max_depth = 50);
+bool reber_state0(QString &s, ReberMode mode, qint32 &depth);
+bool reber_state1(QString &s, ReberMode mode, qint32 &depth);
+bool reber_state2(QString &s, ReberMode mode, qint32 &depth);
+bool reber_state3(QString &s, ReberMode mode, qint32 &depth);
+bool reber_state4(QString &s, ReberMode mode, qint32 &depth);
+bool reber_state5(QString &s, ReberMode mode, qint32 &depth);
+bool reber(QString &s, ReberMode mode, qint32 max_depth = 50);
+bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth = 50);
 
 /*
    Reber grammar
@@ -50,7 +50,7 @@ bool embedded_reber(QString &s, ReberMode mode, int max_depth = 50);
 Input order: BTSXEPV
 */
 
-bool embedded_reber(QString &s, ReberMode mode, int max_depth)
+bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
 {
     if(max_depth < 1)
     {
@@ -110,7 +110,7 @@ bool embedded_reber(QString &s, ReberMode mode, int max_depth)
     }
 }
 
-bool reber(QString &s, ReberMode mode, int max_depth)
+bool reber(QString &s, ReberMode mode, qint32 max_depth)
 {
     if(max_depth < 1)
     {
@@ -118,7 +118,7 @@ bool reber(QString &s, ReberMode mode, int max_depth)
         return false;
     }
 
-    int depth = max_depth;
+    qint32 depth = max_depth;
 
     if(mode == reber_create_random_word)
     {
@@ -147,7 +147,7 @@ bool reber(QString &s, ReberMode mode, int max_depth)
     }
 }
 
-bool reber_state0(QString &s, ReberMode mode, int &depth)
+bool reber_state0(QString &s, ReberMode mode, qint32 &depth)
 {
     if(depth-- <= 0)
     {
@@ -191,7 +191,7 @@ bool reber_state0(QString &s, ReberMode mode, int &depth)
     }
 }
 
-bool reber_state1(QString &s, ReberMode mode, int &depth)
+bool reber_state1(QString &s, ReberMode mode, qint32 &depth)
 {
     if(depth-- <= 0)
     {
@@ -235,7 +235,7 @@ bool reber_state1(QString &s, ReberMode mode, int &depth)
     }
 }
 
-bool reber_state2(QString &s, ReberMode mode, int &depth)
+bool reber_state2(QString &s, ReberMode mode, qint32 &depth)
 {
     if(depth-- <= 0)
     {
@@ -279,7 +279,7 @@ bool reber_state2(QString &s, ReberMode mode, int &depth)
     }
 }
 
-bool reber_state3(QString &s, ReberMode mode, int &depth)
+bool reber_state3(QString &s, ReberMode mode, qint32 &depth)
 {
     if(depth-- <= 0)
     {
@@ -313,7 +313,7 @@ bool reber_state3(QString &s, ReberMode mode, int &depth)
     }
 }
 
-bool reber_state4(QString &s, ReberMode mode, int &depth)
+bool reber_state4(QString &s, ReberMode mode, qint32 &depth)
 {
     if(depth-- <= 0)
     {
@@ -357,7 +357,7 @@ bool reber_state4(QString &s, ReberMode mode, int &depth)
     }
 }
 
-bool reber_state5(QString &s, ReberMode mode, int &depth)
+bool reber_state5(QString &s, ReberMode mode, qint32 &depth)
 {
     if(depth-- <= 0)
     {
@@ -436,7 +436,7 @@ char getRandomReberChar()
 QList<double> reberCharToInput(char c)
 {
     QList<double> input;
-    for(int i = 0; i < 7; ++i)
+    for(qint32 i = 0; i < 7; ++i)
     {
         input << 0.0d;
     }
@@ -473,9 +473,9 @@ QList<double> reberCharToInput(char c)
 char networkToReberOutput(AbstractNeuralNetwork *network)
 {
     double max_value = -10.0d;
-    int max = -1;
+    qint32 max = -1;
 
-    for(int i = 0; i < 8; ++i)
+    for(qint32 i = 0; i < 8; ++i)
     {
         if(network->getNeuronOutput(i) > max_value)
         {
@@ -531,12 +531,12 @@ ReberGrammarSimulation::~ReberGrammarSimulation()
 {
 }
 
-int ReberGrammarSimulation::needInputLength()
+qint32 ReberGrammarSimulation::needInputLength()
 {
     return 7;
 }
 
-int ReberGrammarSimulation::needOutputLength()
+qint32 ReberGrammarSimulation::needOutputLength()
 {
     switch (_config.mode) {
     case DetectGrammar:
@@ -564,7 +564,7 @@ double ReberGrammarSimulation::_getScore()
 {
     double score = 0.0d;
 
-    bool (*reber_function)(QString &s, ReberMode mode, int max_depth);
+    bool (*reber_function)(QString &s, ReberMode mode, qint32 max_depth);
 
     if(_config.embedded)
     {
@@ -575,7 +575,7 @@ double ReberGrammarSimulation::_getScore()
         reber_function = &reber;
     }
 
-    int max_trials = 0;
+    qint32 max_trials = 0;
 
     switch (_config.mode) {
     case DetectGrammar:
@@ -586,7 +586,7 @@ double ReberGrammarSimulation::_getScore()
         break;
     }
 
-    for(int trial = 0; trial < max_trials; ++trial)
+    for(qint32 trial = 0; trial < max_trials; ++trial)
     {
         AbstractNeuralNetwork *network = _network->createConfigCopy();
         network->initialise(_gene);
@@ -631,8 +631,8 @@ double ReberGrammarSimulation::_getScore()
             QString input_word;
             char c_output = '\1';
 
-            int input_length = (word.length()/2) + qrand()%(word.length()/4)+1;
-            for(int i = 0; i < input_length && iter != word.end(); ++i)
+            qint32 input_length = (word.length()/2) + qrand()%(word.length()/4)+1;
+            for(qint32 i = 0; i < input_length && iter != word.end(); ++i)
             {
                 input_word.append(*iter++);
             }
@@ -642,7 +642,7 @@ double ReberGrammarSimulation::_getScore()
                 network->processInput(input);
                 c_output = networkToReberOutput(network);
             }
-            int current_depth = _config.max_depth-input_word.length();
+            qint32 current_depth = _config.max_depth-input_word.length();
             bool finished = c_output == '\0';
 
             if(c_output == '\1')

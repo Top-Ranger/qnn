@@ -32,8 +32,8 @@ public:
 
     void initialise(AbstractNeuralNetwork *network, GenericGene *gene);
     double getScore();
-    virtual int needInputLength();
-    virtual int needOutputLength();
+    virtual qint32 needInputLength();
+    virtual qint32 needOutputLength();
 
     virtual GenericSimulation *createConfigCopy();
 

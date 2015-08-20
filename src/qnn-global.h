@@ -27,6 +27,6 @@
 #  define QNNSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-static const int MAX_GENE_VALUE = 0x7FFFFFFF; // Should be MAX_INT on 32 bit
+static const qint32 MAX_GENE_VALUE = 0x7FFFFFFF; // Should be MAX_INT on 32 bit
 
 #endif // QNN_GLOBAL_H

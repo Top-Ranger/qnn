@@ -20,7 +20,7 @@
 #include <QString>
 #include <QDebug>
 
-AbstractNeuralNetwork::AbstractNeuralNetwork(int len_input, int len_output) :
+AbstractNeuralNetwork::AbstractNeuralNetwork(qint32 len_input, qint32 len_output) :
     _len_input(len_input),
     _len_output(len_output),
     _gene(NULL)
@@ -61,7 +61,7 @@ void AbstractNeuralNetwork::processInput(QList<double> input)
     _processInput(input);
 }
 
-double AbstractNeuralNetwork::getNeuronOutput(int i)
+double AbstractNeuralNetwork::getNeuronOutput(qint32 i)
 {
     if(_gene == NULL)
     {

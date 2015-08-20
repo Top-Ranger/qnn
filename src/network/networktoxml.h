@@ -26,7 +26,7 @@
 
 namespace NetworkToXML {
 void writeConfigStart(QString type, QMap<QString, QVariant> config, QXmlStreamWriter *stream);
-void writeConfigNeuron(int id, QMap<QString, QVariant> config, QMap<int, double> connections, QXmlStreamWriter *stream);
+void writeConfigNeuron(qint32 id, QMap<QString, QVariant> config, QMap<qint32, double> connections, QXmlStreamWriter *stream);
 void writeConfigEnd(QXmlStreamWriter *stream);
 }
 

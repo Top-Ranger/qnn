@@ -29,12 +29,12 @@
 class QNNSHARED_EXPORT AbstractNeuralNetwork
 {
 public:
-    AbstractNeuralNetwork(int len_input, int len_output);
+    AbstractNeuralNetwork(qint32 len_input, qint32 len_output);
     virtual ~AbstractNeuralNetwork();
 
     void initialise(GenericGene *gene);
     void processInput(QList<double> input);
-    double getNeuronOutput(int i);
+    double getNeuronOutput(qint32 i);
 
     bool saveNetworkConfig(QIODevice *device);
 
@@ -46,12 +46,12 @@ protected:
 
     virtual void _initialise() = 0;
     virtual void _processInput(QList<double> input) = 0;
-    virtual double _getNeuronOutput(int i) = 0;
+    virtual double _getNeuronOutput(qint32 i) = 0;
 
     virtual bool _saveNetworkConfig(QXmlStreamWriter *stream) = 0;
 
-    int _len_input;
-    int _len_output;
+    qint32 _len_input;
+    qint32 _len_output;
     GenericGene *_gene;
 };
 

@@ -26,7 +26,7 @@
 class QNNSHARED_EXPORT NonParallelGenericGeneticAlgorithm : public GenericGeneticAlgorithm
 {
 public:
-    NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, int population_size = 300, double fitness_to_reach = 0.99, int max_rounds = 200, QObject *parent = 0);
+    NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, QObject *parent = 0);
     ~NonParallelGenericGeneticAlgorithm();
 
     void run_ga();

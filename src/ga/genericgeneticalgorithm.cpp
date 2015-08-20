@@ -26,7 +26,7 @@
 #include <QFuture>
 
 namespace {
-double runOneSimulation(GenericSimulation *simulation, int rand_seed)
+double runOneSimulation(GenericSimulation *simulation, qint32 rand_seed)
 {
     // We need to seed RNG on each thread to get different random values in the simulations
     qsrand(rand_seed);
@@ -36,7 +36,7 @@ double runOneSimulation(GenericSimulation *simulation, int rand_seed)
 }
 }
 
-GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, int population_size, double fitness_to_reach, int max_rounds, QObject *parent) :
+GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
     QObject(parent),
     _population(),
     _best(),
@@ -101,9 +101,9 @@ void GenericGeneticAlgorithm::run_ga()
     _population.clear();
 
     QList< QFuture<double> > threadList;
-    int currentRound = 0;
+    qint32 currentRound = 0;
 
-    for(int i = 0; i < _population_size; ++i)
+    for(qint32 i = 0; i < _population_size; ++i)
     {
         GeneContainer container;
         container.fitness = -1.0d;
@@ -112,14 +112,14 @@ void GenericGeneticAlgorithm::run_ga()
         _population.append(container);
     }
 
-    for(int i = 0; i < _population_size; ++i)
+    for(qint32 i = 0; i < _population_size; ++i)
     {
         GenericSimulation *simulation = _simulation->createConfigCopy();
         simulation->initialise(_population[i].network, _population[i].gene);
         threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand()));
     }
 
-    for(int i = 0; i < _population_size; ++i)
+    for(qint32 i = 0; i < _population_size; ++i)
     {
         _population[i].fitness = threadList[i].result();
     }
@@ -150,7 +150,7 @@ void GenericGeneticAlgorithm::run_ga()
     _rounds_to_finish = currentRound-1;
 
     // Clean-up
-    for(int i = 0; i < _population.length()-1; ++i)
+    for(qint32 i = 0; i < _population.length()-1; ++i)
     {
         delete _population[i].network;
         delete _population[i].gene;
@@ -174,7 +174,7 @@ double GenericGeneticAlgorithm::average_fitness()
     return _average_fitness;
 }
 
-int GenericGeneticAlgorithm::rounds_to_finish()
+qint32 GenericGeneticAlgorithm::rounds_to_finish()
 {
     return _rounds_to_finish;
 }
@@ -193,7 +193,7 @@ void GenericGeneticAlgorithm::create_children()
         newChildren.clear();
         childrenGene.clear();
         threadList.clear();
-        for(int i = 0; i < 8 && !_population.empty(); ++i)
+        for(qint32 i = 0; i < 8 && !_population.empty(); ++i)
         {
             temp.append(_population.takeAt(qrand()%_population.length()));
         }
@@ -201,7 +201,7 @@ void GenericGeneticAlgorithm::create_children()
         if(temp.length() >= 2)
         {
             childrenGene = temp[temp.length()-1].gene->combine(temp[temp.length()-1].gene, temp[temp.length()-2].gene);
-            for(int i = 0; i < childrenGene.length(); ++i)
+            for(qint32 i = 0; i < childrenGene.length(); ++i)
             {
                 childrenGene[i]->mutate();
                 GeneContainer container;
@@ -213,14 +213,14 @@ void GenericGeneticAlgorithm::create_children()
                 simulation->initialise(container.network, container.gene);
                 threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand()));
             }
-            for(int i = 0; i < childrenGene.length(); ++i)
+            for(qint32 i = 0; i < childrenGene.length(); ++i)
             {
                 newChildren[i].fitness = threadList[i].result();
             }
             threadList.clear();
             temp.append(newChildren);
             qSort(temp);
-            for(int i = 0; i < childrenGene.length(); ++i)
+            for(qint32 i = 0; i < childrenGene.length(); ++i)
             {
                 GeneContainer container = temp.takeFirst();
                 delete container.network;

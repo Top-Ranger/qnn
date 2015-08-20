@@ -28,11 +28,11 @@
 class QNNSHARED_EXPORT GenericGene
 {
 public:
-    GenericGene(int initialLength, int segment_size = 1);
+    GenericGene(qint32 initialLength, qint32 segment_size = 1);
     virtual ~GenericGene();
 
     virtual void mutate();
-    virtual QList< QList<int> > segments();
+    virtual QList< QList<qint32> > segments();
     virtual GenericGene *createCopy();
 
     static QList<GenericGene *> combine(GenericGene *gene1, GenericGene *gene2);
@@ -41,22 +41,22 @@ public:
     GenericGene *loadGene(QIODevice *device);
     bool canLoad(QIODevice *device);
 
-    int getIndependentRandomInt();
+    qint32 getIndependentRandomInt();
 
     static GenericGene *loadThisGene(QIODevice *device);
 
 protected:
     GenericGene();
-    GenericGene(QList< QList<int> > gene, int segment_size);
+    GenericGene(QList< QList<qint32> > gene, qint32 segment_size);
 
-    virtual GenericGene *createGene(QList< QList<int> > gene, int segment_size);
+    virtual GenericGene *createGene(QList< QList<qint32> > gene, qint32 segment_size);
 
     virtual QString identifier();
     virtual bool _saveGene(QTextStream *stream);
-    virtual GenericGene *_loadGene(QList< QList<int> > gene, int segment_size, QTextStream *stream);
+    virtual GenericGene *_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream);
 
-    QList< QList<int> > _gene;
-    int _segment_size;
+    QList< QList<qint32> > _gene;
+    qint32 _segment_size;
 
     static const double MUTATION_RATE = 0.03d;
 };

@@ -31,18 +31,18 @@ class QNNSHARED_EXPORT GenericGeneticAlgorithm : public QObject
     Q_OBJECT
 
 public:
-    explicit GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, int population_size = 300, double fitness_to_reach = 0.99, int max_rounds = 200, QObject *parent = 0);
+    explicit GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, QObject *parent = 0);
     virtual ~GenericGeneticAlgorithm();
 
     virtual void run_ga();
     double best_fitness();
     GenericGene *best_gene();
     double average_fitness();
-    int rounds_to_finish();
+    qint32 rounds_to_finish();
 
 signals:
-    void ga_current_round(int current, int max, double best_fitness_value, double average_fitness_value);
-    void ga_finished(double best_fitness_value, double average_fitness_value, int rounds);
+    void ga_current_round(qint32 current, qint32 max, double best_fitness_value, double average_fitness_value);
+    void ga_finished(double best_fitness_value, double average_fitness_value, qint32 rounds);
 
 protected:
     explicit GenericGeneticAlgorithm(QObject *parent = 0);
@@ -67,11 +67,11 @@ protected:
     GeneContainer _best;
     AbstractNeuralNetwork *_network;
     GenericSimulation *_simulation;
-    int _population_size;
+    qint32 _population_size;
     double _fitness_to_reach;
-    int _max_rounds;
+    qint32 _max_rounds;
     double _average_fitness;
-    int _rounds_to_finish;
+    qint32 _rounds_to_finish;
 };
 
 #endif // GENERICGENETICALGORITHM_H

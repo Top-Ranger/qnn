@@ -65,12 +65,12 @@ double GenericSimulation::getScore()
     return _getScore();
 }
 
-int GenericSimulation::needInputLength()
+qint32 GenericSimulation::needInputLength()
 {
     return 5;
 }
 
-int GenericSimulation::needOutputLength()
+qint32 GenericSimulation::needOutputLength()
 {
     return 1;
 }

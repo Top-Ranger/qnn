@@ -20,7 +20,7 @@
 
 #include <QDebug>
 
-LengthChangingGene::LengthChangingGene(int initialLength, int segment_size, config config) :
+LengthChangingGene::LengthChangingGene(qint32 initialLength, qint32 segment_size, config config) :
     GenericGene(initialLength, segment_size),
     _config(config)
 {
@@ -54,7 +54,7 @@ LengthChangingGene::LengthChangingGene() :
 {
 }
 
-LengthChangingGene::LengthChangingGene(QList< QList<int> > gene, int segment_size, config config) :
+LengthChangingGene::LengthChangingGene(QList< QList<qint32> > gene, qint32 segment_size, config config) :
     GenericGene(gene, segment_size),
     _config(config)
 {
@@ -78,8 +78,8 @@ void LengthChangingGene::mutate()
     {
         if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
         {
-            QList<int> newSegment;
-            for(int j = 0; j < _segment_size; ++j)
+            QList<qint32> newSegment;
+            for(qint32 j = 0; j < _segment_size; ++j)
             {
                 newSegment.append(getIndependentRandomInt());
             }
@@ -99,7 +99,7 @@ GenericGene *LengthChangingGene::loadThisGene(QIODevice *device)
     return gene.loadGene(device);
 }
 
-GenericGene *LengthChangingGene::createGene(QList< QList<int> > gene, int segment_size)
+GenericGene *LengthChangingGene::createGene(QList< QList<qint32> > gene, qint32 segment_size)
 {
     return new LengthChangingGene(gene, segment_size, _config);
 }
@@ -116,7 +116,7 @@ bool LengthChangingGene::_saveGene(QTextStream *stream)
     return true;
 }
 
-GenericGene *LengthChangingGene::_loadGene(QList< QList<int> > gene, int segment_size, QTextStream *stream)
+GenericGene *LengthChangingGene::_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream)
 {
     config config;
 

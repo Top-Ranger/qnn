@@ -27,8 +27,8 @@ class QNNSHARED_EXPORT LengthChangingGene : public GenericGene
 {
 public:
     struct config {
-        int min_length; // -1 = initialLength
-        int max_length; // -1 = initialLength*4
+        qint32 min_length; // -1 = initialLength
+        qint32 max_length; // -1 = initialLength*4
 
         config() :
             min_length(-1),
@@ -37,7 +37,7 @@ public:
         }
     };
 
-    LengthChangingGene(int initialLength, int segment_size = 1, config config = config());
+    LengthChangingGene(qint32 initialLength, qint32 segment_size = 1, config config = config());
     ~LengthChangingGene();
 
     void mutate();
@@ -47,13 +47,13 @@ public:
 
 protected:
     LengthChangingGene();
-    LengthChangingGene(QList< QList<int> > gene, int segment_size, config config = config());
+    LengthChangingGene(QList< QList<qint32> > gene, qint32 segment_size, config config = config());
 
-    GenericGene *createGene(QList< QList<int> > gene, int segment_size);
+    GenericGene *createGene(QList< QList<qint32> > gene, qint32 segment_size);
 
     QString identifier();
     bool _saveGene(QTextStream *stream);
-    GenericGene *_loadGene(QList< QList<int> > gene, int segment_size, QTextStream *stream);
+    GenericGene *_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream);
 
     config _config;
 };

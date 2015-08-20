@@ -36,8 +36,8 @@ public:
         double range_gas_radius;
         double offset_rate_of_gas;
         double range_rate_of_gas;
-        int min_size;
-        int max_size;
+        qint32 min_size;
+        qint32 max_size;
 
         config() :
             area_size(1.0d),
@@ -55,7 +55,7 @@ public:
         }
     };
 
-    GasNet(int len_input, int len_output, config config = config());
+    GasNet(qint32 len_input, qint32 len_output, config config = config());
     ~GasNet();
 
     GenericGene *getRandomGene();
@@ -82,7 +82,7 @@ protected:
                                 gene_bias= 15};
     void _initialise();
     void _processInput(QList<double> input);
-    double _getNeuronOutput(int i);
+    double _getNeuronOutput(qint32 i);
 
     bool _saveNetworkConfig(QXmlStreamWriter *stream);
 
