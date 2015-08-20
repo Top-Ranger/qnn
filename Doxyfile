@@ -1334,7 +1334,7 @@ QCH_FILE               = ../qnn.qch
 # The default value is: org.doxygen.Project.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
-QHP_NAMESPACE          = qnn
+QHP_NAMESPACE          = org.doxygen.qnn
 
 # The QHP_VIRTUAL_FOLDER tag specifies the namespace to use when generating Qt
 # Help Project output. For more information please see Qt Help Project / Virtual
@@ -1343,7 +1343,7 @@ QHP_NAMESPACE          = qnn
 # The default value is: doc.
 # This tag requires that the tag GENERATE_QHP is set to YES.
 
-QHP_VIRTUAL_FOLDER     = qnn
+QHP_VIRTUAL_FOLDER     = doc
 
 # If the QHP_CUST_FILTER_NAME tag is set, it specifies the name of a custom
 # filter to add. For more information please see Qt Help Project / Custom
@@ -2411,14 +2411,3 @@ GENERATE_LEGEND        = YES
 # This tag requires that the tag HAVE_DOT is set to YES.
 
 DOT_CLEANUP            = YES
-
-#---------------------------------------------------------------------------
-# Generate help files for Qt Creator
-#---------------------------------------------------------------------------
-
-GENERATE_QHP           = YES
-
-QCH_FILE               = "../qnn.qch"
-QHP_NAMESPACE          = "qnn"
-QHP_VIRTUAL_FOLDER     = "qnn"
-QHG_LOCATION           =  "qhelpgenerator"
