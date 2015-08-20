@@ -27,7 +27,7 @@ static double random_divisor = RAND_MAX;
 void calculateRandomFactor()
 {
     random_exponent = 1;
-    double random_divisor = RAND_MAX;
+    random_divisor = RAND_MAX;
     while(random_divisor < MAX_GENE_VALUE)
     {
         ++random_exponent;
