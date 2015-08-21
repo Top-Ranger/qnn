@@ -167,7 +167,7 @@ protected:
      * \brief Creates a gene out of a given segment list. The created gene should hold the same configuration as the object on which the method is called.
      * \param gene Segment list
      * \param segment_size Length of the segments
-     * \return
+     * \return Created gene. The caller must delete the gene
      */
     virtual GenericGene *createGene(QList< QList<qint32> > gene, qint32 segment_size);
 
