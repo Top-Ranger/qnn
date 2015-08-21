@@ -295,6 +295,7 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
                                                   floatFromGeneInput(segments[j][gene_y], _config.area_size));
 
             // weight
+            _weights[i][j] = 0;
             if(i == j)
             {
                 // recurrent connection
@@ -311,29 +312,28 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
                     break;
                 }
             }
-            else if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
-                                      floatFromGeneInput(segments[i][gene_y], _config.area_size),
-                                      floatFromGeneInput(segments[j][gene_x], _config.area_size),
-                                      floatFromGeneInput(segments[j][gene_y], _config.area_size),
-                                      floatFromGeneInput(segments[i][gene_PositivConeRadius], _config.area_size*_config.cone_ratio),
-                                      floatFromGeneInput(segments[i][gene_PositivConeExt], 2*M_PI),
-                                      floatFromGeneInput(segments[i][gene_PositivConeOrientation], 2*M_PI)))
-            {
-                _weights[i][j] = 1.0d;
-            }
-            else if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
-                                      floatFromGeneInput(segments[i][gene_y], _config.area_size),
-                                      floatFromGeneInput(segments[j][gene_x], _config.area_size),
-                                      floatFromGeneInput(segments[j][gene_y], _config.area_size),
-                                      floatFromGeneInput(segments[i][gene_NegativConeRadius], _config.area_size*_config.cone_ratio),
-                                      floatFromGeneInput(segments[i][gene_NegativConeExt], 2*M_PI),
-                                      floatFromGeneInput(segments[i][gene_NegativConeOrientation], 2*M_PI)))
-            {
-                _weights[i][j] = -1.0d;
-            }
             else
             {
-                _weights[i][j] = 0.0d;
+                if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
+                                     floatFromGeneInput(segments[i][gene_y], _config.area_size),
+                                     floatFromGeneInput(segments[j][gene_x], _config.area_size),
+                                     floatFromGeneInput(segments[j][gene_y], _config.area_size),
+                                     floatFromGeneInput(segments[i][gene_PositivConeRadius], _config.area_size*_config.cone_ratio),
+                                     floatFromGeneInput(segments[i][gene_PositivConeExt], 2*M_PI),
+                                     floatFromGeneInput(segments[i][gene_PositivConeOrientation], 2*M_PI)))
+                {
+                    _weights[i][j] += 1.0d;
+                }
+                if(areNodesConnected(floatFromGeneInput(segments[i][gene_x], _config.area_size),
+                                     floatFromGeneInput(segments[i][gene_y], _config.area_size),
+                                     floatFromGeneInput(segments[j][gene_x], _config.area_size),
+                                     floatFromGeneInput(segments[j][gene_y], _config.area_size),
+                                     floatFromGeneInput(segments[i][gene_NegativConeRadius], _config.area_size*_config.cone_ratio),
+                                     floatFromGeneInput(segments[i][gene_NegativConeExt], 2*M_PI),
+                                     floatFromGeneInput(segments[i][gene_NegativConeOrientation], 2*M_PI)))
+                {
+                    _weights[i][j] += -1.0d;
+                }
             }
         }
     }
@@ -480,7 +480,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             // Connections
             for(qint32 j = 0; j < segments.length(); ++j)
             {
-                newValue += _network[j] * _weights[i][j];
+                newValue += _network[j] * _weights[j][i];
             }
 
             // Input
@@ -869,9 +869,9 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
 
         for(qint32 j = 0; j < segments.length(); ++j)
         {
-            if(_weights[i][j] != 0)
+            if(_weights[j][i] != 0)
             {
-                connections_neuron[j] = _weights[i][j];
+                connections_neuron[j] = _weights[j][i];
             }
         }
 
