@@ -34,6 +34,9 @@
  * QNeuralNetwork is licensed under the terms of the GNU Lesser General Public License Version 3 or (at your option) any later version.
  */
 
+/*!
+  * \brief This macro will ensure import / export of symbols will work correctly on all platforms
+  */
 #if defined(QNN_LIBRARY)
 #  define QNNSHARED_EXPORT Q_DECL_EXPORT
 #else

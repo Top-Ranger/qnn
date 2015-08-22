@@ -139,7 +139,8 @@ protected:
 
 private:
     /*!
-     * \brief Empty constructor
+     * \brief Empty constructor.
+     *
      * FeedForwardNetwork may not be used empty
      */
     FeedForwardNetwork();
