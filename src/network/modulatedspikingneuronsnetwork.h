@@ -24,7 +24,7 @@
 #include "abstractneuralnetwork.h"
 
 /*!
- * \brief The ModulatedSpikingNeuronsNetwork class represents a "modulated spiking-neurons network".
+ * \brief The ModulatedSpikingNeuronsNetwork class represents a modulated spiking-neurons network, a combination of GasNets and spiking neurons.
  *
  * For more information see:
  * Stefan Bruhns. Modulated Spiking-Neurons. Bachelor thesis, University Hamburg, 2015.

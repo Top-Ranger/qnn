@@ -24,7 +24,7 @@
 #include "abstractneuralnetwork.h"
 
 /*!
- * \brief The GasNet class represents a GasNet.
+ * \brief The GasNet class represents a GasNet which is inspired by the discovery of freely floating gas in the human brain.
  *
  * For more information see:
  * Phil Husbands, Tom Smith, Nick Jakobi, and Michael O’Shea. Better Living Through Chemistry: Evolving GasNets for Robot Control. 1998.
