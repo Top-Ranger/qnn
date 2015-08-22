@@ -21,6 +21,19 @@
 
 #include <QtCore/qglobal.h>
 
+/*!
+ * \mainpage QNeuralNetwork documentation
+ *
+ * QNeuralNetwork (qnn) is a simple to use, customisable and efficient library for neural network. QNeuralNetwork is written in C++/Qt.
+ *
+ * QNeuralNetwork uses an easy internal model. A network is solely defined through its type, its configuration and its gene.
+ * A gene contains a number of segments, each segment is a list of numbers.
+ *
+ * A network can be trained for a task using a genetic algorithm. The task is contained in a simulation.
+ *
+ * QNeuralNetwork is licensed under the terms of the GNU Lesser General Public License Version 3 or (at your option) any later version.
+ */
+
 #if defined(QNN_LIBRARY)
 #  define QNNSHARED_EXPORT Q_DECL_EXPORT
 #else
