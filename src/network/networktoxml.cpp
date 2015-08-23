@@ -23,7 +23,7 @@
 namespace NetworkToXML {
 void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
 {
-    if(stream == NULL)
+    if(Q_UNLIKELY(stream == NULL))
     {
         return;
     }
@@ -59,7 +59,7 @@ void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
 
 void writeConfigStart(QString type, QMap<QString, QVariant> config, QXmlStreamWriter *stream)
 {
-    if(stream == NULL)
+    if(Q_UNLIKELY(stream == NULL))
     {
         return;
     }
@@ -80,7 +80,7 @@ void writeConfigStart(QString type, QMap<QString, QVariant> config, QXmlStreamWr
 
 void writeConfigNeuron(qint32 id, QMap<QString, QVariant> config, QMap<qint32, double> connections, QXmlStreamWriter *stream)
 {
-    if(stream == NULL)
+    if(Q_UNLIKELY(stream == NULL))
     {
         return;
     }
@@ -108,7 +108,7 @@ void writeConfigNeuron(qint32 id, QMap<QString, QVariant> config, QMap<qint32, d
 
 void writeConfigEnd(QXmlStreamWriter *stream)
 {
-    if(stream == NULL)
+    if(Q_UNLIKELY(stream == NULL))
     {
         return;
     }

@@ -44,9 +44,14 @@ AbstractNeuralNetwork::~AbstractNeuralNetwork()
 
 void AbstractNeuralNetwork::initialise(GenericGene *gene)
 {
-    if(_gene != NULL)
+    if(Q_UNLIKELY(_gene != NULL))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Network already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(Q_UNLIKELY(gene == NULL))
+    {
+        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": can not initialise with gene=NULL!";
+        return;
     }
     _gene = gene->createCopy();
     _initialise();
@@ -54,7 +59,7 @@ void AbstractNeuralNetwork::initialise(GenericGene *gene)
 
 void AbstractNeuralNetwork::processInput(QList<double> input)
 {
-    if(_gene == NULL)
+    if(Q_UNLIKELY(_gene == NULL))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -63,7 +68,7 @@ void AbstractNeuralNetwork::processInput(QList<double> input)
 
 double AbstractNeuralNetwork::getNeuronOutput(qint32 i)
 {
-    if(_gene == NULL)
+    if(Q_UNLIKELY(_gene == NULL))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -72,18 +77,18 @@ double AbstractNeuralNetwork::getNeuronOutput(qint32 i)
 
 bool AbstractNeuralNetwork::saveNetworkConfig(QIODevice *device)
 {
-    if(device == NULL)
+    if(Q_UNLIKELY(device == NULL))
     {
         return false;
     }
 
-    if(_gene == NULL)
+    if(Q_UNLIKELY(_gene == NULL))
     {
         qCritical() << "WARNING in " __FILE__ << " " << __LINE__ << ": Network not initialised";
         return false;
     }
 
-    if(device->isOpen())
+    if(Q_UNLIKELY(device->isOpen()))
     {
         qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Saving to an open device is not permitted";
         return false;

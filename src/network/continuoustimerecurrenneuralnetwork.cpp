@@ -40,7 +40,7 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(qint32 
     _config(config),
     _network(NULL)
 {
-    if(_config.network_default_size_grow <= 0)
+    if(Q_UNLIKELY(_config.network_default_size_grow <= 0))
     {
         qFatal(QString("FATAL ERROR in %1 %2: max_time_constant must be greater than 0!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -55,15 +55,15 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(qint32 
     {
         _config.max_size_network = _config.size_network * 4;
     }
-    if(_config.size_network < len_output)
+    if(Q_UNLIKELY(_config.size_network < len_output))
     {
         qFatal(QString("FATAL ERROR in %1 %2: size_network must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(_config.max_time_constant < 1)
+    if(Q_UNLIKELY(_config.max_time_constant < 1))
     {
         qFatal(QString("FATAL ERROR in %1 %2: max_time_constant must be 1 or bigger!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(_config.size_changing && _config.max_size_network < _config.size_network)
+    if(Q_UNLIKELY(_config.size_changing && _config.max_size_network < _config.size_network))
     {
         qFatal(QString("FATAL ERROR in %1 %2: max_size_network must not be smaller than size_network!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -106,11 +106,11 @@ AbstractNeuralNetwork *ContinuousTimeRecurrenNeuralNetwork::createConfigCopy()
 
 void ContinuousTimeRecurrenNeuralNetwork::_initialise()
 {
-    if(_gene->segments().length() < _config.size_network || _gene->segments()[0].length() < (3 + _config.size_network))
+    if(Q_UNLIKELY(_gene->segments().length() < _config.size_network || _gene->segments()[0].length() < (3 + _config.size_network)))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Gene lenght does not fit!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(_config.size_changing && _gene->segments()[0].length() < (3 + _config.max_size_network))
+    if(Q_UNLIKELY(_config.size_changing && _gene->segments()[0].length() < (3 + _config.max_size_network)))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Gene lenght does not fit max_size_network!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -155,7 +155,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
 
 double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(qint32 i)
 {
-    if(_network != NULL && i < _len_output)
+    if(Q_LIKELY(_network != NULL && i < _len_output))
     {
         return _config.activision_function(_network[i] + weight(_gene->segments()[i][gene_bias], _config.bias_scalar));
     }

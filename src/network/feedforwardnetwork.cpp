@@ -65,11 +65,11 @@ FeedForwardNetwork::~FeedForwardNetwork()
 
 void FeedForwardNetwork::_initialise()
 {
-    if(_gene->segments().length() < num_segments(_len_input, _len_output, _config.num_hidden_layer, _config.len_hidden))
+    if(Q_UNLIKELY(_gene->segments().length() < num_segments(_len_input, _len_output, _config.num_hidden_layer, _config.len_hidden)))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Wrong gene length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    else if(_config.len_hidden <= 0 || _config.num_hidden_layer < 0)
+    else if(Q_UNLIKELY(_config.len_hidden <= 0 || _config.num_hidden_layer < 0))
     {
         qFatal(QString("FATAL ERROR in %1 %2: invalid hidden layer size!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -87,7 +87,7 @@ void FeedForwardNetwork::_initialise()
 
 void FeedForwardNetwork::_processInput(QList<double> input)
 {
-    if(input.length() != _len_input)
+    if(Q_UNLIKELY(input.length() != _len_input))
     {
         qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": input length" << input.length() << "!= _len_input" << _len_input;
         return;
@@ -156,7 +156,7 @@ void FeedForwardNetwork::_processInput(QList<double> input)
 
 double FeedForwardNetwork::_getNeuronOutput(qint32 i)
 {
-    if(i >= 0 && i < _len_output)
+    if(Q_LIKELY(i >= 0 && i < _len_output))
     {
         return _output[i];
     }

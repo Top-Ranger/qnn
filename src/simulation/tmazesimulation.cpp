@@ -84,7 +84,7 @@ double TMazeSimulation::_getScore()
             }
             if(TMaze[position] != 0)
             {
-                if(TMaze[position] > _config.range_input)
+                if(Q_UNLIKELY(TMaze[position] > _config.range_input))
                 {
                     qFatal(QString("FATAL ERROR in %1 %2: Value out of range!").arg(__FILE__).arg(__LINE__).toLatin1().data());
                 }

@@ -44,11 +44,11 @@ GenericGene::GenericGene(qint32 initialLength, qint32 segment_size) :
     _gene(),
     _segment_size(segment_size)
 {
-    if(initialLength < 0)
+    if(Q_UNLIKELY(initialLength < 0))
     {
         qFatal(QString("FATAL ERROR in %1 %2: initial length can not be negativ!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(segment_size <= 0)
+    if(Q_UNLIKELY(segment_size <= 0))
     {
         qFatal(QString("FATAL ERROR in %1 %2: segment size must be 1 or greater").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -155,11 +155,11 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
 
 bool GenericGene::saveGene(QIODevice *device)
 {
-    if(device == NULL)
+    if(Q_UNLIKELY(device == NULL))
     {
         return false;
     }
-    if(device->isOpen())
+    if(Q_UNLIKELY(device->isOpen()))
     {
         qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Saving to an open device is not permitted";
         return false;
@@ -190,7 +190,7 @@ bool GenericGene::saveGene(QIODevice *device)
 
 GenericGene *GenericGene::loadGene(QIODevice *device)
 {
-    if(device == NULL)
+    if(Q_UNLIKELY(device == NULL))
     {
         return NULL;
     }
@@ -198,7 +198,7 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
     qint32 segment_size;
     QList< QList<qint32> > gene;
 
-    if(device->isOpen())
+    if(Q_UNLIKELY(device->isOpen()))
     {
         qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Loading to an open device is not permitted";
         return NULL;
@@ -274,11 +274,11 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
 
 bool GenericGene::canLoad(QIODevice *device)
 {
-    if(device == NULL)
+    if(Q_UNLIKELY(device == NULL))
     {
         return false;
     }
-    if(device->isOpen())
+    if(Q_UNLIKELY(device->isOpen()))
     {
         qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Loading to an open device is not permitted";
         return false;
@@ -316,12 +316,12 @@ qint32 GenericGene::getIndependentRandomInt()
     // Sometimes d might be slightly bigger then 1 because of float imprecision
     // Therefore we have to check for overflows
     qint64 result = MAX_GENE_VALUE * (d / random_divisor);
-    if(result > MAX_GENE_VALUE)
+    if(Q_UNLIKELY(result > MAX_GENE_VALUE))
     {
         // Overflow has occured
         result = MAX_GENE_VALUE;
     }
-    else if(result < 0)
+    else if(Q_UNLIKELY(result < 0))
     {
         // negativ value has occured
         result = 0;
@@ -347,12 +347,12 @@ QString GenericGene::identifier()
 
 bool GenericGene::_saveGene(QTextStream *stream)
 {
-    Q_UNUSED(stream);
+    Q_UNUSED(stream); // Nothing extra to save here
     return true;
 }
 
 GenericGene *GenericGene::_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream)
 {
-    Q_UNUSED(stream);
+    Q_UNUSED(stream); // Nothing extra to save here
     return new GenericGene(gene, segment_size);
 }

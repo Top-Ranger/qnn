@@ -80,15 +80,15 @@ ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork(qint32 len_input,
     _Pc(),
     _Pd()
 {
-    if(_config.area_size <= 0)
+    if(Q_UNLIKELY(_config.area_size <= 0))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Area needs to be greater then 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(_config.min_size != -1 && _config.min_size < _len_output)
+    if(Q_UNLIKELY(_config.min_size != -1 && _config.min_size < _len_output))
     {
         qFatal(QString("FATAL ERROR in %1 %2: min_size_network must not be smaller then output lenght!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(_config.offset_rate_of_gas <= 0.0d)
+    if(Q_UNLIKELY(_config.offset_rate_of_gas <= 0.0d))
     {
         qFatal(QString("FATAL ERROR in %1 %2: offset_rate_of_gas must be greater than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -226,7 +226,7 @@ GenericGene *ModulatedSpikingNeuronsNetwork::getRandomGene()
     }
     else
     {
-        if(config.min_length > config.max_length)
+        if(Q_UNLIKELY(config.min_length > config.max_length))
         {
             qCritical() << "CRITICAL ERROR in " << __FILE__ << " " << __LINE__ << ": min_length is not smaller then max_length";
             initial_length = _len_output;
@@ -257,11 +257,11 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
 {
     QList< QList<qint32> > segments = _gene->segments();
 
-    if(segments.length() < _len_output)
+    if(Q_UNLIKELY(segments.length() < _len_output))
     {
         qFatal(QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(segments[0].length() != 18)
+    if(Q_UNLIKELY(segments[0].length() != 18))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -600,7 +600,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
 
 double ModulatedSpikingNeuronsNetwork::_getNeuronOutput(qint32 i)
 {
-    if(i >= 0 && i < _len_output)
+    if(Q_LIKELY(i >= 0 && i < _len_output))
     {
         return _firecount[i] * _config.timestep_size;
     }

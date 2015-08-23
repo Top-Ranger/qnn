@@ -42,11 +42,11 @@ GenericSimulation::~GenericSimulation()
 
 void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *gene)
 {
-    if(_network != NULL || _gene != NULL)
+    if(Q_UNLIKELY(_network != NULL || _gene != NULL))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Simulation already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(network == NULL || gene == NULL)
+    if(Q_UNLIKELY(network == NULL || gene == NULL))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Trying to initialise with NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -58,7 +58,7 @@ void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *
 
 double GenericSimulation::getScore()
 {
-    if(_network == NULL || _gene == NULL)
+    if(Q_UNLIKELY(_network == NULL || _gene == NULL))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
