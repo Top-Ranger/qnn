@@ -26,10 +26,20 @@
 #include <QFuture>
 
 namespace {
-double runOneSimulation(GenericSimulation *simulation, qint32 rand_seed)
+
+static const qint32 MAX_FORWARD_RANDOM = 256;
+
+double runOneSimulation(GenericSimulation *simulation, qint32 rand_seed, qint32 forward_random)
 {
     // We need to seed RNG on each thread to get different random values in the simulations
     qsrand(rand_seed);
+
+    // Advance random a bit for better randomness in the simulations
+    for(qint32 i = 0; i < forward_random; ++i)
+    {
+        qrand();
+    }
+
     double result = simulation->getScore();
     delete simulation;
     return result;
@@ -116,7 +126,7 @@ void GenericGeneticAlgorithm::run_ga()
     {
         GenericSimulation *simulation = _simulation->createConfigCopy();
         simulation->initialise(_population[i].network, _population[i].gene);
-        threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand()));
+        threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand(), qrand()%MAX_FORWARD_RANDOM));
     }
 
     for(qint32 i = 0; i < _population_size; ++i)
@@ -216,7 +226,7 @@ void GenericGeneticAlgorithm::create_children()
                 newChildren[number_list].append(container);
                 GenericSimulation *simulation = _simulation->createConfigCopy();
                 simulation->initialise(container.network, container.gene);
-                threadList[number_list].append(QtConcurrent::run(runOneSimulation, simulation, qrand()));
+                threadList[number_list].append(QtConcurrent::run(runOneSimulation, simulation, qrand(), qrand()%MAX_FORWARD_RANDOM));
             }
             ++number_list;
         }
