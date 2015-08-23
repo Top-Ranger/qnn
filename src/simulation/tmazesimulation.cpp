@@ -108,7 +108,7 @@ double TMazeSimulation::_getScore()
             switch(direction)
             {
             case start_direction:
-                qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Direction ist start_direction";
+                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Direction ist start_direction";
                 break;
 
             case none_direction:
@@ -183,7 +183,7 @@ bool TMazeSimulation::standardG1Correct(QList<qint32> list)
 {
     if(list.length() < 2)
     {
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": List shorter than 2 - returning default false";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": List shorter than 2 - returning default false";
         return false;
     }
     return list.first() == list.last();

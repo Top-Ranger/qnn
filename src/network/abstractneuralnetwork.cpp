@@ -50,7 +50,7 @@ void AbstractNeuralNetwork::initialise(GenericGene *gene)
     }
     if(Q_UNLIKELY(gene == NULL))
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": can not initialise with gene=NULL!";
+        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": can not initialise with gene=NULL!";
         return;
     }
     _gene = gene->createCopy();
@@ -84,18 +84,18 @@ bool AbstractNeuralNetwork::saveNetworkConfig(QIODevice *device)
 
     if(Q_UNLIKELY(_gene == NULL))
     {
-        qCritical() << "WARNING in " __FILE__ << " " << __LINE__ << ": Network not initialised";
+        qCritical() << "WARNING in " __FILE__ << __LINE__ << ": Network not initialised";
         return false;
     }
 
     if(Q_UNLIKELY(device->isOpen()))
     {
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Saving to an open device is not permitted";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Saving to an open device is not permitted";
         return false;
     }
     if(!device->open(QIODevice::WriteOnly))
     {
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Can not open device";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Can not open device";
         return false;
     }
 

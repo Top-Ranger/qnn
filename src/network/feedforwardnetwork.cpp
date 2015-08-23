@@ -89,7 +89,7 @@ void FeedForwardNetwork::_processInput(QList<double> input)
 {
     if(Q_UNLIKELY(input.length() != _len_input))
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": input length" << input.length() << "!= _len_input" << _len_input;
+        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": input length" << input.length() << "!= _len_input" << _len_input;
         return;
     }
 
@@ -162,7 +162,7 @@ double FeedForwardNetwork::_getNeuronOutput(qint32 i)
     }
     else
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": i out of bound";
+        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": i out of bound";
         return -1.0;
     }
 }

@@ -161,7 +161,7 @@ double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(qint32 i)
     }
     else
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": i out of bound";
+        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": i out of bound";
         return -1.0d;
     }
 }

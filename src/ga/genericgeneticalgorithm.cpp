@@ -238,7 +238,7 @@ void GenericGeneticAlgorithm::create_children()
             }
             else
             {
-                qCritical() << "WARNING in " __FILE__ << " " << __LINE__ << ": Trysing to append empty list";
+                qCritical() << "WARNING in " __FILE__ << __LINE__ << ": Trysing to append empty list";
             }
         }
 
@@ -272,7 +272,7 @@ double GenericGeneticAlgorithm::calculate_average_fitness()
 {
     if(_population.length() == 0)
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": calling calculate_average_fitness with empty population!";
+        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": calling calculate_average_fitness with empty population!";
         return -1.0d;
     }
 

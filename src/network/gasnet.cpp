@@ -142,7 +142,7 @@ GenericGene *GasNet::getRandomGene()
     {
         if(Q_UNLIKELY(config.min_length > config.max_length))
         {
-            qCritical() << "CRITICAL ERROR in " << __FILE__ << " " << __LINE__ << ": min_length is not smaller then max_length";
+            qCritical() << "CRITICAL ERROR in " << __FILE__ << __LINE__ << ": min_length is not smaller then max_length";
             initial_length = _len_output;
         }
         else
@@ -294,7 +294,7 @@ void GasNet::_processInput(QList<double> input)
                     break;
 
                 default:
-                    qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
+                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
                     break;
                 }
             }
@@ -377,7 +377,7 @@ void GasNet::_processInput(QList<double> input)
             break;
 
         default:
-            qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
+            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
             break;
         }
 
@@ -400,7 +400,7 @@ double GasNet::_getNeuronOutput(qint32 i)
     }
     else
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << " " << __LINE__ << ": i out of bound";
+        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": i out of bound";
         return -1.0;
     }
 }
@@ -466,7 +466,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
                     break;
 
                 default:
-                    qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
+                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
                     break;
                 }
             }
@@ -527,7 +527,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
             break;
 
         default:
-            qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
+            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
             break;
         }
 
@@ -551,7 +551,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
             break;
 
         default:
-            qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
+            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
             break;
         }
 

@@ -427,7 +427,7 @@ char getRandomReberChar()
         return 'V';
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Impossible random status";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Impossible random status";
         return 'B';
         break;
     }
@@ -486,7 +486,7 @@ char networkToReberOutput(AbstractNeuralNetwork *network)
     switch(max)
     {
     case -1:
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Mo max_value found";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Mo max_value found";
         return '\0';
         break;
     case 0:
@@ -514,7 +514,7 @@ char networkToReberOutput(AbstractNeuralNetwork *network)
         return '\0';
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": max =" << max;
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": max =" << max;
         return '\0';
         break;
     }
@@ -546,7 +546,7 @@ qint32 ReberGrammarSimulation::needOutputLength()
         return 8;
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown simulation mode";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown simulation mode";
         return 1;
     }
 }
@@ -647,7 +647,7 @@ double ReberGrammarSimulation::_getScore()
 
             if(c_output == '\1')
             {
-                qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": No input";
+                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No input";
                 return 0.0d;
             }
 

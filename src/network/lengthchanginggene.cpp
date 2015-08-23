@@ -126,7 +126,7 @@ GenericGene *LengthChangingGene::_loadGene(QList< QList<qint32> > gene, qint32 s
     *stream >> command;
     if(command != "min_length")
     {
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": No min_length";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No min_length";
         return NULL;
     }
     *stream >> config.min_length;
@@ -135,7 +135,7 @@ GenericGene *LengthChangingGene::_loadGene(QList< QList<qint32> > gene, qint32 s
     *stream >> command;
     if(command != "max_length")
     {
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": No max_length";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No max_length";
         return NULL;
     }
     *stream >> config.max_length;

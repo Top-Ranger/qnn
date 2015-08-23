@@ -31,7 +31,7 @@ void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
     switch(value.type())
     {
     case QVariant::Invalid:
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Invalid QVariant at '" << key <<"' - Skipping";
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Invalid QVariant at '" << key <<"' - Skipping";
         return;
         break;
     case QVariant::Bool:
@@ -47,7 +47,7 @@ void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
         stream->writeStartElement("QString");
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << " " << __LINE__ << ": Unknown QVariant type" << value.type();
+        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown QVariant type" << value.type();
         stream->writeStartElement("unknown");
         break;
     }
