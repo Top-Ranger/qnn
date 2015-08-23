@@ -185,26 +185,27 @@ qint32 GenericGeneticAlgorithm::rounds_to_finish()
 
 void GenericGeneticAlgorithm::create_children()
 {
-    QList<GeneContainer> newPopulation;
-    QList<GeneContainer> temp;
-    QList<GeneContainer> newChildren;
+    QList< QList<GeneContainer> > temp;
+    QList< QList<GeneContainer> > newChildren;
     QList<GenericGene *> childrenGene;
-    QList< QFuture<double> > threadList;
+    QList< QList< QFuture<double> > > threadList;
+    QList<GeneContainer> saveSmallPopulation;
+    int number_list = 0;
 
     while(!_population.empty())
     {
-        temp.clear();
-        newChildren.clear();
         childrenGene.clear();
-        threadList.clear();
+        temp.append(QList<GeneContainer>());
         for(qint32 i = 0; i < 8 && !_population.empty(); ++i)
         {
-            temp.append(_population.takeAt(qrand()%_population.length()));
+            temp[number_list].append(_population.takeAt(qrand()%_population.length()));
         }
-        qSort(temp);
-        if(temp.length() >= 2)
+        qSort(temp[number_list]);
+        if(temp[number_list].length() >= 2)
         {
-            childrenGene = temp[temp.length()-1].gene->combine(temp[temp.length()-1].gene, temp[temp.length()-2].gene);
+            childrenGene = temp[number_list][temp[number_list].length()-1].gene->combine(temp[number_list][temp[number_list].length()-1].gene, temp[number_list][temp[number_list].length()-2].gene);
+            newChildren.append(QList<GeneContainer>());
+            threadList.append(QList< QFuture<double> >());
             for(qint32 i = 0; i < childrenGene.length(); ++i)
             {
                 childrenGene[i]->mutate();
@@ -212,28 +213,44 @@ void GenericGeneticAlgorithm::create_children()
                 container.gene = childrenGene[i];
                 container.network = _network->createConfigCopy();
                 container.fitness = -1.0d;
-                newChildren.append(container);
+                newChildren[number_list].append(container);
                 GenericSimulation *simulation = _simulation->createConfigCopy();
                 simulation->initialise(container.network, container.gene);
-                threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand()));
+                threadList[number_list].append(QtConcurrent::run(runOneSimulation, simulation, qrand()));
             }
-            for(qint32 i = 0; i < childrenGene.length(); ++i)
-            {
-                newChildren[i].fitness = threadList[i].result();
-            }
-            threadList.clear();
-            temp.append(newChildren);
-            qSort(temp);
-            for(qint32 i = 0; i < childrenGene.length(); ++i)
-            {
-                GeneContainer container = temp.takeFirst();
-                delete container.network;
-                delete container.gene;
-            }
-            newPopulation.append(temp);
+            ++number_list;
         }
+        else
+        {
+            if(!temp.isEmpty())
+            {
+                saveSmallPopulation.append(temp.takeLast());
+            }
+            else
+            {
+                qCritical() << "WARNING in " __FILE__ << " " << __LINE__ << ": Trysing to append empty list";
+            }
+        }
+
     }
-    _population = newPopulation;
+
+    for(int j = 0; j < number_list; ++j)
+    {
+        for(qint32 i = 0; i < newChildren[j].length(); ++i)
+        {
+            newChildren[j][i].fitness = threadList[j][i].result();
+        }
+        temp[j].append(newChildren[j]);
+        qSort(temp[j]);
+        for(qint32 i = 0; i < newChildren[j].length(); ++i)
+        {
+            GeneContainer container = temp[j].takeFirst();
+            delete container.network;
+            delete container.gene;
+        }
+        _population.append(temp[j]);
+    }
+    _population.append(saveSmallPopulation);
 }
 
 void GenericGeneticAlgorithm::survivor_selection()

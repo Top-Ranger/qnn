@@ -59,12 +59,12 @@ protected:
     explicit NonParallelGenericGeneticAlgorithm(QObject *parent = 0);
 
     /*!
-     * \brief In this function the children in the genetic algorithm are created.
+     * \brief In this function the children in the genetic algorithm are created. This is an overwritten function.
      */
     void create_children();
 
     /*!
-     * \brief In this function the survivors are created.
+     * \brief In this function the survivors are created. This is an overwritten function.
      */
     void survivor_selection();
 };
