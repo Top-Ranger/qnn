@@ -201,7 +201,7 @@ void GenericGeneticAlgorithm::create_children()
             temp[number_list].append(_population.takeAt(qrand()%_population.length()));
         }
         qSort(temp[number_list]);
-        if(temp[number_list].length() >= 2)
+        if(Q_LIKELY(temp[number_list].length() >= 2))
         {
             childrenGene = temp[number_list][temp[number_list].length()-1].gene->combine(temp[number_list][temp[number_list].length()-1].gene, temp[number_list][temp[number_list].length()-2].gene);
             newChildren.append(QList<GeneContainer>());
@@ -222,7 +222,7 @@ void GenericGeneticAlgorithm::create_children()
         }
         else
         {
-            if(!temp.isEmpty())
+            if(Q_LIKELY(!temp.isEmpty()))
             {
                 saveSmallPopulation.append(temp.takeLast());
             }

@@ -115,7 +115,7 @@ void NonParallelGenericGeneticAlgorithm::create_children()
             temp.append(_population.takeAt(qrand()%_population.length()));
         }
         qSort(temp);
-        if(temp.length() >= 2)
+        if(Q_LIKELY(temp.length() >= 2))
         {
             childrenGene = temp[temp.length()-1].gene->combine(temp[temp.length()-1].gene, temp[temp.length()-2].gene);
             for(qint32 i = 0; i < childrenGene.length(); ++i)
@@ -138,8 +138,8 @@ void NonParallelGenericGeneticAlgorithm::create_children()
                 delete container.network;
                 delete container.gene;
             }
-            newPopulation.append(temp);
         }
+        newPopulation.append(temp);
     }
     _population = newPopulation;
 }
