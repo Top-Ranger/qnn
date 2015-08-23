@@ -52,7 +52,7 @@ Input order: BTSXEPV
 
 bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
 {
-    if(max_depth < 1)
+    if(Q_UNLIKELY(max_depth < 1))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
@@ -112,7 +112,7 @@ bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
 
 bool reber(QString &s, ReberMode mode, qint32 max_depth)
 {
-    if(max_depth < 1)
+    if(Q_UNLIKELY(max_depth < 1))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
@@ -645,10 +645,10 @@ double ReberGrammarSimulation::_getScore()
             qint32 current_depth = _config.max_depth-input_word.length();
             bool finished = c_output == '\0';
 
-            if(c_output == '\1')
+            if(Q_UNLIKELY(c_output == '\1'))
             {
                 qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No input";
-                return 0.0d;
+                break;
             }
 
             while(!finished && current_depth-- > 0)

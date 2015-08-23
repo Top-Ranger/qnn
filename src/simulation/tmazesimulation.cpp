@@ -181,7 +181,7 @@ QList<qint32> TMazeSimulation::generateStandardTMaze()
 
 bool TMazeSimulation::standardG1Correct(QList<qint32> list)
 {
-    if(list.length() < 2)
+    if(Q_UNLIKELY(list.length() < 2))
     {
         qWarning() << "WARNING in " __FILE__ << __LINE__ << ": List shorter than 2 - returning default false";
         return false;
