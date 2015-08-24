@@ -149,7 +149,7 @@ bool reber(QString &s, ReberMode mode, qint32 max_depth)
 
 bool reber_state0(QString &s, ReberMode mode, qint32 &depth)
 {
-    if(depth-- <= 0)
+    if(Q_UNLIKELY(depth-- <= 0))
     {
         return false;
     }
@@ -193,7 +193,7 @@ bool reber_state0(QString &s, ReberMode mode, qint32 &depth)
 
 bool reber_state1(QString &s, ReberMode mode, qint32 &depth)
 {
-    if(depth-- <= 0)
+    if(Q_UNLIKELY(depth-- <= 0))
     {
         return false;
     }
@@ -237,7 +237,7 @@ bool reber_state1(QString &s, ReberMode mode, qint32 &depth)
 
 bool reber_state2(QString &s, ReberMode mode, qint32 &depth)
 {
-    if(depth-- <= 0)
+    if(Q_UNLIKELY(depth-- <= 0))
     {
         return false;
     }
@@ -281,7 +281,7 @@ bool reber_state2(QString &s, ReberMode mode, qint32 &depth)
 
 bool reber_state3(QString &s, ReberMode mode, qint32 &depth)
 {
-    if(depth-- <= 0)
+    if(Q_UNLIKELY(depth-- <= 0))
     {
         return false;
     }
@@ -315,7 +315,7 @@ bool reber_state3(QString &s, ReberMode mode, qint32 &depth)
 
 bool reber_state4(QString &s, ReberMode mode, qint32 &depth)
 {
-    if(depth-- <= 0)
+    if(Q_UNLIKELY(depth-- <= 0))
     {
         return false;
     }
@@ -359,7 +359,7 @@ bool reber_state4(QString &s, ReberMode mode, qint32 &depth)
 
 bool reber_state5(QString &s, ReberMode mode, qint32 &depth)
 {
-    if(depth-- <= 0)
+    if(Q_UNLIKELY(depth-- <= 0))
     {
         return false;
     }
@@ -483,8 +483,7 @@ char networkToReberOutput(AbstractNeuralNetwork *network)
             max_value = network->getNeuronOutput(i);
         }
     }
-    switch(max)
-    {
+    switch(max) {
     case -1:
         qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Mo max_value found";
         return '\0';
