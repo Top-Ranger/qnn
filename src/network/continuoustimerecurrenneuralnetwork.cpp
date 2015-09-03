@@ -145,7 +145,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             d = _config.activision_function(d);
             newValue += d * weight(segments[i][gene_W_start+j], _config.weight_scalar); // wij
         }
-        newNetwork[i] = newValue / ((segments[i][gene_time_constraqint32]%_config.max_time_constant)+1); // τ
+        newNetwork[i] = newValue / ((segments[i][gene_time_constraint]%_config.max_time_constant)+1); // τ
         newNetwork[i] += _network[i];
     }
 
@@ -191,7 +191,7 @@ bool ContinuousTimeRecurrenNeuralNetwork::_saveNetworkConfig(QXmlStreamWriter *s
 
         config_neuron["qint32ernal_value"] = _network[i];
         config_neuron["bias"] = weight(segments[i][gene_bias], _config.bias_scalar);
-        config_neuron["time_constant"] = (segments[i][gene_time_constraqint32]%_config.max_time_constant)+1;
+        config_neuron["time_constant"] = (segments[i][gene_time_constraint]%_config.max_time_constant)+1;
 
         if(segments[i][gene_input]%(_len_input+1) != 0)
         {

@@ -143,7 +143,7 @@ protected:
      */
     enum CTRNNgene_positions {gene_bias = 0,
                               gene_input = 1,
-                              gene_time_constraqint32 = 2,
+                              gene_time_constraint = 2,
                               gene_W_start = 3};
 
     /*!
