@@ -879,5 +879,5 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
     }
 
     writeConfigEnd(stream);
-    return false;
+    return true;
 }
