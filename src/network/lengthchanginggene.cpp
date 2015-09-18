@@ -69,14 +69,14 @@ void LengthChangingGene::mutate()
     GenericGene::mutate();
     if(_gene.length() > _config.min_length)
     {
-        if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
+        if(((double) qrand()/(double) RAND_MAX) < MUTATION_RATE)
         {
             _gene.removeAt(qrand()%_gene.length());
         }
     }
     if(_gene.length() < _config.max_length)
     {
-        if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
+        if(((double) qrand()/(double) RAND_MAX) < MUTATION_RATE)
         {
             QList<qint32> newSegment;
             for(qint32 j = 0; j < _segment_size; ++j)
