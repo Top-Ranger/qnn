@@ -100,14 +100,8 @@ GasNet::GasNet() :
 
 GasNet::~GasNet()
 {
-    if(_network != NULL)
-    {
-        delete [] _network;
-    }
-    if(_gas_emitting != NULL)
-    {
-        delete [] _gas_emitting;
-    }
+    delete [] _network;
+    delete [] _gas_emitting;
     if(_distances != NULL && _gene != NULL)
     {
         for(qint32 i = 0; i < _gene->segments().length(); ++i)

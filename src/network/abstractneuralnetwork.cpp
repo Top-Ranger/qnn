@@ -36,10 +36,7 @@ AbstractNeuralNetwork::AbstractNeuralNetwork() :
 
 AbstractNeuralNetwork::~AbstractNeuralNetwork()
 {
-    if(_gene != NULL)
-    {
-        delete _gene;
-    }
+    delete _gene;
 }
 
 void AbstractNeuralNetwork::initialise(GenericGene *gene)

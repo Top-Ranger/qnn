@@ -78,10 +78,7 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork() :
 
 ContinuousTimeRecurrenNeuralNetwork::~ContinuousTimeRecurrenNeuralNetwork()
 {
-    if(_network != NULL)
-    {
-        delete [] _network;
-    }
+    delete [] _network;
 }
 
 GenericGene *ContinuousTimeRecurrenNeuralNetwork::getRandomGene()

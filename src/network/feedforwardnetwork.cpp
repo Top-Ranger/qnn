@@ -57,10 +57,7 @@ FeedForwardNetwork::~FeedForwardNetwork()
         }
         delete [] _hidden_layers;
     }
-    if(_output != NULL)
-    {
-        delete [] _output;
-    }
+    delete [] _output;
 }
 
 void FeedForwardNetwork::_initialise()

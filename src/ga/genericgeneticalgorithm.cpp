@@ -93,14 +93,8 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(QObject *parent) :
 
 GenericGeneticAlgorithm::~GenericGeneticAlgorithm()
 {
-    if(_best.network != NULL)
-    {
-        delete _best.network;
-    }
-    if(_best.gene != NULL)
-    {
-        delete _best.gene;
-    }
+    delete _best.network;
+    delete _best.gene;
     delete _network;
     delete _simulation;
 }
@@ -119,16 +113,10 @@ void GenericGeneticAlgorithm::run_ga()
     // Initialise
     qsrand(QTime(0,0,0).msecsTo(QTime::currentTime()));
 
-    if(_best.network != NULL)
-    {
-        delete _best.network;
-        _best.network = NULL;
-    }
-    if(_best.gene != NULL)
-    {
-        delete _best.gene;
-        _best.gene = NULL;
-    }
+    delete _best.network;
+    _best.network = NULL;
+    delete _best.gene;
+    _best.gene = NULL;
 
     _population.clear();
 
