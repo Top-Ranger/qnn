@@ -775,35 +775,91 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
             break;
 
         case 1:
-            config_neuron["when_gas_emitting"] = "gasAPositiv concentration";
+            if(_config.a_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasAPositiv concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         case 2:
-            config_neuron["when_gas_emitting"] = "gasANegativ concentration";
+            if(_config.a_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasANegativ concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         case 3:
-            config_neuron["when_gas_emitting"] = "gasBPositiv concentration";
+            if(_config.b_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasBPositiv concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         case 4:
-            config_neuron["when_gas_emitting"] = "gasBNegativ concentration";
+            if(_config.b_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasBNegativ concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         case 5:
-            config_neuron["when_gas_emitting"] = "gasCPositiv concentration";
+            if(_config.c_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasCPositiv concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         case 6:
-            config_neuron["when_gas_emitting"] = "gasCNegativ concentration";
+            if(_config.c_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasCNegativ concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         case 7:
-            config_neuron["when_gas_emitting"] = "gasDPositiv concentration";
+            if(_config.d_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasDPositiv concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         case 8:
-            config_neuron["when_gas_emitting"] = "gasDNegativ concentration";
+            if(_config.d_modulated)
+            {
+                config_neuron["when_gas_emitting"] = "gasDNegativ concentration";
+            }
+            else
+            {
+                config_neuron["when_gas_emitting"] = "Not emitting";
+            }
             break;
 
         default:
@@ -818,35 +874,92 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
             break;
 
         case 1:
-            config_neuron["gas_type"] = "gasAPositiv";
+            if(_config.a_modulated)
+            {
+                config_neuron["gas_type"] = "gasAPositiv";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
             break;
 
         case 2:
-            config_neuron["gas_type"] = "gasANegativ";
+            if(_config.a_modulated)
+            {
+                config_neuron["gas_type"] = "gasANegativ";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
             break;
 
         case 3:
-            config_neuron["gas_type"] = "gasBPositiv";
+            if(_config.b_modulated)
+            {
+                config_neuron["gas_type"] = "gasBPositiv";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
             break;
 
         case 4:
-            config_neuron["gas_type"] = "gasBNegativ";
+            if(_config.b_modulated)
+            {
+                config_neuron["gas_type"] = "gasBNegativ";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
             break;
 
         case 5:
-            config_neuron["gas_type"] = "gasCPositiv";
+            if(_config.c_modulated)
+            {
+                config_neuron["gas_type"] = "gasCPositiv";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
+
             break;
 
         case 6:
-            config_neuron["gas_type"] = "gasCNegativ";
+            if(_config.c_modulated)
+            {
+                config_neuron["gas_type"] = "gasCNegativ";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
             break;
 
         case 7:
-            config_neuron["gas_type"] = "gasDPositiv";
+            if(_config.d_modulated)
+            {
+                config_neuron["gas_type"] = "gasDPositiv";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
             break;
 
         case 8:
-            config_neuron["gas_type"] = "gasDNegativ";
+            if(_config.d_modulated)
+            {
+                config_neuron["gas_type"] = "gasDNegativ";
+            }
+            else
+            {
+                config_neuron["gas_type"] = "No gas";
+            }
             break;
 
         default:
