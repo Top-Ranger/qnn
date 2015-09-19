@@ -43,8 +43,11 @@ class QNNSHARED_EXPORT GenericGeneticAlgorithm : public QObject
 public:
     /*!
      * \brief Constructor of GenericGeneticAlgorithm
-     * \param network The network which should be optimised
-     * \param simulation The simulation for which the network should be optimised
+     *
+     * The genetic algorithm will save a deep copy of the network/simulation so the caller can delete both at any time.
+     *
+     * \param network The network which should be optimised. Might not be NULL
+     * \param simulation The simulation for which the network should be optimised. Might not be NULL
      * \param population_size The population size
      * \param fitness_to_reach The fitness which should be reached. Once it has been reached the genetic algorithm will finish
      * \param max_rounds The maximum amount of rounds. The genetic algorithm will abort after the amount of rounds
@@ -97,6 +100,20 @@ public:
      * \return Best fitness
      */
     qint32 rounds_to_finish();
+
+    /*!
+     * \brief Returns a copy of the network used by the genetic algorithm.
+     *
+     * \return Network copy. The caller must delete the network
+     */
+    AbstractNeuralNetwork *get_network_copy();
+
+    /*!
+     * \brief Returns a copy of the simulation used by the genetic algorithm.
+     *
+     * \return Simulation copy. The caller must delete the simulation
+     */
+    GenericSimulation *get_simulation_copy();
 
 signals:
     /*!

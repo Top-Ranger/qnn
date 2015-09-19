@@ -36,6 +36,15 @@ NonParallelGenericGeneticAlgorithm::~NonParallelGenericGeneticAlgorithm()
 
 void NonParallelGenericGeneticAlgorithm::run_ga()
 {
+    if(Q_UNLIKELY(_network == NULL))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(Q_UNLIKELY(_simulation == NULL))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+
     // Initialise
     qsrand(QTime(0,0,0).msecsTo(QTime::currentTime()));
 

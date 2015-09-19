@@ -50,14 +50,25 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network,
     QObject(parent),
     _population(),
     _best(),
-    _network(network),
-    _simulation(simulation),
+    _network(NULL),
+    _simulation(NULL),
     _population_size(population_size),
     _fitness_to_reach(fitness_to_reach),
     _max_rounds(max_rounds),
     _average_fitness(-1.0d),
     _rounds_to_finish(-1)
 {
+    if(Q_UNLIKELY(network == NULL))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(Q_UNLIKELY(simulation == NULL))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    _network = network->createConfigCopy();
+    _simulation = simulation->createConfigCopy();
+
     _best.fitness = -1.0;
     _best.gene = NULL;
     _best.network = NULL;
@@ -90,10 +101,21 @@ GenericGeneticAlgorithm::~GenericGeneticAlgorithm()
     {
         delete _best.gene;
     }
+    delete _network;
+    delete _simulation;
 }
 
 void GenericGeneticAlgorithm::run_ga()
 {
+    if(Q_UNLIKELY(_network == NULL))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(Q_UNLIKELY(_simulation == NULL))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+
     // Initialise
     qsrand(QTime(0,0,0).msecsTo(QTime::currentTime()));
 
@@ -191,6 +213,16 @@ double GenericGeneticAlgorithm::average_fitness()
 qint32 GenericGeneticAlgorithm::rounds_to_finish()
 {
     return _rounds_to_finish;
+}
+
+AbstractNeuralNetwork *GenericGeneticAlgorithm::get_network_copy()
+{
+    return _network->createConfigCopy();
+}
+
+GenericSimulation *GenericGeneticAlgorithm::get_simulation_copy()
+{
+    return _simulation->createConfigCopy();
 }
 
 void GenericGeneticAlgorithm::create_children()

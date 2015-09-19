@@ -30,9 +30,11 @@ class QNNSHARED_EXPORT NonParallelGenericGeneticAlgorithm : public GenericGeneti
 {
 public:
     /*!
+     * Constructor of NonParallelGenericGeneticAlgorithm
+     *
      * \brief Constructor of NonParallelGenericGeneticAlgorithm
-     * \param network The network which should be optimised
-     * \param simulation The simulation for which the network should be optimised
+     * \param network The network which should be optimised. Might not be NULL
+     * \param simulation The simulation for which the network should be optimised. Might not be NULL
      * \param population_size The population size
      * \param fitness_to_reach The fitness which should be reached. Once it has been reached the genetic algorithm will finish
      * \param max_rounds The maximum amount of rounds. The genetic algorithm will abort after the amount of rounds
