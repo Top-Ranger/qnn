@@ -36,7 +36,7 @@ GenericSimulation::~GenericSimulation()
 
 void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *gene)
 {
-    if(Q_UNLIKELY(_network == NULL || _gene != NULL))
+    if(Q_UNLIKELY(_network != NULL || _gene != NULL))
     {
         qFatal(QString("FATAL ERROR in %1 %2: Simulation already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
