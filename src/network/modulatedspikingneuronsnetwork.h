@@ -189,6 +189,11 @@ protected:
     void initialiseP();
 
     /*!
+     * \brief This method initialises all token arrays and sets _emitting_possible according to the config
+     */
+    void initialiseTokenArrays();
+
+    /*!
      * \brief This enum contains the gene position of the different values.
      */
     enum ModulatedSpikingNeuronsNetwork_gene_positions {gene_x = 0,
@@ -209,6 +214,19 @@ protected:
                                                         gene_b = 15,
                                                         gene_c = 16,
                                                         gene_d = 17};
+    /*!
+     * \brief This enum contains all possible tokens for type of gas and reasons of emitting gas.
+     */
+    enum GasToken { ElectricCharge,
+                    APositiv,
+                    ANegativ,
+                    BPositiv,
+                    BNegativ,
+                    CPositiv,
+                    CNegativ,
+                    DPositiv,
+                    DNegativ,
+                    NoGas};
 
     /*!
      * \brief Overwritten function to initialise the network.
@@ -289,6 +307,21 @@ protected:
      * \brief P array for d variable as defined by Bruhns
      */
     QList<double> _Pd;
+
+    /*!
+     * \brief This list contains Tokens for all possible reasons for gas emitting.
+     */
+    QList<GasToken> _WhenGas_list;
+
+    /*!
+     * \brief This list contains Tokens for all possible gases that cam be emitted by neurons.
+     */
+    QList<GasToken> _TypeGas_list;
+
+    /*!
+     * \brief Holds if the network can emit gas at all.
+     */
+    bool _emitting_possible;
 };
 
 #endif // MODULATEDSPIKINGNEURONSNETWORK_H

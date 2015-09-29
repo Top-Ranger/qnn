@@ -263,9 +263,9 @@ void GasNet::_processInput(QList<double> input)
     for(qint32 i = 0; i < segments.length(); ++i)
     {
         // Calculate gas concentration
-        double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
         if(_gas_emitting[i] > 0.0d && segments[i][gene_TypeGas]%3 != 0)
         {
+            double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
             for(qint32 j = 0; j < segments.length(); ++j)
             {
                 if(_distances[i][j] > gas_radius)
@@ -435,9 +435,9 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
     for(qint32 i = 0; i < segments.length(); ++i)
     {
         // Calculate gas concentration
-        double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
         if(_gas_emitting[i] > 0.0d && segments[i][gene_TypeGas]%3 != 0)
         {
+            double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
             for(qint32 j = 0; j < segments.length(); ++j)
             {
                 if(_distances[i][j] > gas_radius)

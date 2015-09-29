@@ -78,7 +78,10 @@ ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork(qint32 len_input,
     _Pa(),
     _Pb(),
     _Pc(),
-    _Pd()
+    _Pd(),
+    _WhenGas_list(),
+    _TypeGas_list(),
+    _emitting_possible(false)
 {
     if(Q_UNLIKELY(_config.area_size <= 0))
     {
@@ -108,7 +111,10 @@ ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork() :
     _Pa(),
     _Pb(),
     _Pc(),
-    _Pd()
+    _Pd(),
+    _WhenGas_list(),
+    _TypeGas_list(),
+    _emitting_possible(false)
 {
 }
 
@@ -199,6 +205,44 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
     _Pd.append(3.0d);
     _Pd.append(4.0d);
     _Pd.append(6.0d);
+}
+
+void ModulatedSpikingNeuronsNetwork::initialiseTokenArrays()
+{
+    _WhenGas_list.append(ElectricCharge);
+    _TypeGas_list.append(NoGas);
+    if(_config.a_modulated)
+    {
+        _emitting_possible = true;
+        _WhenGas_list.append(APositiv);
+        _WhenGas_list.append(ANegativ);
+        _TypeGas_list.append(APositiv);
+        _TypeGas_list.append(ANegativ);
+    }
+    if(_config.b_modulated)
+    {
+        _emitting_possible = true;
+        _WhenGas_list.append(BPositiv);
+        _WhenGas_list.append(BNegativ);
+        _TypeGas_list.append(BPositiv);
+        _TypeGas_list.append(BNegativ);
+    }
+    if(_config.c_modulated)
+    {
+        _emitting_possible = true;
+        _WhenGas_list.append(CPositiv);
+        _WhenGas_list.append(CNegativ);
+        _TypeGas_list.append(CPositiv);
+        _TypeGas_list.append(CNegativ);
+    }
+    if(_config.d_modulated)
+    {
+        _emitting_possible = true;
+        _WhenGas_list.append(DPositiv);
+        _WhenGas_list.append(DNegativ);
+        _TypeGas_list.append(DPositiv);
+        _TypeGas_list.append(DNegativ);
+    }
 }
 
 GenericGene *ModulatedSpikingNeuronsNetwork::getRandomGene()
@@ -370,84 +414,63 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             gasDNeg[i] = 0;
         }
 
-        for(qint32 i = 0; i < segments.length(); ++i)
+        if(_emitting_possible)
         {
-            // Calculate gas concentration
-            double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
-            if(_gas_emitting[i] > 0.0d && segments[i][gene_TypeGas]%9 != 0)
+            for(qint32 i = 0; i < segments.length(); ++i)
             {
-                for(qint32 j = 0; j < segments.length(); ++j)
+                // Calculate gas concentration
+                if(_gas_emitting[i] > 0.0d && _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] != NoGas)
                 {
-                    if(_distances[i][j] > gas_radius)
+                    double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
+                    for(qint32 j = 0; j < segments.length(); ++j)
                     {
-                        continue;
-                    }
-                    double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
-                    switch (segments[i][gene_TypeGas]%9)
-                    {
-                    case 0:
-                        // No Gas is emitted
-                        break;
-
-                    case 1:
-                        if(_config.a_modulated)
+                        if(_distances[i][j] > gas_radius)
                         {
+                            continue;
+                        }
+                        double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
+                        switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()])
+                        {
+                        case NoGas:
+                            // No Gas is emitted
+                            break;
+
+                        case APositiv:
                             gasAPos[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    case 2:
-                        if(_config.a_modulated)
-                        {
+                        case ANegativ:
                             gasANeg[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    case 3:
-                        if(_config.b_modulated)
-                        {
+                        case BPositiv:
                             gasBPos[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    case 4:
-                        if(_config.b_modulated)
-                        {
+                        case BNegativ:
                             gasBNeg[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    case 5:
-                        if(_config.c_modulated)
-                        {
+                        case CPositiv:
                             gasCPos[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    case 6:
-                        if(_config.c_modulated)
-                        {
+                        case CNegativ:
                             gasCNeg[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    case 7:
-                        if(_config.d_modulated)
-                        {
+                        case DPositiv:
                             gasDPos[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    case 8:
-                        if(_config.d_modulated)
-                        {
+                        case DNegativ:
                             gasDNeg[j] += gas_concentration;
-                        }
-                        break;
+                            break;
 
-                    default:
-                        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
-                        break;
+                        default:
+                            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] << "- ignoring";
+                            break;
+                        }
                     }
                 }
             }
@@ -490,87 +513,90 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         delete [] _u;
         _u = newU;
 
-        for(qint32 i = 0; i < segments.length(); ++i)
+        if(_emitting_possible)
         {
-            // Calculate emition of gas
-            bool emittingGas = false;
-            switch (segments[i][gene_WhenGas]%9)
+            for(qint32 i = 0; i < segments.length(); ++i)
             {
-            case 0: // Electric charge
-                if(_network[i] > _config.electric_threshhold)
+                // Calculate emition of gas
+                bool emittingGas = false;
+                switch(_WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()])
                 {
-                    emittingGas = true;
-                }
-                break;
+                case ElectricCharge:
+                    if(_network[i] > _config.electric_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
 
-            case 1:
-                if(gasAPos[i] > _config.gas_threshhold)
+                case APositiv:
+                    if(gasAPos[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                case ANegativ:
+                    if(gasANeg[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                case BPositiv:
+                    if(gasBPos[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                case BNegativ:
+                    if(gasBNeg[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                case CPositiv:
+                    if(gasCPos[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                case CNegativ:
+                    if(gasCNeg[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                case DPositiv:
+                    if(gasDPos[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                case DNegativ:
+                    if(gasDNeg[i] > _config.gas_threshhold)
+                    {
+                        emittingGas = true;
+                    }
+                    break;
+
+                default:
+                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()] << "- ignoring";
+                    break;
+                }
+
+                if(emittingGas)
                 {
-                    emittingGas = true;
+                    _gas_emitting[i] = cut01(_gas_emitting[i] + 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
                 }
-                break;
-
-            case 2:
-                if(gasANeg[i] > _config.gas_threshhold)
+                else
                 {
-                    emittingGas = true;
+                    _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
                 }
-                break;
-
-            case 3:
-                if(gasBPos[i] > _config.gas_threshhold)
-                {
-                    emittingGas = true;
-                }
-                break;
-
-            case 4:
-                if(gasBNeg[i] > _config.gas_threshhold)
-                {
-                    emittingGas = true;
-                }
-                break;
-
-            case 5:
-                if(gasCPos[i] > _config.gas_threshhold)
-                {
-                    emittingGas = true;
-                }
-                break;
-
-            case 6:
-                if(gasCNeg[i] > _config.gas_threshhold)
-                {
-                    emittingGas = true;
-                }
-                break;
-
-            case 7:
-                if(gasDPos[i] > _config.gas_threshhold)
-                {
-                    emittingGas = true;
-                }
-                break;
-
-            case 8:
-                if(gasDNeg[i] > _config.gas_threshhold)
-                {
-                    emittingGas = true;
-                }
-                break;
-
-            default:
-                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
-                break;
-            }
-
-            if(emittingGas)
-            {
-                _gas_emitting[i] = cut01(_gas_emitting[i] + 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
-            }
-            else
-            {
-                _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
             }
         }
 
@@ -649,84 +675,63 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         gasDNeg[i] = 0;
     }
 
-    for(qint32 i = 0; i < segments.length(); ++i)
+    if(_emitting_possible)
     {
-        // Calculate gas concentration
-        double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
-        if(_gas_emitting[i] > 0.0d && segments[i][gene_TypeGas]%9 != 0)
+        for(qint32 i = 0; i < segments.length(); ++i)
         {
-            for(qint32 j = 0; j < segments.length(); ++j)
+            // Calculate gas concentration
+            if(_gas_emitting[i] > 0.0d && _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] != NoGas)
             {
-                if(_distances[i][j] > gas_radius)
+                double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
+                for(qint32 j = 0; j < segments.length(); ++j)
                 {
-                    continue;
-                }
-                double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
-                switch (segments[i][gene_TypeGas]%9)
-                {
-                case 0:
-                    // No Gas is emitted
-                    break;
-
-                case 1:
-                    if(_config.a_modulated)
+                    if(_distances[i][j] > gas_radius)
                     {
+                        continue;
+                    }
+                    double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
+                    switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()])
+                    {
+                    case NoGas:
+                        // No Gas is emitted
+                        break;
+
+                    case APositiv:
                         gasAPos[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                case 2:
-                    if(_config.a_modulated)
-                    {
+                    case ANegativ:
                         gasANeg[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                case 3:
-                    if(_config.b_modulated)
-                    {
+                    case BPositiv:
                         gasBPos[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                case 4:
-                    if(_config.b_modulated)
-                    {
+                    case BNegativ:
                         gasBNeg[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                case 5:
-                    if(_config.c_modulated)
-                    {
+                    case CPositiv:
                         gasCPos[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                case 6:
-                    if(_config.c_modulated)
-                    {
+                    case CNegativ:
                         gasCNeg[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                case 7:
-                    if(_config.d_modulated)
-                    {
+                    case DPositiv:
                         gasDPos[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                case 8:
-                    if(_config.d_modulated)
-                    {
+                    case DNegativ:
                         gasDNeg[j] += gas_concentration;
-                    }
-                    break;
+                        break;
 
-                default:
-                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
-                    break;
+                    default:
+                        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] << "- ignoring";
+                        break;
+                    }
                 }
             }
         }
@@ -757,203 +762,98 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         config_neuron["gasDNeg_concentration"] = gasDNeg[i];
 
 
-        switch (segments[i][gene_WhenGas]%9)
+        if(_emitting_possible)
         {
-        case 0: // Electric charge
-            config_neuron["when_gas_emitting"] = "electric charge";
-            break;
-
-        case 1:
-            if(_config.a_modulated)
+            switch(_WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()])
             {
+            case ElectricCharge:
+                config_neuron["when_gas_emitting"] = "electric charge";
+                break;
+
+            case APositiv:
                 config_neuron["when_gas_emitting"] = "gasAPositiv concentration";
-            }
-            else
-            {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+                break;
 
-        case 2:
-            if(_config.a_modulated)
-            {
+            case ANegativ:
                 config_neuron["when_gas_emitting"] = "gasANegativ concentration";
-            }
-            else
-            {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+                break;
 
-        case 3:
-            if(_config.b_modulated)
-            {
+            case BPositiv:
                 config_neuron["when_gas_emitting"] = "gasBPositiv concentration";
-            }
-            else
-            {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+                break;
 
-        case 4:
-            if(_config.b_modulated)
-            {
+            case BNegativ:
                 config_neuron["when_gas_emitting"] = "gasBNegativ concentration";
-            }
-            else
-            {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+                break;
 
-        case 5:
-            if(_config.c_modulated)
-            {
+            case CPositiv:
                 config_neuron["when_gas_emitting"] = "gasCPositiv concentration";
-            }
-            else
-            {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+                break;
 
-        case 6:
-            if(_config.c_modulated)
-            {
+            case CNegativ:
                 config_neuron["when_gas_emitting"] = "gasCNegativ concentration";
-            }
-            else
-            {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+                break;
 
-        case 7:
-            if(_config.d_modulated)
-            {
+            case DPositiv:
                 config_neuron["when_gas_emitting"] = "gasDPositiv concentration";
-            }
-            else
-            {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+                break;
 
-        case 8:
-            if(_config.d_modulated)
-            {
+            case DNegativ:
                 config_neuron["when_gas_emitting"] = "gasDNegativ concentration";
+                break;
+
+            default:
+                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()] << "- ignoring";
+                break;
             }
-            else
+
+            switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()])
             {
-                config_neuron["when_gas_emitting"] = "Not emitting";
-            }
-            break;
+            case NoGas:
+                config_neuron["gas_type"] = "No gas";
+                break;
 
-        default:
-            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << segments[i][gene_WhenGas]%3 << "- ignoring";
-            break;
-        }
-
-        switch (segments[i][gene_TypeGas]%9)
-        {
-        case 0:
-            config_neuron["gas_type"] = "No gas";
-            break;
-
-        case 1:
-            if(_config.a_modulated)
-            {
+            case APositiv:
                 config_neuron["gas_type"] = "gasAPositiv";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
-            break;
+                break;
 
-        case 2:
-            if(_config.a_modulated)
-            {
+            case ANegativ:
                 config_neuron["gas_type"] = "gasANegativ";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
-            break;
+                break;
 
-        case 3:
-            if(_config.b_modulated)
-            {
+            case BPositiv:
                 config_neuron["gas_type"] = "gasBPositiv";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
-            break;
+                break;
 
-        case 4:
-            if(_config.b_modulated)
-            {
+            case BNegativ:
                 config_neuron["gas_type"] = "gasBNegativ";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
-            break;
+                break;
 
-        case 5:
-            if(_config.c_modulated)
-            {
+            case CPositiv:
                 config_neuron["gas_type"] = "gasCPositiv";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
+                break;
 
-            break;
-
-        case 6:
-            if(_config.c_modulated)
-            {
+            case CNegativ:
                 config_neuron["gas_type"] = "gasCNegativ";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
-            break;
+                break;
 
-        case 7:
-            if(_config.d_modulated)
-            {
+            case DPositiv:
                 config_neuron["gas_type"] = "gasDPositiv";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
-            break;
+                break;
 
-        case 8:
-            if(_config.d_modulated)
-            {
+            case DNegativ:
                 config_neuron["gas_type"] = "gasDNegativ";
-            }
-            else
-            {
-                config_neuron["gas_type"] = "No gas";
-            }
-            break;
+                break;
 
-        default:
-            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
-            break;
+            default:
+                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << segments[i][gene_TypeGas]%3 << "- ignoring";
+                break;
+            }
+        }
+        else
+        {
+            config_neuron["gas_type"] = "No gas";
+            config_neuron["when_gas_emitting"] = "Not emitting";
         }
 
         config_neuron["rate_of_gas"] = (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas));
