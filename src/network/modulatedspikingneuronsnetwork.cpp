@@ -97,6 +97,7 @@ ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork(qint32 len_input,
     }
 
     initialiseP();
+    initialiseTokenArrays();
 }
 
 ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork() :
