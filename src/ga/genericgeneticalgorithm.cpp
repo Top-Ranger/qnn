@@ -66,6 +66,14 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network,
     {
         qFatal(QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
+    if(Q_UNLIKELY(population_size <= 0))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Population size must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
+    if(Q_UNLIKELY(max_rounds <= 0))
+    {
+        qFatal(QString("FATAL ERROR in %1 %2: Max rounds must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+    }
     _network = network->createConfigCopy();
     _simulation = simulation->createConfigCopy();
 
@@ -122,6 +130,8 @@ void GenericGeneticAlgorithm::run_ga()
 
     create_initial_population();
 
+    Q_ASSERT(_population.length() == _population_size);
+
     qSort(_population);
 
     emit ga_current_round(0, _max_rounds, _population.last().fitness, calculate_average_fitness());
@@ -132,6 +142,7 @@ void GenericGeneticAlgorithm::run_ga()
     {
         create_children();
         survivor_selection();
+        Q_ASSERT(_population.length() == _population_size);
         qSort(_population);
         emit ga_current_round(currentRound, _max_rounds, _population.last().fitness, calculate_average_fitness());
     }
