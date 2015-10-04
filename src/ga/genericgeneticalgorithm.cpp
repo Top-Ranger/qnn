@@ -120,39 +120,14 @@ void GenericGeneticAlgorithm::run_ga()
 
     _population.clear();
 
-    QList< QFuture<double> > threadList;
-    qint32 currentRound = 0;
-
-    for(qint32 i = 0; i < _population_size; ++i)
-    {
-        GeneContainer container;
-        container.fitness = -1.0d;
-        container.gene = _network->getRandomGene();
-        container.network = _network->createConfigCopy();
-        _population.append(container);
-    }
-
-    for(qint32 i = 0; i < _population_size; ++i)
-    {
-        GenericSimulation *simulation = _simulation->createConfigCopy();
-        simulation->initialise(_population[i].network, _population[i].gene);
-        threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand(), qrand()%MAX_FORWARD_RANDOM));
-    }
-
-    for(qint32 i = 0; i < _population_size; ++i)
-    {
-        _population[i].fitness = threadList[i].result();
-    }
-
-    threadList.clear();
+    create_initial_population();
 
     qSort(_population);
 
     emit ga_current_round(0, _max_rounds, _population.last().fitness, calculate_average_fitness());
 
-
-    // Main loop
-
+    // Main loop    
+    qint32 currentRound = 0;
     while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
     {
         create_children();
@@ -211,6 +186,32 @@ AbstractNeuralNetwork *GenericGeneticAlgorithm::get_network_copy()
 GenericSimulation *GenericGeneticAlgorithm::get_simulation_copy()
 {
     return _simulation->createConfigCopy();
+}
+
+void GenericGeneticAlgorithm::create_initial_population()
+{
+    QList< QFuture<double> > threadList;
+
+    for(qint32 i = 0; i < _population_size; ++i)
+    {
+        GeneContainer container;
+        container.fitness = -1.0d;
+        container.gene = _network->getRandomGene();
+        container.network = _network->createConfigCopy();
+        _population.append(container);
+    }
+
+    for(qint32 i = 0; i < _population_size; ++i)
+    {
+        GenericSimulation *simulation = _simulation->createConfigCopy();
+        simulation->initialise(_population[i].network, _population[i].gene);
+        threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand(), qrand()%MAX_FORWARD_RANDOM));
+    }
+
+    for(qint32 i = 0; i < _population_size; ++i)
+    {
+        _population[i].fitness = threadList[i].result();
+    }
 }
 
 void GenericGeneticAlgorithm::create_children()

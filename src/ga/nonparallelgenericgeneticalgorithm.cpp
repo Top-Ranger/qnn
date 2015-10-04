@@ -34,29 +34,8 @@ NonParallelGenericGeneticAlgorithm::~NonParallelGenericGeneticAlgorithm()
 {
 }
 
-void NonParallelGenericGeneticAlgorithm::run_ga()
+void NonParallelGenericGeneticAlgorithm::create_initial_population()
 {
-    if(Q_UNLIKELY(_network == NULL))
-    {
-        qFatal(QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
-    }
-    if(Q_UNLIKELY(_simulation == NULL))
-    {
-        qFatal(QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
-    }
-
-    // Initialise
-    qsrand(QTime(0,0,0).msecsTo(QTime::currentTime()));
-
-    delete _best.network;
-    _best.network = NULL;
-    delete _best.gene;
-    _best.gene = NULL;
-
-    _population.clear();
-
-    qint32 currentRound = 0;
-
     for(qint32 i = 0; i < _population_size; ++i)
     {
         GeneContainer container;
@@ -68,37 +47,6 @@ void NonParallelGenericGeneticAlgorithm::run_ga()
         delete simulation;
         _population.append(container);
     }
-
-    qSort(_population);
-
-    emit ga_current_round(0, _max_rounds, _population.last().fitness, calculate_average_fitness());
-
-    // Main loop
-
-    while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
-    {
-        create_children();
-        survivor_selection();
-        qSort(_population);
-        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness, calculate_average_fitness());
-    }
-
-    // Find the best individuum
-    _best.fitness = _population.last().fitness;
-    _best.gene = _population.last().gene;
-    _best.network = _population.last().network;
-
-    _average_fitness = calculate_average_fitness();
-    _rounds_to_finish = currentRound-1;
-
-    // Clean-up
-    for(qint32 i = 0; i < _population.length()-1; ++i)
-    {
-        delete _population[i].network;
-        delete _population[i].gene;
-    }
-    _population.clear();
-    emit ga_finished(_best.fitness, _average_fitness, _rounds_to_finish);
 }
 
 void NonParallelGenericGeneticAlgorithm::create_children()

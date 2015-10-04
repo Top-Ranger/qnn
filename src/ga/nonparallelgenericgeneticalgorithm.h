@@ -47,11 +47,6 @@ public:
      */
     ~NonParallelGenericGeneticAlgorithm();
 
-    /*!
-     * \brief This method starts the genetic algorithm
-     */
-    void run_ga();
-
 protected:
     /*!
      * \brief Empty constructor.
@@ -59,6 +54,11 @@ protected:
      * This constructor may be useful for subclasses.
      */
     explicit NonParallelGenericGeneticAlgorithm(QObject *parent = 0);
+
+    /*!
+     * \brief In this function the initial population is created. This is an overwritten function.
+     */
+    virtual void create_initial_population();
 
     /*!
      * \brief In this function the children in the genetic algorithm are created. This is an overwritten function.

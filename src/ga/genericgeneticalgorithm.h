@@ -142,6 +142,11 @@ protected:
     explicit GenericGeneticAlgorithm(QObject *parent = 0);
 
     /*!
+     * \brief In this function the initial population is created.
+     */
+    virtual void create_initial_population();
+
+    /*!
      * \brief In this function the children in the genetic algorithm are created.
      */
     virtual void create_children();
