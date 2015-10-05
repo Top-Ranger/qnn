@@ -130,7 +130,7 @@ void GenericGeneticAlgorithm::run_ga()
 
     create_initial_population();
 
-    Q_ASSERT(_population.length() == _population_size);
+    Q_ASSERT_X(_population.length() == _population_size, "GenericGeneticAlgorithm::run_ga after create_initial_population()", "size of population does not match _population_size");
 
     qSort(_population);
 
@@ -142,7 +142,7 @@ void GenericGeneticAlgorithm::run_ga()
     {
         create_children();
         survivor_selection();
-        Q_ASSERT(_population.length() == _population_size);
+        Q_ASSERT_X(_population.length() == _population_size, "GenericGeneticAlgorithm::run_ga after create_children(), survivor_selection()", "size of population does not match _population_size");
         qSort(_population);
         emit ga_current_round(currentRound, _max_rounds, _population.last().fitness, calculate_average_fitness());
     }
