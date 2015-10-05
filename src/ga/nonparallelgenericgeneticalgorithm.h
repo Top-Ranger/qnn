@@ -58,17 +58,17 @@ protected:
     /*!
      * \brief In this function the initial population is created. This is an overwritten function.
      */
-    virtual void create_initial_population();
+    virtual void createInitialPopulation();
 
     /*!
      * \brief In this function the children in the genetic algorithm are created. This is an overwritten function.
      */
-    void create_children();
+    void createChildren();
 
     /*!
      * \brief In this function the survivors are created. This is an overwritten function.
      */
-    void survivor_selection();
+    void survivorSelection();
 };
 
 #endif // NONPARALLELGENERICGENETICALGORITHM_H

@@ -33,7 +33,7 @@
 
 using CommonNetworkFunctions::floatFromGeneInput;
 using CommonNetworkFunctions::weight;
-using CommonNetworkFunctions::calculate_distance;
+using CommonNetworkFunctions::calculateDistance;
 using CommonNetworkFunctions::areNodesConnected;
 using CommonNetworkFunctions::cut01;
 
@@ -194,7 +194,7 @@ void GasNet::_initialise()
         for(qint32 j = 0; j < segments.length(); ++j)
         {
             // distance
-            _distances[i][j] = calculate_distance(floatFromGeneInput(segments[i][gene_x], _config.area_size),
+            _distances[i][j] = calculateDistance(floatFromGeneInput(segments[i][gene_x], _config.area_size),
                                                   floatFromGeneInput(segments[i][gene_y], _config.area_size),
                                                   floatFromGeneInput(segments[j][gene_x], _config.area_size),
                                                   floatFromGeneInput(segments[j][gene_y], _config.area_size));

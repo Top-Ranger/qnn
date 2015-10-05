@@ -34,7 +34,7 @@ NonParallelGenericGeneticAlgorithm::~NonParallelGenericGeneticAlgorithm()
 {
 }
 
-void NonParallelGenericGeneticAlgorithm::create_initial_population()
+void NonParallelGenericGeneticAlgorithm::createInitialPopulation()
 {
     for(qint32 i = 0; i < _population_size; ++i)
     {
@@ -49,7 +49,7 @@ void NonParallelGenericGeneticAlgorithm::create_initial_population()
     }
 }
 
-void NonParallelGenericGeneticAlgorithm::create_children()
+void NonParallelGenericGeneticAlgorithm::createChildren()
 {
     QList<GeneContainer> newPopulation;
     QList<GeneContainer> temp;
@@ -95,7 +95,7 @@ void NonParallelGenericGeneticAlgorithm::create_children()
     _population = newPopulation;
 }
 
-void NonParallelGenericGeneticAlgorithm::survivor_selection()
+void NonParallelGenericGeneticAlgorithm::survivorSelection()
 {
     // Not needed because survivors are selected in create_children
 }

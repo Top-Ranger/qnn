@@ -60,7 +60,7 @@ double sigmoid(double d);
  * \param y_target Y coordinates of target
  * \return Euclidean distance
  */
-double calculate_distance(double x_source, double y_source, double x_target, double y_target);
+double calculateDistance(double x_source, double y_source, double x_target, double y_target);
 
 /*!
  * \brief Calculates if a node is located in a cone

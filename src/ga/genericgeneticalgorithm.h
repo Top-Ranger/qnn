@@ -63,7 +63,7 @@ public:
     /*!
      * \brief This method starts the genetic algorithm
      */
-    virtual void run_ga();
+    virtual void runGa();
 
     /*!
      * \brief Return the best fitness of the last run.
@@ -72,7 +72,7 @@ public:
      *
      * \return Best fitness
      */
-    double best_fitness();
+    double bestFitness();
 
     /*!
      * \brief Return the best gene of the last run.
@@ -81,7 +81,7 @@ public:
      *
      * \return Best gene. The caller must delete the gene
      */
-    GenericGene *best_gene();
+    GenericGene *bestGene();
 
     /*!
      * \brief Return the average fitness of the last run.
@@ -90,7 +90,7 @@ public:
      *
      * \return Best fitness
      */
-    double average_fitness();
+    double averageFitness();
 
     /*!
      * \brief Return the number of rounds of the last run.
@@ -99,21 +99,21 @@ public:
      *
      * \return Best fitness
      */
-    qint32 rounds_to_finish();
+    qint32 roundsToFinish();
 
     /*!
      * \brief Returns a copy of the network used by the genetic algorithm.
      *
      * \return Network copy. The caller must delete the network
      */
-    AbstractNeuralNetwork *get_network_copy();
+    AbstractNeuralNetwork *getNetworkCopy();
 
     /*!
      * \brief Returns a copy of the simulation used by the genetic algorithm.
      *
      * \return Simulation copy. The caller must delete the simulation
      */
-    GenericSimulation *get_simulation_copy();
+    GenericSimulation *getSimulationCopy();
 
 signals:
     /*!
@@ -144,23 +144,23 @@ protected:
     /*!
      * \brief In this function the initial population is created.
      */
-    virtual void create_initial_population();
+    virtual void createInitialPopulation();
 
     /*!
      * \brief In this function the children in the genetic algorithm are created.
      */
-    virtual void create_children();
+    virtual void createChildren();
 
     /*!
      * \brief In this function the survivors are created.
      */
-    virtual void survivor_selection();
+    virtual void survivorSelection();
 
     /*!
      * \brief Calculates the average fitness of the population
      * \return Average fitness
      */
-    double calculate_average_fitness();
+    double calculateAverageFitness();
 
     /*!
      * \brief A simple container used in the population

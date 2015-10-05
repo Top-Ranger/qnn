@@ -107,7 +107,7 @@ GenericGeneticAlgorithm::~GenericGeneticAlgorithm()
     delete _simulation;
 }
 
-void GenericGeneticAlgorithm::run_ga()
+void GenericGeneticAlgorithm::runGa()
 {
     if(Q_UNLIKELY(_network == NULL))
     {
@@ -128,23 +128,23 @@ void GenericGeneticAlgorithm::run_ga()
 
     _population.clear();
 
-    create_initial_population();
+    createInitialPopulation();
 
     Q_ASSERT_X(_population.length() == _population_size, "GenericGeneticAlgorithm::run_ga after create_initial_population()", "size of population does not match _population_size");
 
     qSort(_population);
 
-    emit ga_current_round(0, _max_rounds, _population.last().fitness, calculate_average_fitness());
+    emit ga_current_round(0, _max_rounds, _population.last().fitness, calculateAverageFitness());
 
     // Main loop    
     qint32 currentRound = 0;
     while(currentRound++ < _max_rounds && _population.last().fitness < _fitness_to_reach)
     {
-        create_children();
-        survivor_selection();
+        createChildren();
+        survivorSelection();
         Q_ASSERT_X(_population.length() == _population_size, "GenericGeneticAlgorithm::run_ga after create_children(), survivor_selection()", "size of population does not match _population_size");
         qSort(_population);
-        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness, calculate_average_fitness());
+        emit ga_current_round(currentRound, _max_rounds, _population.last().fitness, calculateAverageFitness());
     }
 
     // Find the best individuum
@@ -152,7 +152,7 @@ void GenericGeneticAlgorithm::run_ga()
     _best.gene = _population.last().gene;
     _best.network = _population.last().network;
 
-    _average_fitness = calculate_average_fitness();
+    _average_fitness = calculateAverageFitness();
     _rounds_to_finish = currentRound-1;
 
     // Clean-up
@@ -165,12 +165,12 @@ void GenericGeneticAlgorithm::run_ga()
     emit ga_finished(_best.fitness, _average_fitness, _rounds_to_finish);
 }
 
-double GenericGeneticAlgorithm::best_fitness()
+double GenericGeneticAlgorithm::bestFitness()
 {
     return _best.fitness;
 }
 
-GenericGene *GenericGeneticAlgorithm::best_gene()
+GenericGene *GenericGeneticAlgorithm::bestGene()
 {
     if(_best.gene == NULL)
     {
@@ -179,27 +179,27 @@ GenericGene *GenericGeneticAlgorithm::best_gene()
     return _best.gene->createCopy();
 }
 
-double GenericGeneticAlgorithm::average_fitness()
+double GenericGeneticAlgorithm::averageFitness()
 {
     return _average_fitness;
 }
 
-qint32 GenericGeneticAlgorithm::rounds_to_finish()
+qint32 GenericGeneticAlgorithm::roundsToFinish()
 {
     return _rounds_to_finish;
 }
 
-AbstractNeuralNetwork *GenericGeneticAlgorithm::get_network_copy()
+AbstractNeuralNetwork *GenericGeneticAlgorithm::getNetworkCopy()
 {
     return _network->createConfigCopy();
 }
 
-GenericSimulation *GenericGeneticAlgorithm::get_simulation_copy()
+GenericSimulation *GenericGeneticAlgorithm::getSimulationCopy()
 {
     return _simulation->createConfigCopy();
 }
 
-void GenericGeneticAlgorithm::create_initial_population()
+void GenericGeneticAlgorithm::createInitialPopulation()
 {
     QList< QFuture<double> > threadList;
 
@@ -225,7 +225,7 @@ void GenericGeneticAlgorithm::create_initial_population()
     }
 }
 
-void GenericGeneticAlgorithm::create_children()
+void GenericGeneticAlgorithm::createChildren()
 {
     QList< QList<GeneContainer> > temp;
     QList< QList<GeneContainer> > newChildren;
@@ -295,12 +295,12 @@ void GenericGeneticAlgorithm::create_children()
     _population.append(saveSmallPopulation);
 }
 
-void GenericGeneticAlgorithm::survivor_selection()
+void GenericGeneticAlgorithm::survivorSelection()
 {
     // Not needed because survivors are selected in create_children
 }
 
-double GenericGeneticAlgorithm::calculate_average_fitness()
+double GenericGeneticAlgorithm::calculateAverageFitness()
 {
     if(_population.length() == 0)
     {

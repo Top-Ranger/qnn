@@ -36,7 +36,7 @@ double sigmoid(double d)
     return 1.0d / (1.0d + qExp(-1.0d * d));
 }
 
-double calculate_distance(double x_source, double y_source, double x_target, double y_target)
+double calculateDistance(double x_source, double y_source, double x_target, double y_target)
 {
     double difference_x = x_source - x_target;
     double difference_y = y_source - y_target;
@@ -52,7 +52,7 @@ bool areNodesConnected(double x_source, double y_source, double x_target, double
 
     double difference_x = x_source - x_target;
     double difference_y = y_source - y_target;
-    double distance = calculate_distance(x_source, y_source, x_target, y_target);
+    double distance = calculateDistance(x_source, y_source, x_target, y_target);
 
     if(distance > radius)
     {
