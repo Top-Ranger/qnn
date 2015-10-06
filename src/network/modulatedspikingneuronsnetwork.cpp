@@ -42,18 +42,18 @@ using NetworkToXML::writeConfigNeuron;
 using NetworkToXML::writeConfigEnd;
 
 namespace {
-double getModulatedValue(bool modulation_applied, double gasPos, double gasNeg, qint32 basis_index, QList<double> &array)
+double getModulatedValue(bool modulation_applied, double gasPos, double gasNeg, qint32 basis_index, QVector<double> &array)
 {
     if(modulation_applied)
     {
-        qint32 index = qFloor(basis_index + gasPos * (array.length() - basis_index) + gasNeg * basis_index);
+        qint32 index = qFloor(basis_index + gasPos * (array.size() - basis_index) + gasNeg * basis_index);
         if(index < 0)
         {
             index = 0;
         }
-        else if(index >= array.length())
+        else if(index >= array.size())
         {
-            index = array.length()-1;
+            index = array.size()-1;
         }
         return array[index];
     }
@@ -62,7 +62,6 @@ double getModulatedValue(bool modulation_applied, double gasPos, double gasNeg, 
         return array[basis_index];
     }
 }
-
 }
 
 
@@ -151,6 +150,7 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
     _Pc.clear();
     _Pd.clear();
 
+    _Pa.reserve(13);
     _Pa.append(0.0d);
     _Pa.append(0.02d);
     _Pa.append(0.04d);
@@ -165,6 +165,7 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
     _Pa.append(0.08d);
     _Pa.append(0.1d);
 
+    _Pb.reserve(13);
     _Pb.append(-0.2d);
     _Pb.append(0.0d);
     _Pb.append(0.1d);
@@ -179,6 +180,7 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
     _Pb.append(0.4d);
     _Pb.append(0.6d);
 
+    _Pc.reserve(13);
     _Pc.append(-80.0d);
     _Pc.append(-72.0d);
     _Pc.append(-68.0d);
@@ -193,6 +195,7 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
     _Pc.append(-58.0d);
     _Pc.append(-50.0d);
 
+    _Pd.reserve(13);
     _Pd.append(-2.0d);
     _Pd.append(0.0d);
     _Pd.append(1.0d);
@@ -210,6 +213,12 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
 
 void ModulatedSpikingNeuronsNetwork::initialiseTokenArrays()
 {
+    _WhenGas_list.clear();
+    _WhenGas_list.reserve(9);
+    _TypeGas_list.clear();
+    _TypeGas_list.reserve(9);
+    _emitting_possible = false;
+
     _WhenGas_list.append(ElectricCharge);
     _TypeGas_list.append(NoGas);
     if(_config.a_modulated)
@@ -420,7 +429,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             for(qint32 i = 0; i < segments.length(); ++i)
             {
                 // Calculate gas concentration
-                if(_gas_emitting[i] > 0.0d && _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] != NoGas)
+                if(_gas_emitting[i] > 0.0d && _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
                 {
                     double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
                     for(qint32 j = 0; j < segments.length(); ++j)
@@ -430,7 +439,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                             continue;
                         }
                         double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
-                        switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()])
+                        switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.size()])
                         {
                         case NoGas:
                             // No Gas is emitted
@@ -469,7 +478,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                             break;
 
                         default:
-                            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] << "- ignoring";
+                            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.size()] << "- ignoring";
                             break;
                         }
                     }
@@ -480,10 +489,10 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         for(qint32 i = 0; i < segments.length(); ++i)
         {
             // Calculate a,b,c,d
-            a = getModulatedValue(_config.a_modulated, gasAPos[i], gasANeg[i], segments[i][gene_a]%_Pa.length(), _Pa);
-            b = getModulatedValue(_config.b_modulated, gasBPos[i], gasBNeg[i], segments[i][gene_b]%_Pb.length(), _Pb);
-            c[i] = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], segments[i][gene_c]%_Pc.length(), _Pc);
-            d[i] = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], segments[i][gene_d]%_Pd.length(), _Pd);
+            a = getModulatedValue(_config.a_modulated, gasAPos[i], gasANeg[i], segments[i][gene_a]%_Pa.size(), _Pa);
+            b = getModulatedValue(_config.b_modulated, gasBPos[i], gasBNeg[i], segments[i][gene_b]%_Pb.size(), _Pb);
+            c[i] = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], segments[i][gene_c]%_Pc.size(), _Pc);
+            d[i] = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], segments[i][gene_d]%_Pd.size(), _Pd);
 
 
             // Calculate new input
@@ -520,7 +529,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             {
                 // Calculate emition of gas
                 bool emittingGas = false;
-                switch(_WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()])
+                switch(_WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.size()])
                 {
                 case ElectricCharge:
                     if(_network[i] > _config.electric_threshhold)
@@ -586,7 +595,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                     break;
 
                 default:
-                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()] << "- ignoring";
+                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.size()] << "- ignoring";
                     break;
                 }
 
@@ -681,7 +690,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         for(qint32 i = 0; i < segments.length(); ++i)
         {
             // Calculate gas concentration
-            if(_gas_emitting[i] > 0.0d && _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] != NoGas)
+            if(_gas_emitting[i] > 0.0d && _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
             {
                 double gas_radius = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
                 for(qint32 j = 0; j < segments.length(); ++j)
@@ -691,7 +700,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
                         continue;
                     }
                     double gas_concentration = qExp((-2 * _distances[i][j])/gas_radius) * _gas_emitting[i];
-                    switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()])
+                    switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.size()])
                     {
                     case NoGas:
                         // No Gas is emitted
@@ -730,7 +739,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
                         break;
 
                     default:
-                        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()] << "- ignoring";
+                        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.size()] << "- ignoring";
                         break;
                     }
                 }
@@ -765,7 +774,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
 
         if(_emitting_possible)
         {
-            switch(_WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()])
+            switch(_WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.size()])
             {
             case ElectricCharge:
                 config_neuron["when_gas_emitting"] = "electric charge";
@@ -804,11 +813,11 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
                 break;
 
             default:
-                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.length()] << "- ignoring";
+                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[segments[i][gene_WhenGas]%_WhenGas_list.size()] << "- ignoring";
                 break;
             }
 
-            switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.length()])
+            switch(_TypeGas_list[segments[i][gene_TypeGas]%_TypeGas_list.size()])
             {
             case NoGas:
                 config_neuron["gas_type"] = "No gas";
@@ -859,14 +868,14 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
 
         config_neuron["rate_of_gas"] = (_config.offset_rate_of_gas + floatFromGeneInput(segments[i][gene_Rate_of_gas], _config.range_rate_of_gas));
         config_neuron["gas_radius"] = _config.offset_gas_radius + floatFromGeneInput( segments[i][gene_Gas_radius], _config.range_gas_radius);
-        config_neuron["a_basis"] = _Pa[segments[i][gene_a]%_Pa.length()];
-        config_neuron["b_basis"] = _Pb[segments[i][gene_b]%_Pb.length()];
-        config_neuron["c_basis"] = _Pc[segments[i][gene_c]%_Pc.length()];
-        config_neuron["d_basis"] = _Pd[segments[i][gene_d]%_Pd.length()];
-        config_neuron["a_modulated"] = getModulatedValue(_config.a_modulated, gasAPos[i], gasANeg[i], segments[i][gene_a]%_Pa.length(), _Pa);
-        config_neuron["b_modulated"] = getModulatedValue(_config.b_modulated, gasBPos[i], gasBNeg[i], segments[i][gene_b]%_Pb.length(), _Pb);
-        config_neuron["c_modulated"] = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], segments[i][gene_c]%_Pc.length(), _Pc);
-        config_neuron["d_modulated"] = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], segments[i][gene_d]%_Pd.length(), _Pd);
+        config_neuron["a_basis"] = _Pa[segments[i][gene_a]%_Pa.size()];
+        config_neuron["b_basis"] = _Pb[segments[i][gene_b]%_Pb.size()];
+        config_neuron["c_basis"] = _Pc[segments[i][gene_c]%_Pc.size()];
+        config_neuron["d_basis"] = _Pd[segments[i][gene_d]%_Pd.size()];
+        config_neuron["a_modulated"] = getModulatedValue(_config.a_modulated, gasAPos[i], gasANeg[i], segments[i][gene_a]%_Pa.size(), _Pa);
+        config_neuron["b_modulated"] = getModulatedValue(_config.b_modulated, gasBPos[i], gasBNeg[i], segments[i][gene_b]%_Pb.size(), _Pb);
+        config_neuron["c_modulated"] = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], segments[i][gene_c]%_Pc.size(), _Pc);
+        config_neuron["d_modulated"] = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], segments[i][gene_d]%_Pd.size(), _Pd);
         config_neuron["qint32ernal_charge"] = _network[i];
         config_neuron["fire_output"] = _firecount[i] * _config.timestep_size;
 

@@ -291,32 +291,32 @@ protected:
     /*!
      * \brief P array for a variable as defined by Bruhns
      */
-    QList<double> _Pa;
+    QVector<double> _Pa;
 
     /*!
      * \brief P array for b variable as defined by Bruhns
      */
-    QList<double> _Pb;
+    QVector<double> _Pb;
 
     /*!
      * \brief P array for c variable as defined by Bruhns
      */
-    QList<double> _Pc;
+    QVector<double> _Pc;
 
     /*!
      * \brief P array for d variable as defined by Bruhns
      */
-    QList<double> _Pd;
+    QVector<double> _Pd;
 
     /*!
      * \brief This list contains Tokens for all possible reasons for gas emitting.
      */
-    QList<GasToken> _WhenGas_list;
+    QVector<GasToken> _WhenGas_list;
 
     /*!
      * \brief This list contains Tokens for all possible gases that cam be emitted by neurons.
      */
-    QList<GasToken> _TypeGas_list;
+    QVector<GasToken> _TypeGas_list;
 
     /*!
      * \brief Holds if the network can emit gas at all.
