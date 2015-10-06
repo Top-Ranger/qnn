@@ -53,11 +53,13 @@ GenericGene::GenericGene(qint32 initialLength, qint32 segment_size) :
         qFatal(QString("FATAL ERROR in %1 %2: segment size must be 1 or greater").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
+    _gene.reserve(initialLength);
     for(qint32 i = 0; i < initialLength; ++i)
     {
         QList<qint32> list;
         for(qint32 j = 0; j < _segment_size; ++j)
         {
+            list.reserve(_segment_size);
             list.append(getIndependentRandomInt());
         }
         _gene.append(list);

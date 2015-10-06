@@ -79,6 +79,7 @@ void LengthChangingGene::mutate()
         if(((double) qrand()/(double) RAND_MAX) < MUTATION_RATE)
         {
             QList<qint32> newSegment;
+            newSegment.reserve(_segment_size);
             for(qint32 j = 0; j < _segment_size; ++j)
             {
                 newSegment.append(getIndependentRandomInt());
