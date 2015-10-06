@@ -18,8 +18,6 @@
 
 #include "nonparallelgenericgeneticalgorithm.h"
 
-#include <QTime>
-
 NonParallelGenericGeneticAlgorithm::NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
     GenericGeneticAlgorithm(network, simulation, population_size, fitness_to_reach, max_rounds, parent)
 {
