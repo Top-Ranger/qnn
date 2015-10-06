@@ -31,10 +31,10 @@
  *
  * A genetic algorithm is a way to optimise networks. The idea of the algorithm is based on the natural evolution.
  *
- * The algorithm is easily customizable by overwriting create_children, survivor_selection or create_initial_population although you can also override run_ga to change the behaviour compleately.
+ * The algorithm is easily customizable by overwriting createChildren, survivorSelection or createInitialPopulation although you can also override runGa to change the behaviour compleately.
  * You must always overwrite the following functions together:
- *  - create_children()
- *  - survivor_selection()
+ *  - createChildren()
+ *  - survivorSelection()
  */
 class QNNSHARED_EXPORT GenericGeneticAlgorithm : public QObject
 {
