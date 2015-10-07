@@ -90,8 +90,6 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         return;
     }
 
-    QList< QList<qint32> > segments = _gene->segments();
-
     if(_config.num_hidden_layer == 0)
     {
         qint32 current_segment = 0;
@@ -100,9 +98,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
-                sum += input[i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
+                sum += input[i_input] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
+            sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             _output[i_output] = _config.activision_function(sum);
         }
     }
@@ -116,9 +114,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
-                sum += input[i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
+                sum += input[i_input] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
+            sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             _hidden_layers[0][i_hidden] = _config.activision_function(sum);
         }
 
@@ -130,9 +128,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
                 double sum = 0.0d;
                 for(qint32 i_input = 0; i_input < _config.len_hidden; ++i_input)
                 {
-                    sum += _hidden_layers[current_hidden-1][i_input] * weight(segments[current_segment++][0], _config.weight_scalar);
+                    sum += _hidden_layers[current_hidden-1][i_input] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
                 }
-                sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
+                sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
                 _hidden_layers[current_hidden][i_output] = _config.activision_function(sum);
             }
         }
@@ -143,9 +141,9 @@ void FeedForwardNetwork::_processInput(QList<double> input)
             double sum = 0.0d;
             for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
             {
-                sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(segments[current_segment++][0], _config.weight_scalar);
+                sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(segments[current_segment++][0], _config.weight_scalar);
+            sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             _output[i_output] = _config.activision_function(sum);
         }
     }
@@ -184,8 +182,6 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
         writeConfigNeuron(i, config_neuron, connections_neuron, stream);
     }
 
-    QList< QList<qint32> > segments = _gene->segments();
-
     if(_config.num_hidden_layer == 0)
     {
         qint32 current_segment = 0;
@@ -195,7 +191,7 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
             QMap<qint32, double> connections_neuron;
             for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
-                connections_neuron[i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
+                connections_neuron[i_input] = weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
             writeConfigNeuron(_len_input+i_output, config_neuron, connections_neuron, stream);
         }
@@ -211,7 +207,7 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
             QMap<qint32, double> connections_neuron;
             for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
-                connections_neuron[i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
+                connections_neuron[i_input] = weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
             writeConfigNeuron(_len_input+i_hidden, config_neuron, connections_neuron, stream);
         }
@@ -225,7 +221,7 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
                 QMap<qint32, double> connections_neuron;
                 for(qint32 i_input = 0; i_input < _config.len_hidden; ++i_input)
                 {
-                    connections_neuron[_config.len_hidden*(current_hidden-1)+_len_input+i_input] = weight(segments[current_segment++][0], _config.weight_scalar);
+                    connections_neuron[_config.len_hidden*(current_hidden-1)+_len_input+i_input] = weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
                 }
                 writeConfigNeuron(_config.len_hidden*current_hidden+_len_input+i_output, config_neuron, connections_neuron, stream);
             }
@@ -238,7 +234,7 @@ bool FeedForwardNetwork::_saveNetworkConfig(QXmlStreamWriter *stream)
             QMap<qint32, double> connections_neuron;
             for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
             {
-                connections_neuron[_config.len_hidden*(_config.num_hidden_layer-1)+_len_input+i_hidden] = weight(segments[current_segment++][0], _config.weight_scalar);
+                connections_neuron[_config.len_hidden*(_config.num_hidden_layer-1)+_len_input+i_hidden] = weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
             writeConfigNeuron(_config.len_hidden*_config.num_hidden_layer+_len_input+i_output, config_neuron, connections_neuron, stream);
         }

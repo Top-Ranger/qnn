@@ -68,10 +68,14 @@ public:
     virtual void mutate();
 
     /*!
-     * \brief segments Return a copy of the list of segments from this gene.
-     * \return List of segments
+     * \brief segments Return the list of segments from this gene.
+     *
+     * Please note: The list is returned by reference which means the content of the gene can be changed through it.
+     * Although this might be desired for implementing other learning methods and such the segments should not be changed without explicit actions.
+     *
+     * \return Reference of list of segments
      */
-    virtual QList< QList<qint32> > segments();
+    virtual QList< QList<qint32> >& segments();
 
     /*!
      * \brief createCopy Creates a deep copy of the gene.

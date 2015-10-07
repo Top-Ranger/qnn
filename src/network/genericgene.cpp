@@ -76,7 +76,7 @@ GenericGene::~GenericGene()
 {
 }
 
-QList< QList<qint32> > GenericGene::segments()
+QList<QList<qint32> > &GenericGene::segments()
 {
     return _gene;
 }
