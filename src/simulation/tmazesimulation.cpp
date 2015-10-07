@@ -94,12 +94,13 @@ double TMazeSimulation::_getScore()
 
             for(qint32 i = 0; i < 4; ++i)
             {
-                if(network->getNeuronOutput(i) > max_output)
+                qint32 output = network->getNeuronOutput(i);
+                if(output > max_output)
                 {
                     max_output = network->getNeuronOutput(i);
                     direction = (Direction) i;
                 }
-                else if(network->getNeuronOutput(i) == max_output)
+                else if(output == max_output)
                 {
                     direction = none_direction;
                 }

@@ -436,6 +436,7 @@ char getRandomReberChar()
 QList<double> reberCharToInput(char c)
 {
     QList<double> input;
+    input.reserve(7);
     for(qint32 i = 0; i < 7; ++i)
     {
         input << 0.0d;
