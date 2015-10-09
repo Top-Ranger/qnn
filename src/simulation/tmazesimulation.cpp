@@ -62,7 +62,7 @@ void TMazeSimulation::_initialise()
 
 double TMazeSimulation::_getScore()
 {
-    double score = 0.0d;
+    double score = 0.0;
 
     for(qint32 trial = 0; trial < _config.trials; ++trial)
     {
@@ -75,12 +75,12 @@ double TMazeSimulation::_getScore()
         for(qint32 timestep = 0; timestep < _config.max_timesteps && goalNotReached; ++timestep)
         {
             Direction direction = start_direction;
-            double max_output = -10.0d;
+            double max_output = -10.0;
 
             QList<double> input;
             for(qint32 i = 0; i < _config.range_input; ++i)
             {
-                input << 0.0d;
+                input << 0.0;
             }
             if(TMaze[position] != 0)
             {
@@ -88,7 +88,7 @@ double TMazeSimulation::_getScore()
                 {
                     qFatal(QString("FATAL ERROR in %1 %2: Value out of range!").arg(__FILE__).arg(__LINE__).toLatin1().data());
                 }
-                input[TMaze[position]-1] = 1.0d;
+                input[TMaze[position]-1] = 1.0;
             }
             network->processInput(input);
 
@@ -136,7 +136,7 @@ double TMazeSimulation::_getScore()
                     goalNotReached = false;
                     if(_config.G1Correct(TMaze))
                     {
-                        score += 1.0d;
+                        score += 1.0;
                     }
                 }
                 break;
@@ -148,7 +148,7 @@ double TMazeSimulation::_getScore()
                     goalNotReached = false;
                     if(!_config.G1Correct(TMaze))
                     {
-                        score += 1.0d;
+                        score += 1.0;
                     }
                 }
                 break;

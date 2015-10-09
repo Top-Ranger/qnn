@@ -63,17 +63,17 @@ GasNet::GasNet(qint32 len_input, qint32 len_output, config config) :
         qFatal(QString("FATAL ERROR in %1 %2: offset_rate_of_gas must be greater than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
-    _P.append(-4.0d);
-    _P.append(-2.0d);
-    _P.append(-1.0d);
-    _P.append(-0.5d);
-    _P.append(-0.25d);
-    _P.append(0.0d);
-    _P.append(0.25d);
-    _P.append(0.5d);
-    _P.append(1.0d);
-    _P.append(2.0d);
-    _P.append(4.0d);
+    _P.append(-4.0);
+    _P.append(-2.0);
+    _P.append(-1.0);
+    _P.append(-0.5);
+    _P.append(-0.25);
+    _P.append(0.0);
+    _P.append(0.25);
+    _P.append(0.5);
+    _P.append(1.0);
+    _P.append(2.0);
+    _P.append(4.0);
 }
 
 GasNet::GasNet() :
@@ -85,17 +85,17 @@ GasNet::GasNet() :
     _weights(NULL),
     _P()
 {
-    _P.append(-4.0d);
-    _P.append(-2.0d);
-    _P.append(-1.0d);
-    _P.append(-0.5d);
-    _P.append(-0.25d);
-    _P.append(0.0d);
-    _P.append(0.25d);
-    _P.append(0.5d);
-    _P.append(1.0d);
-    _P.append(2.0d);
-    _P.append(4.0d);
+    _P.append(-4.0);
+    _P.append(-2.0);
+    _P.append(-1.0);
+    _P.append(-0.5);
+    _P.append(-0.25);
+    _P.append(0.0);
+    _P.append(0.25);
+    _P.append(0.5);
+    _P.append(1.0);
+    _P.append(2.0);
+    _P.append(4.0);
 }
 
 GasNet::~GasNet()
@@ -205,13 +205,13 @@ void GasNet::_initialise()
                 switch(_gene->segments()[i][gene_recurrent]%3)
                 {
                 case 1:
-                    _weights[i][j] = 1.0d;
+                    _weights[i][j] = 1.0;
                     break;
                 case 2:
-                    _weights[i][j] = -1.0d;
+                    _weights[i][j] = -1.0;
                     break;
                 default:
-                    _weights[i][j] = 0.0d;
+                    _weights[i][j] = 0.0;
                     break;
                 }
             }
@@ -225,7 +225,7 @@ void GasNet::_initialise()
                                      floatFromGeneInput(_gene->segments()[i][gene_PositivConeExt], 2*M_PI),
                                      floatFromGeneInput(_gene->segments()[i][gene_PositivConeOrientation], 2*M_PI)))
                 {
-                    _weights[i][j] += 1.0d;
+                    _weights[i][j] += 1.0;
                 }
                 if(areNodesConnected(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
                                      floatFromGeneInput(_gene->segments()[i][gene_y], _config.area_size),
@@ -235,7 +235,7 @@ void GasNet::_initialise()
                                      floatFromGeneInput(_gene->segments()[i][gene_NegativConeExt], 2*M_PI),
                                      floatFromGeneInput(_gene->segments()[i][gene_NegativConeOrientation], 2*M_PI)))
                 {
-                    _weights[i][j] += -1.0d;
+                    _weights[i][j] += -1.0;
                 }
             }
         }
@@ -259,7 +259,7 @@ void GasNet::_processInput(QList<double> input)
     for(qint32 i = 0; i < _gene->segments().length(); ++i)
     {
         // Calculate gas concentration
-        if(_gas_emitting[i] > 0.0d && _gene->segments()[i][gene_TypeGas]%3 != 0)
+        if(_gas_emitting[i] > 0.0 && _gene->segments()[i][gene_TypeGas]%3 != 0)
         {
             double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
             for(qint32 j = 0; j < _gene->segments().length(); ++j)
@@ -373,11 +373,11 @@ void GasNet::_processInput(QList<double> input)
 
         if(emittingGas)
         {
-            _gas_emitting[i] = cut01(_gas_emitting[i] + 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
+            _gas_emitting[i] = cut01(_gas_emitting[i] + 1.0 / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
         }
         else
         {
-            _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
+            _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0 / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
         }
     }
 }
@@ -429,7 +429,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
     for(qint32 i = 0; i < _gene->segments().length(); ++i)
     {
         // Calculate gas concentration
-        if(_gas_emitting[i] > 0.0d && _gene->segments()[i][gene_TypeGas]%3 != 0)
+        if(_gas_emitting[i] > 0.0 && _gene->segments()[i][gene_TypeGas]%3 != 0)
         {
             double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
             for(qint32 j = 0; j < _gene->segments().length(); ++j)

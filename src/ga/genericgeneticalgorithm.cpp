@@ -55,7 +55,7 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network,
     _population_size(population_size),
     _fitness_to_reach(fitness_to_reach),
     _max_rounds(max_rounds),
-    _average_fitness(-1.0d),
+    _average_fitness(-1.0),
     _rounds_to_finish(-1)
 {
     if(Q_UNLIKELY(network == NULL))
@@ -89,7 +89,7 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(QObject *parent) :
     _network(NULL),
     _simulation(NULL),
     _population_size(0),
-    _fitness_to_reach(0.0d),
+    _fitness_to_reach(0.0),
     _max_rounds(0),
     _average_fitness(0),
     _rounds_to_finish(0)
@@ -206,7 +206,7 @@ void GenericGeneticAlgorithm::createInitialPopulation()
     for(qint32 i = 0; i < _population_size; ++i)
     {
         GeneContainer container;
-        container.fitness = -1.0d;
+        container.fitness = -1.0;
         container.gene = _network->getRandomGene();
         container.network = _network->createConfigCopy();
         _population.append(container);
@@ -254,7 +254,7 @@ void GenericGeneticAlgorithm::createChildren()
                 GeneContainer container;
                 container.gene = childrenGene[i];
                 container.network = _network->createConfigCopy();
-                container.fitness = -1.0d;
+                container.fitness = -1.0;
                 newChildren[number_list].append(container);
                 GenericSimulation *simulation = _simulation->createConfigCopy();
                 simulation->initialise(container.network, container.gene);
@@ -305,10 +305,10 @@ double GenericGeneticAlgorithm::calculateAverageFitness()
     if(_population.length() == 0)
     {
         qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": calling calculate_average_fitness with empty population!";
-        return -1.0d;
+        return -1.0;
     }
 
-    double d = 0.0d;
+    double d = 0.0;
     foreach(GeneContainer container, _population)
     {
         d += container.fitness;

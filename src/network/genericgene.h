@@ -224,7 +224,7 @@ protected:
     /*!
      * \brief MUTATION_RATE is the probability of a mutation occuring.
      */
-    static const double MUTATION_RATE = 0.03d;
+    static const double MUTATION_RATE = 0.03;
 };
 
 #endif // GENERICGENE_H

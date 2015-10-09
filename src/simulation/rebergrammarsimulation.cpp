@@ -439,30 +439,30 @@ QList<double> reberCharToInput(char c)
     input.reserve(7);
     for(qint32 i = 0; i < 7; ++i)
     {
-        input << 0.0d;
+        input << 0.0;
     }
 
     switch (c) {
     case 'B':
-        input[0] = 1.0d;
+        input[0] = 1.0;
         break;
     case 'T':
-        input[1] = 1.0d;
+        input[1] = 1.0;
         break;
     case 'S':
-        input[2] = 1.0d;
+        input[2] = 1.0;
         break;
     case 'X':
-        input[3] = 1.0d;
+        input[3] = 1.0;
         break;
     case 'E':
-        input[4] = 1.0d;
+        input[4] = 1.0;
         break;
     case 'P':
-        input[5] = 1.0d;
+        input[5] = 1.0;
         break;
     case 'V':
-        input[6] = 1.0d;
+        input[6] = 1.0;
         break;
     default:
         break;
@@ -473,7 +473,7 @@ QList<double> reberCharToInput(char c)
 
 char networkToReberOutput(AbstractNeuralNetwork *network)
 {
-    double max_value = -10.0d;
+    double max_value = -10.0;
     qint32 max = -1;
 
     for(qint32 i = 0; i < 8; ++i)
@@ -562,7 +562,7 @@ void ReberGrammarSimulation::_initialise()
 
 double ReberGrammarSimulation::_getScore()
 {
-    double score = 0.0d;
+    double score = 0.0;
 
     bool (*reber_function)(QString &s, ReberMode mode, qint32 max_depth);
 
@@ -622,7 +622,7 @@ double ReberGrammarSimulation::_getScore()
                 }
                 if((network->getNeuronOutput(0) >= _config.detect_threshold) == reber_function(word, reber_verify_word, _config.max_depth))
                 {
-                    score += 1.0d;
+                    score += 1.0;
                 }
             break;
 
@@ -662,7 +662,7 @@ double ReberGrammarSimulation::_getScore()
 
             if(finished && reber_function(input_word, reber_verify_word, _config.max_depth))
             {
-                score += 1.0d;
+                score += 1.0;
             }
             break;
         }

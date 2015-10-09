@@ -87,7 +87,7 @@ public:
             embedded(false),
             trials_detect(500),
             trials_create(50),
-            detect_threshold(0.50d),
+            detect_threshold(0.50),
             max_depth(50)
         {
         }

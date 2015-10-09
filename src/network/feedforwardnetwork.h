@@ -81,7 +81,7 @@ public:
             num_hidden_layer(2),
             len_hidden(5),
             activision_function(&standard_activision_function),
-            weight_scalar(1.0d)
+            weight_scalar(1.0)
         {
         }
     };

@@ -82,7 +82,7 @@ GenericSimulation *GenericSimulation::createConfigCopy()
 double GenericSimulation::_getScore()
 {
     QList<double> input;
-    input << 0.2d << 0.4d << 0.6d << 0.8d << 1.0d;
+    input << 0.2 << 0.4 << 0.6 << 0.8 << 1.0;
     _network->processInput(input);
     return _network->getNeuronOutput(0);
 }

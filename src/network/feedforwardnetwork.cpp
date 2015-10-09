@@ -95,12 +95,12 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         qint32 current_segment = 0;
         for(qint32 i_output = 0; i_output < _len_output; ++i_output)
         {
-            double sum = 0.0d;
+            double sum = 0.0;
             for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
                 sum += input[i_input] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
+            sum += 1.0 * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             _output[i_output] = _config.activision_function(sum);
         }
     }
@@ -111,12 +111,12 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         // Input to hidden
         for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
         {
-            double sum = 0.0d;
+            double sum = 0.0;
             for(qint32 i_input = 0; i_input < _len_input; ++i_input)
             {
                 sum += input[i_input] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
+            sum += 1.0 * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             _hidden_layers[0][i_hidden] = _config.activision_function(sum);
         }
 
@@ -125,12 +125,12 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         {
             for(qint32 i_output = 0; i_output < _config.len_hidden; ++i_output)
             {
-                double sum = 0.0d;
+                double sum = 0.0;
                 for(qint32 i_input = 0; i_input < _config.len_hidden; ++i_input)
                 {
                     sum += _hidden_layers[current_hidden-1][i_input] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
                 }
-                sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
+                sum += 1.0 * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
                 _hidden_layers[current_hidden][i_output] = _config.activision_function(sum);
             }
         }
@@ -138,12 +138,12 @@ void FeedForwardNetwork::_processInput(QList<double> input)
         // Hidden to output
         for(qint32 i_output = 0; i_output < _len_output; ++i_output)
         {
-            double sum = 0.0d;
+            double sum = 0.0;
             for(qint32 i_hidden = 0; i_hidden < _config.len_hidden; ++i_hidden)
             {
                 sum += _hidden_layers[_config.num_hidden_layer-1][i_hidden] * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             }
-            sum += 1.0d * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
+            sum += 1.0 * weight(_gene->segments()[current_segment++][0], _config.weight_scalar);
             _output[i_output] = _config.activision_function(sum);
         }
     }

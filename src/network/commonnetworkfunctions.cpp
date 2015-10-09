@@ -33,7 +33,7 @@ double weight(qint32 gene_input, double scalar)
 
 double sigmoid(double d)
 {
-    return 1.0d / (1.0d + qExp(-1.0d * d));
+    return 1.0 / (1.0 + qExp(-1.0 * d));
 }
 
 double calculateDistance(double x_source, double y_source, double x_target, double y_target)
@@ -61,20 +61,20 @@ bool areNodesConnected(double x_source, double y_source, double x_target, double
 
     double angleCone = qAsin(difference_x / distance);
 
-    if(difference_y < 0.0d)
+    if(difference_y < 0.0)
     {
         angleCone = M_PI - angleCone;
     }
-    else if (angleCone < 0.0d)
+    else if (angleCone < 0.0)
     {
-        angleCone = 2.0d * M_PI + angleCone;
+        angleCone = 2.0 * M_PI + angleCone;
     }
 
     angleCone -= angularExtend;
 
-    if (angleCone < 0.0d)
+    if (angleCone < 0.0)
     {
-        angleCone = 2.0d * M_PI + angleCone;
+        angleCone = 2.0 * M_PI + angleCone;
     }
 
     return angleCone < orientation;
@@ -82,13 +82,13 @@ bool areNodesConnected(double x_source, double y_source, double x_target, double
 
 double cut01(double d)
 {
-    if(d > 1.0d)
+    if(d > 1.0)
     {
-        return 1.0d;
+        return 1.0;
     }
-    else if(d < 0.0d)
+    else if(d < 0.0)
     {
-        return 0.0d;
+        return 0.0;
     }
     return d;
 }

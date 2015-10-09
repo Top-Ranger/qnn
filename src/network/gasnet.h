@@ -103,15 +103,15 @@ public:
          * \brief Constructor for standard values
          */
         config() :
-            area_size(1.0d),
-            bias_scalar(1.0d),
-            gas_threshhold(0.1d),
-            electric_threshhold(0.5d),
-            cone_ratio(0.5d),
-            offset_gas_radius(0.1d),
-            range_gas_radius(0.5d),
-            offset_rate_of_gas(1.0d),
-            range_rate_of_gas(10.0d),
+            area_size(1.0),
+            bias_scalar(1.0),
+            gas_threshhold(0.1),
+            electric_threshhold(0.5),
+            cone_ratio(0.5),
+            offset_gas_radius(0.1),
+            range_gas_radius(0.5),
+            offset_rate_of_gas(1.0),
+            range_rate_of_gas(10.0),
             min_size(-1),
             max_size(-1)
         {

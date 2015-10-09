@@ -151,64 +151,64 @@ void ModulatedSpikingNeuronsNetwork::initialiseP()
     _Pd.clear();
 
     _Pa.reserve(13);
-    _Pa.append(0.0d);
-    _Pa.append(0.02d);
-    _Pa.append(0.04d);
-    _Pa.append(0.045d);
-    _Pa.append(0.0475d);
-    _Pa.append(0.04875d);
-    _Pa.append(0.05d);
-    _Pa.append(0.05125d);
-    _Pa.append(0.0525d);
-    _Pa.append(0.055d);
-    _Pa.append(0.06d);
-    _Pa.append(0.08d);
-    _Pa.append(0.1d);
+    _Pa.append(0.0);
+    _Pa.append(0.02);
+    _Pa.append(0.04);
+    _Pa.append(0.045);
+    _Pa.append(0.0475);
+    _Pa.append(0.04875);
+    _Pa.append(0.05);
+    _Pa.append(0.05125);
+    _Pa.append(0.0525);
+    _Pa.append(0.055);
+    _Pa.append(0.06);
+    _Pa.append(0.08);
+    _Pa.append(0.1);
 
     _Pb.reserve(13);
-    _Pb.append(-0.2d);
-    _Pb.append(0.0d);
-    _Pb.append(0.1d);
-    _Pb.append(0.15d);
-    _Pb.append(0.175d);
-    _Pb.append(0.1875d);
-    _Pb.append(0.2d);
-    _Pb.append(0.2125d);
-    _Pb.append(0.225d);
-    _Pb.append(0.25d);
-    _Pb.append(0.3d);
-    _Pb.append(0.4d);
-    _Pb.append(0.6d);
+    _Pb.append(-0.2);
+    _Pb.append(0.0);
+    _Pb.append(0.1);
+    _Pb.append(0.15);
+    _Pb.append(0.175);
+    _Pb.append(0.1875);
+    _Pb.append(0.2);
+    _Pb.append(0.2125);
+    _Pb.append(0.225);
+    _Pb.append(0.25);
+    _Pb.append(0.3);
+    _Pb.append(0.4);
+    _Pb.append(0.6);
 
     _Pc.reserve(13);
-    _Pc.append(-80.0d);
-    _Pc.append(-72.0d);
-    _Pc.append(-68.0d);
-    _Pc.append(-66.0d);
-    _Pc.append(-65.5d);
-    _Pc.append(-65.25d);
-    _Pc.append(-65.0d);
-    _Pc.append(-64.75d);
-    _Pc.append(-64.5d);
-    _Pc.append(-64.0d);
-    _Pc.append(-62.0d);
-    _Pc.append(-58.0d);
-    _Pc.append(-50.0d);
+    _Pc.append(-80.0);
+    _Pc.append(-72.0);
+    _Pc.append(-68.0);
+    _Pc.append(-66.0);
+    _Pc.append(-65.5);
+    _Pc.append(-65.25);
+    _Pc.append(-65.0);
+    _Pc.append(-64.75);
+    _Pc.append(-64.5);
+    _Pc.append(-64.0);
+    _Pc.append(-62.0);
+    _Pc.append(-58.0);
+    _Pc.append(-50.0);
 
     _Pd.reserve(13);
-    _Pd.append(-2.0d);
-    _Pd.append(0.0d);
-    _Pd.append(1.0d);
-    _Pd.append(1.5d);
-    _Pd.append(1.75d);
-    _Pd.append(1.875d);
-    _Pd.append(2.0d);
-    _Pd.append(2.125d);
-    _Pd.append(2.25d);
-    _Pd.append(2.5d);
-    _Pd.append(3.0d);
-    _Pd.append(4.0d);
-    _Pd.append(6.0d);
+    _Pd.append(-2.0);
+    _Pd.append(0.0);
+    _Pd.append(1.0);
+    _Pd.append(1.5);
+    _Pd.append(1.75);
+    _Pd.append(1.875);
+    _Pd.append(2.0);
+    _Pd.append(2.125);
+    _Pd.append(2.25);
+    _Pd.append(2.5);
+    _Pd.append(3.0);
+    _Pd.append(4.0);
+    _Pd.append(6.0);
 }
 
 void ModulatedSpikingNeuronsNetwork::initialiseTokenArrays()
@@ -343,13 +343,13 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
                 switch(_gene->segments()[i][gene_recurrent]%3)
                 {
                 case 1:
-                    _weights[i][j] = 1.0d;
+                    _weights[i][j] = 1.0;
                     break;
                 case 2:
-                    _weights[i][j] = -1.0d;
+                    _weights[i][j] = -1.0;
                     break;
                 default:
-                    _weights[i][j] = 0.0d;
+                    _weights[i][j] = 0.0;
                     break;
                 }
             }
@@ -363,7 +363,7 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
                                      floatFromGeneInput(_gene->segments()[i][gene_PositivConeExt], 2*M_PI),
                                      floatFromGeneInput(_gene->segments()[i][gene_PositivConeOrientation], 2*M_PI)))
                 {
-                    _weights[i][j] += 1.0d;
+                    _weights[i][j] += 1.0;
                 }
                 if(areNodesConnected(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
                                      floatFromGeneInput(_gene->segments()[i][gene_y], _config.area_size),
@@ -373,7 +373,7 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
                                      floatFromGeneInput(_gene->segments()[i][gene_NegativConeExt], 2*M_PI),
                                      floatFromGeneInput(_gene->segments()[i][gene_NegativConeOrientation], 2*M_PI)))
                 {
-                    _weights[i][j] += -1.0d;
+                    _weights[i][j] += -1.0;
                 }
             }
         }
@@ -388,7 +388,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         _firecount[i] = 0;
     }
 
-    for(qint32 timesteps = 0; timesteps < 1.0d / _config.timestep_size; ++timesteps)
+    for(qint32 timesteps = 0; timesteps < 1.0 / _config.timestep_size; ++timesteps)
     {
         double *newNetwork = new double[_gene->segments().length()];
         double *newU = new double[_gene->segments().length()];
@@ -425,7 +425,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             for(qint32 i = 0; i < _gene->segments().length(); ++i)
             {
                 // Calculate gas concentration
-                if(_gas_emitting[i] > 0.0d && _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
+                if(_gas_emitting[i] > 0.0 && _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
                 {
                     double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
                     for(qint32 j = 0; j < _gene->segments().length(); ++j)
@@ -508,7 +508,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             }
 
             // Calculate potential
-            newNetwork[i] = _network[i] + (0.04d * _network[i] * _network[i] + 5.0d * _network[i] + 140.0d - _u[i] + newValue);
+            newNetwork[i] = _network[i] + (0.04 * _network[i] * _network[i] + 5.0 * _network[i] + 140.0 - _u[i] + newValue);
 
             // Calculate U
             newU[i] = _u[i] + (a * (b * _network[i] - _u[i]));
@@ -597,11 +597,11 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
 
                 if(emittingGas)
                 {
-                    _gas_emitting[i] = cut01(_gas_emitting[i] + 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
+                    _gas_emitting[i] = cut01(_gas_emitting[i] + 1.0 / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
                 }
                 else
                 {
-                    _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0d / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
+                    _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0 / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
                 }
             }
         }
@@ -609,7 +609,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         for(qint32 i = 0; i < _gene->segments().length(); ++i)
         {
             // Check if fired
-            if(_network[i] >= 30.0d)
+            if(_network[i] >= 30.0)
             {
                 _network[i] = c[i];
                 _u[i] = _u[i] + d[i];
@@ -684,7 +684,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         for(qint32 i = 0; i < _gene->segments().length(); ++i)
         {
             // Calculate gas concentration
-            if(_gas_emitting[i] > 0.0d && _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
+            if(_gas_emitting[i] > 0.0 && _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
             {
                 double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
                 for(qint32 j = 0; j < _gene->segments().length(); ++j)
