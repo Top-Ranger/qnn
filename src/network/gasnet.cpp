@@ -52,15 +52,15 @@ GasNet::GasNet(qint32 len_input, qint32 len_output, config config) :
 {
     if(Q_UNLIKELY(_config.area_size <= 0))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Area needs to be greater then 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Area needs to be greater then 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(_config.min_size != -1 && _config.min_size < _len_output))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: min_size_network must not be smaller then output lenght!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: min_size_network must not be smaller then output lenght!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(_config.offset_rate_of_gas <= 0.0d))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: offset_rate_of_gas must be greater than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: offset_rate_of_gas must be greater than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
     _P.append(-4.0);
@@ -165,11 +165,11 @@ void GasNet::_initialise()
 {
     if(Q_UNLIKELY(_gene->segments().length() < _len_output))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(_gene->segments()[0].length() != 16))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     _network = new double[_gene->segments().length()];
     _gas_emitting = new double[_gene->segments().length()];

@@ -43,7 +43,7 @@ void AbstractNeuralNetwork::initialise(GenericGene *gene)
 {
     if(Q_UNLIKELY(_gene != NULL))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Network already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Network already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(gene == NULL))
     {
@@ -58,7 +58,7 @@ void AbstractNeuralNetwork::processInput(QList<double> input)
 {
     if(Q_UNLIKELY(_gene == NULL))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     _processInput(input);
 }
@@ -67,7 +67,7 @@ double AbstractNeuralNetwork::getNeuronOutput(qint32 i)
 {
     if(Q_UNLIKELY(_gene == NULL))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     return _getNeuronOutput(i);
 }

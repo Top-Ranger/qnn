@@ -54,7 +54,7 @@ bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
 {
     if(Q_UNLIKELY(max_depth < 1))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 
@@ -105,7 +105,7 @@ bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }
@@ -114,7 +114,7 @@ bool reber(QString &s, ReberMode mode, qint32 max_depth)
 {
     if(Q_UNLIKELY(max_depth < 1))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 
@@ -142,7 +142,7 @@ bool reber(QString &s, ReberMode mode, qint32 max_depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }
@@ -186,7 +186,7 @@ bool reber_state0(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }
@@ -230,7 +230,7 @@ bool reber_state1(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }
@@ -274,7 +274,7 @@ bool reber_state2(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }
@@ -308,7 +308,7 @@ bool reber_state3(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }
@@ -352,7 +352,7 @@ bool reber_state4(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }
@@ -396,7 +396,7 @@ bool reber_state5(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
         return false;
     }
 }

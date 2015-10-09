@@ -64,11 +64,11 @@ void FeedForwardNetwork::_initialise()
 {
     if(Q_UNLIKELY(_gene->segments().length() < num_segments(_len_input, _len_output, _config.num_hidden_layer, _config.len_hidden)))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Wrong gene length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     else if(Q_UNLIKELY(_config.len_hidden <= 0 || _config.num_hidden_layer < 0))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: invalid hidden layer size!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: invalid hidden layer size!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
     if(_config.len_hidden > 0)

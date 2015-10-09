@@ -46,11 +46,11 @@ GenericGene::GenericGene(qint32 initialLength, qint32 segment_size) :
 {
     if(Q_UNLIKELY(initialLength < 0))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: initial length can not be negativ!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: initial length can not be negativ!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(segment_size <= 0))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: segment size must be 1 or greater").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: segment size must be 1 or greater").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
     _gene.reserve(initialLength);

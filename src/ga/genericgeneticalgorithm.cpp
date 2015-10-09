@@ -60,19 +60,19 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network,
 {
     if(Q_UNLIKELY(network == NULL))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(simulation == NULL))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(population_size <= 0))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Population size must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Population size must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(max_rounds <= 0))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Max rounds must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Max rounds must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     _network = network->createConfigCopy();
     _simulation = simulation->createConfigCopy();
@@ -111,11 +111,11 @@ void GenericGeneticAlgorithm::runGa()
 {
     if(Q_UNLIKELY(_network == NULL))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
     if(Q_UNLIKELY(_simulation == NULL))
     {
-        qFatal(QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        qFatal("%s", QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
 
     // Initialise
