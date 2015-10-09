@@ -66,7 +66,7 @@ double TMazeSimulation::_getScore()
 
     for(qint32 trial = 0; trial < _config.trials; ++trial)
     {
-        QList<qint32> TMaze = _config.generateTMaze();
+        QVector<qint32> TMaze = _config.generateTMaze();
         qint32 position = 0;
         bool goalNotReached = true;
 
@@ -116,7 +116,7 @@ double TMazeSimulation::_getScore()
                 break;
 
             case up_direction:
-                if(position < TMaze.length()-1)
+                if(position < TMaze.size()-1)
                 {
                     ++position;
                 }
@@ -130,7 +130,7 @@ double TMazeSimulation::_getScore()
                 break;
 
             case left_direction:
-                if(position == TMaze.length()-1)
+                if(position == TMaze.size()-1)
                 {
                     // G1
                     goalNotReached = false;
@@ -142,7 +142,7 @@ double TMazeSimulation::_getScore()
                 break;
 
             case right_direction:
-                if(position == TMaze.length()-1)
+                if(position == TMaze.size()-1)
                 {
                     // G2
                     goalNotReached = false;
@@ -160,9 +160,9 @@ double TMazeSimulation::_getScore()
     return score / _config.trials;
 }
 
-QList<qint32> TMazeSimulation::generateStandardTMaze()
+QVector<qint32> TMazeSimulation::generateStandardTMaze()
 {
-    QList<qint32> list;
+    QVector<qint32> list;
     qint32 number = (qrand()%5)+1;
     list << number;
     for(qint32 i = 0; i < 5; ++i)
@@ -180,9 +180,9 @@ QList<qint32> TMazeSimulation::generateStandardTMaze()
     return list;
 }
 
-bool TMazeSimulation::standardG1Correct(QList<qint32> list)
+bool TMazeSimulation::standardG1Correct(QVector<qint32> list)
 {
-    if(Q_UNLIKELY(list.length() < 2))
+    if(Q_UNLIKELY(list.size() < 2))
     {
         qWarning() << "WARNING in " __FILE__ << __LINE__ << ": List shorter than 2 - returning default false";
         return false;

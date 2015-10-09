@@ -104,7 +104,7 @@ GasNet::~GasNet()
     delete [] _gas_emitting;
     if(_distances != NULL && _gene != NULL)
     {
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             delete [] _distances[i];
         }
@@ -112,7 +112,7 @@ GasNet::~GasNet()
     }
     if(_weights != NULL && _gene != NULL)
     {
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             delete [] _weights[i];
         }
@@ -163,18 +163,18 @@ AbstractNeuralNetwork *GasNet::createConfigCopy()
 
 void GasNet::_initialise()
 {
-    if(Q_UNLIKELY(_gene->segments().length() < _len_output))
+    if(Q_UNLIKELY(_gene->segments().size() < _len_output))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(Q_UNLIKELY(_gene->segments()[0].length() != 16))
+    if(Q_UNLIKELY(_gene->segments()[0].size() != 16))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    _network = new double[_gene->segments().length()];
-    _gas_emitting = new double[_gene->segments().length()];
+    _network = new double[_gene->segments().size()];
+    _gas_emitting = new double[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         _network[i] = 0;
         _gas_emitting[i] = 0;
@@ -182,14 +182,14 @@ void GasNet::_initialise()
 
 
     // Cache distances and connection for faster calculation later
-    _distances = new double*[_gene->segments().length()];
-    _weights = new double*[_gene->segments().length()];
+    _distances = new double*[_gene->segments().size()];
+    _weights = new double*[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
-        _distances[i] = new double[_gene->segments().length()];
-        _weights[i] = new double[_gene->segments().length()];
-        for(qint32 j = 0; j < _gene->segments().length(); ++j)
+        _distances[i] = new double[_gene->segments().size()];
+        _weights[i] = new double[_gene->segments().size()];
+        for(qint32 j = 0; j < _gene->segments().size(); ++j)
         {
             // distance
             _distances[i][j] = calculateDistance(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
@@ -244,11 +244,11 @@ void GasNet::_initialise()
 
 void GasNet::_processInput(QList<double> input)
 {
-    double gas1[_gene->segments().length()];
-    double gas2[_gene->segments().length()];
-    double k[_gene->segments().length()];
+    double gas1[_gene->segments().size()];
+    double gas2[_gene->segments().size()];
+    double k[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Initiation
         gas1[i] = 0;
@@ -256,13 +256,13 @@ void GasNet::_processInput(QList<double> input)
         k[i] = 0;
     }
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Calculate gas concentration
         if(_gas_emitting[i] > 0.0 && _gene->segments()[i][gene_TypeGas]%3 != 0)
         {
             double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
-            for(qint32 j = 0; j < _gene->segments().length(); ++j)
+            for(qint32 j = 0; j < _gene->segments().size(); ++j)
             {
                 if(_distances[i][j] > gas_radius)
                 {
@@ -291,7 +291,7 @@ void GasNet::_processInput(QList<double> input)
         }
     }
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Calculate k
         qint32 basis_index = _gene->segments()[i][gene_basis_index]%_P.length();
@@ -307,15 +307,15 @@ void GasNet::_processInput(QList<double> input)
         k[i] = _P[index];
     }
 
-    double *newNetwork = new double[_gene->segments().length()];
+    double *newNetwork = new double[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Calculate new input
         double newValue = 0;
 
         // Connections
-        for(qint32 j = 0; j < _gene->segments().length(); ++j)
+        for(qint32 j = 0; j < _gene->segments().size(); ++j)
         {
             newValue += _network[j] * _weights[j][i];
         }
@@ -339,7 +339,7 @@ void GasNet::_processInput(QList<double> input)
     delete [] _network;
     _network = newNetwork;
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Calculate emition of gas
         bool emittingGas = false;
@@ -414,11 +414,11 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
 
     writeConfigStart("GasNet", config_network, stream);
 
-    double gas1[_gene->segments().length()];
-    double gas2[_gene->segments().length()];
-    double k[_gene->segments().length()];
+    double gas1[_gene->segments().size()];
+    double gas2[_gene->segments().size()];
+    double k[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Initiation
         gas1[i] = 0;
@@ -426,13 +426,13 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
         k[i] = 0;
     }
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Calculate gas concentration
         if(_gas_emitting[i] > 0.0 && _gene->segments()[i][gene_TypeGas]%3 != 0)
         {
             double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
-            for(qint32 j = 0; j < _gene->segments().length(); ++j)
+            for(qint32 j = 0; j < _gene->segments().size(); ++j)
             {
                 if(_distances[i][j] > gas_radius)
                 {
@@ -461,7 +461,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
         }
     }
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Calculate k
         qint32 basis_index = _gene->segments()[i][gene_basis_index]%_P.length();
@@ -477,7 +477,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
         k[i] = _P[index];
     }
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         QMap<QString, QVariant> config_neuron;
         QMap<qint32, double> connections_neuron;
@@ -543,7 +543,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
             break;
         }
 
-        for(qint32 j = 0; j < _gene->segments().length(); ++j)
+        for(qint32 j = 0; j < _gene->segments().size(); ++j)
         {
             if(_weights[j][i] != 0)
             {

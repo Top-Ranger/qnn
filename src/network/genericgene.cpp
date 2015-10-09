@@ -56,7 +56,7 @@ GenericGene::GenericGene(qint32 initialLength, qint32 segment_size) :
     _gene.reserve(initialLength);
     for(qint32 i = 0; i < initialLength; ++i)
     {
-        QList<qint32> list;
+        QVector<qint32> list;
         for(qint32 j = 0; j < _segment_size; ++j)
         {
             list.reserve(_segment_size);
@@ -66,7 +66,7 @@ GenericGene::GenericGene(qint32 initialLength, qint32 segment_size) :
     }
 }
 
-GenericGene::GenericGene(QList< QList<qint32> > gene, qint32 segment_size) :
+GenericGene::GenericGene(QVector< QVector<qint32> > gene, qint32 segment_size) :
     _gene(gene),
     _segment_size(segment_size)
 {
@@ -76,7 +76,7 @@ GenericGene::~GenericGene()
 {
 }
 
-QList<QList<qint32> > &GenericGene::segments()
+QVector<QVector<qint32> > &GenericGene::segments()
 {
     return _gene;
 }
@@ -89,9 +89,9 @@ GenericGene *GenericGene::createCopy()
 void GenericGene::mutate()
 {
     //Simple mutation py probability - the chance of mutating a value is the same for every value.
-    for(qint32 i = 0; i < _gene.length(); ++i)
+    for(qint32 i = 0; i < _gene.size(); ++i)
     {
-        for(qint32 j = 0; j < _gene[i].length(); ++j)
+        for(qint32 j = 0; j < _gene[i].size(); ++j)
         {
             if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
             {
@@ -103,26 +103,26 @@ void GenericGene::mutate()
 
 QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2)
 {
-    if(gene1->_gene[0].length() != gene2->_gene[0].length())
+    if(gene1->_gene[0].size() != gene2->_gene[0].size())
     {
         qCritical() << "WARNING in " __FILE__ << __LINE__ << ": Attemted crossover of different type of genes";
         return QList<GenericGene *>();
     }
-    QList< QList<qint32> > newGene1;
-    QList< QList<qint32> > newGene2;
-    qint32 smallerLength = gene1->_gene.length() < gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
-    qint32 largerLength = gene1->_gene.length() > gene2->_gene.length() ? gene1->_gene.length() : gene2->_gene.length();
+    QVector< QVector<qint32> > newGene1;
+    QVector< QVector<qint32> > newGene2;
+    qint32 smallerLength = gene1->_gene.size() < gene2->_gene.size() ? gene1->_gene.size() : gene2->_gene.size();
+    qint32 largerLength = gene1->_gene.size() > gene2->_gene.size() ? gene1->_gene.size() : gene2->_gene.size();
     qint32 outer_crossover = qrand() % smallerLength;
-    qint32 inner_crossover = qrand() % gene1->_gene[0].length();
+    qint32 inner_crossover = qrand() % gene1->_gene[0].size();
     qint32 i;
     for(i = 0; i < outer_crossover; ++i)
     {
         newGene1.append(gene1->_gene[i]);
         newGene2.append(gene2->_gene[i]);
     }
-    QList<qint32> crossover1;
-    QList<qint32> crossover2;
-    for(qint32 j = 0; j < gene1->_gene[0].length(); ++j)
+    QVector<qint32> crossover1;
+    QVector<qint32> crossover2;
+    for(qint32 j = 0; j < gene1->_gene[0].size(); ++j)
     {
         if(i < inner_crossover)
         {
@@ -139,19 +139,19 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
     newGene2.append(crossover2);
     for(++i; i < largerLength; ++i)
     {
-        if(i < gene2->_gene.length())
+        if(i < gene2->_gene.size())
         {
             newGene1.append(gene2->_gene[i]);
         }
-        if(i < gene1->_gene.length())
+        if(i < gene1->_gene.size())
         {
             newGene2.append(gene1->_gene[i]);
         }
     }
 
     QList<GenericGene *> geneList;
-    geneList.append(gene1->createGene(newGene1, gene1->_gene[0].length()));
-    geneList.append(gene2->createGene(newGene2, gene2->_gene[0].length()));
+    geneList.append(gene1->createGene(newGene1, gene1->_gene[0].size()));
+    geneList.append(gene2->createGene(newGene2, gene2->_gene[0].size()));
     return geneList;
 }
 
@@ -176,7 +176,7 @@ bool GenericGene::saveGene(QIODevice *device)
     stream << identifier() << " ";
     stream << "segments " << _segment_size << " ";
     stream << "gene ";
-    foreach(QList<qint32> segment, _gene)
+    foreach(QVector<qint32> segment, _gene)
     {
         stream << "genesegment ";
         foreach(qint32 i, segment)
@@ -198,7 +198,7 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
     }
 
     qint32 segment_size;
-    QList< QList<qint32> > gene;
+    QVector< QVector<qint32> > gene;
 
     if(Q_UNLIKELY(device->isOpen()))
     {
@@ -248,7 +248,7 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
         stream >> command;
         if(command == "genesegment")
         {
-               QList<qint32> segment;
+            QVector<qint32> segment;
                for(qint32 i = 0; i < segment_size; ++i)
                {
                    qint32 value;
@@ -337,7 +337,7 @@ GenericGene *GenericGene::loadThisGene(QIODevice *device)
     return gene.loadGene(device);
 }
 
-GenericGene *GenericGene::createGene(QList< QList<qint32> > gene, qint32 segment_size)
+GenericGene *GenericGene::createGene(QVector< QVector<qint32> > gene, qint32 segment_size)
 {
     return new GenericGene(gene, segment_size);
 }
@@ -353,7 +353,7 @@ bool GenericGene::_saveGene(QTextStream *stream)
     return true;
 }
 
-GenericGene *GenericGene::_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream)
+GenericGene *GenericGene::_loadGene(QVector< QVector<qint32> > gene, qint32 segment_size, QTextStream *stream)
 {
     Q_UNUSED(stream); // Nothing extra to save here
     return new GenericGene(gene, segment_size);

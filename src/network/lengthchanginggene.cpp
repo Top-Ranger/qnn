@@ -54,11 +54,11 @@ LengthChangingGene::LengthChangingGene() :
 {
 }
 
-LengthChangingGene::LengthChangingGene(QList< QList<qint32> > gene, qint32 segment_size, config config) :
+LengthChangingGene::LengthChangingGene(QVector< QVector<qint32> > gene, qint32 segment_size, config config) :
     GenericGene(gene, segment_size),
     _config(config)
 {
-    if(Q_UNLIKELY(gene.length() < config.min_length || gene.length() > config.max_length))
+    if(Q_UNLIKELY(gene.size() < config.min_length || gene.size() > config.max_length))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: gene length must be between min length and max length").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
@@ -67,18 +67,18 @@ LengthChangingGene::LengthChangingGene(QList< QList<qint32> > gene, qint32 segme
 void LengthChangingGene::mutate()
 {
     GenericGene::mutate();
-    if(_gene.length() > _config.min_length)
+    if(_gene.size() > _config.min_length)
     {
         if(((double) qrand()/(double) RAND_MAX) < MUTATION_RATE)
         {
-            _gene.removeAt(qrand()%_gene.length());
+            _gene.remove(qrand()%_gene.size());
         }
     }
-    if(_gene.length() < _config.max_length)
+    if(_gene.size() < _config.max_length)
     {
         if(((double) qrand()/(double) RAND_MAX) < MUTATION_RATE)
         {
-            QList<qint32> newSegment;
+            QVector<qint32> newSegment;
             newSegment.reserve(_segment_size);
             for(qint32 j = 0; j < _segment_size; ++j)
             {
@@ -100,7 +100,7 @@ GenericGene *LengthChangingGene::loadThisGene(QIODevice *device)
     return gene.loadGene(device);
 }
 
-GenericGene *LengthChangingGene::createGene(QList< QList<qint32> > gene, qint32 segment_size)
+GenericGene *LengthChangingGene::createGene(QVector< QVector<qint32> > gene, qint32 segment_size)
 {
     return new LengthChangingGene(gene, segment_size, _config);
 }
@@ -117,7 +117,7 @@ bool LengthChangingGene::_saveGene(QTextStream *stream)
     return true;
 }
 
-GenericGene *LengthChangingGene::_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream)
+GenericGene *LengthChangingGene::_loadGene(QVector< QVector<qint32> > gene, qint32 segment_size, QTextStream *stream)
 {
     config config;
 

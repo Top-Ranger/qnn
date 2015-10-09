@@ -127,7 +127,7 @@ ModulatedSpikingNeuronsNetwork::~ModulatedSpikingNeuronsNetwork()
 
     if(_distances != NULL && _gene != NULL)
     {
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             delete [] _distances[i];
         }
@@ -135,7 +135,7 @@ ModulatedSpikingNeuronsNetwork::~ModulatedSpikingNeuronsNetwork()
     }
     if(_weights != NULL && _gene != NULL)
     {
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             delete [] _weights[i];
         }
@@ -298,20 +298,20 @@ AbstractNeuralNetwork *ModulatedSpikingNeuronsNetwork::createConfigCopy()
 
 void ModulatedSpikingNeuronsNetwork::_initialise()
 {
-    if(Q_UNLIKELY(_gene->segments().length() < _len_output))
+    if(Q_UNLIKELY(_gene->segments().size() < _len_output))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(Q_UNLIKELY(_gene->segments()[0].length() != 18))
+    if(Q_UNLIKELY(_gene->segments()[0].size() != 18))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    _network = new double[_gene->segments().length()];
-    _gas_emitting = new double[_gene->segments().length()];
-    _u = new double[_gene->segments().length()];
-    _firecount = new double[_gene->segments().length()];
+    _network = new double[_gene->segments().size()];
+    _gas_emitting = new double[_gene->segments().size()];
+    _u = new double[_gene->segments().size()];
+    _firecount = new double[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         _network[i] = 0;
         _gas_emitting[i] = 0;
@@ -320,14 +320,14 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
     }
 
     // Cache distances and connection for faster calculation later
-    _distances = new double*[_gene->segments().length()];
-    _weights = new double*[_gene->segments().length()];
+    _distances = new double*[_gene->segments().size()];
+    _weights = new double*[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
-        _distances[i] = new double[_gene->segments().length()];
-        _weights[i] = new double[_gene->segments().length()];
-        for(qint32 j = 0; j < _gene->segments().length(); ++j)
+        _distances[i] = new double[_gene->segments().size()];
+        _weights[i] = new double[_gene->segments().size()];
+        for(qint32 j = 0; j < _gene->segments().size(); ++j)
         {
             // distance
             _distances[i][j] = calculateDistance(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
@@ -383,31 +383,31 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
 void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
 {
     // Clear fire count
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         _firecount[i] = 0;
     }
 
     for(qint32 timesteps = 0; timesteps < 1.0 / _config.timestep_size; ++timesteps)
     {
-        double *newNetwork = new double[_gene->segments().length()];
-        double *newU = new double[_gene->segments().length()];
+        double *newNetwork = new double[_gene->segments().size()];
+        double *newU = new double[_gene->segments().size()];
 
-        double gasAPos[_gene->segments().length()];
-        double gasANeg[_gene->segments().length()];
-        double gasBPos[_gene->segments().length()];
-        double gasBNeg[_gene->segments().length()];
-        double gasCPos[_gene->segments().length()];
-        double gasCNeg[_gene->segments().length()];
-        double gasDPos[_gene->segments().length()];
-        double gasDNeg[_gene->segments().length()];
+        double gasAPos[_gene->segments().size()];
+        double gasANeg[_gene->segments().size()];
+        double gasBPos[_gene->segments().size()];
+        double gasBNeg[_gene->segments().size()];
+        double gasCPos[_gene->segments().size()];
+        double gasCNeg[_gene->segments().size()];
+        double gasDPos[_gene->segments().size()];
+        double gasDNeg[_gene->segments().size()];
 
         double a;
         double b;
-        double c[_gene->segments().length()]; // This both parameter have to be cached
-        double d[_gene->segments().length()];
+        double c[_gene->segments().size()]; // This both parameter have to be cached
+        double d[_gene->segments().size()];
 
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             // Initiation
             gasAPos[i] = 0;
@@ -422,13 +422,13 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
 
         if(_emitting_possible)
         {
-            for(qint32 i = 0; i < _gene->segments().length(); ++i)
+            for(qint32 i = 0; i < _gene->segments().size(); ++i)
             {
                 // Calculate gas concentration
                 if(_gas_emitting[i] > 0.0 && _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
                 {
                     double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
-                    for(qint32 j = 0; j < _gene->segments().length(); ++j)
+                    for(qint32 j = 0; j < _gene->segments().size(); ++j)
                     {
                         if(_distances[i][j] > gas_radius)
                         {
@@ -482,7 +482,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             }
         }
 
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             // Calculate a,b,c,d
             a = getModulatedValue(_config.a_modulated, gasAPos[i], gasANeg[i], _gene->segments()[i][gene_a]%_Pa.size(), _Pa);
@@ -496,7 +496,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             double newValue = 0;
 
             // Connections
-            for(qint32 j = 0; j < _gene->segments().length(); ++j)
+            for(qint32 j = 0; j < _gene->segments().size(); ++j)
             {
                 newValue += _network[j] * _weights[j][i];
             }
@@ -521,7 +521,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
 
         if(_emitting_possible)
         {
-            for(qint32 i = 0; i < _gene->segments().length(); ++i)
+            for(qint32 i = 0; i < _gene->segments().size(); ++i)
             {
                 // Calculate emition of gas
                 bool emittingGas = false;
@@ -606,7 +606,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             }
         }
 
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             // Check if fired
             if(_network[i] >= 30.0)
@@ -657,16 +657,16 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
 
     // Gas concentration
 
-    double gasAPos[_gene->segments().length()];
-    double gasANeg[_gene->segments().length()];
-    double gasBPos[_gene->segments().length()];
-    double gasBNeg[_gene->segments().length()];
-    double gasCPos[_gene->segments().length()];
-    double gasCNeg[_gene->segments().length()];
-    double gasDPos[_gene->segments().length()];
-    double gasDNeg[_gene->segments().length()];
+    double gasAPos[_gene->segments().size()];
+    double gasANeg[_gene->segments().size()];
+    double gasBPos[_gene->segments().size()];
+    double gasBNeg[_gene->segments().size()];
+    double gasCPos[_gene->segments().size()];
+    double gasCNeg[_gene->segments().size()];
+    double gasDPos[_gene->segments().size()];
+    double gasDNeg[_gene->segments().size()];
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         // Initiation
         gasAPos[i] = 0;
@@ -681,13 +681,13 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
 
     if(_emitting_possible)
     {
-        for(qint32 i = 0; i < _gene->segments().length(); ++i)
+        for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             // Calculate gas concentration
             if(_gas_emitting[i] > 0.0 && _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] != NoGas)
             {
                 double gas_radius = _config.offset_gas_radius + floatFromGeneInput( _gene->segments()[i][gene_Gas_radius], _config.range_gas_radius);
-                for(qint32 j = 0; j < _gene->segments().length(); ++j)
+                for(qint32 j = 0; j < _gene->segments().size(); ++j)
                 {
                     if(_distances[i][j] > gas_radius)
                     {
@@ -743,7 +743,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
 
     // Write neuron config
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         QMap<QString, QVariant> config_neuron;
         QMap<qint32, double> connections_neuron;
@@ -873,7 +873,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         config_neuron["qint32ernal_charge"] = _network[i];
         config_neuron["fire_output"] = _firecount[i] * _config.timestep_size;
 
-        for(qint32 j = 0; j < _gene->segments().length(); ++j)
+        for(qint32 j = 0; j < _gene->segments().size(); ++j)
         {
             if(_weights[j][i] != 0)
             {

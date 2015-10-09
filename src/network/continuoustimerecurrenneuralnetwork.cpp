@@ -103,16 +103,16 @@ AbstractNeuralNetwork *ContinuousTimeRecurrenNeuralNetwork::createConfigCopy()
 
 void ContinuousTimeRecurrenNeuralNetwork::_initialise()
 {
-    if(Q_UNLIKELY(_gene->segments().length() < _config.size_network || _gene->segments()[0].length() < (3 + _config.size_network)))
+    if(Q_UNLIKELY(_gene->segments().size() < _config.size_network || _gene->segments()[0].size() < (3 + _config.size_network)))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: Gene lenght does not fit!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    if(Q_UNLIKELY(_config.size_changing && _gene->segments()[0].length() < (3 + _config.max_size_network)))
+    if(Q_UNLIKELY(_config.size_changing && _gene->segments()[0].size() < (3 + _config.max_size_network)))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: Gene lenght does not fit max_size_network!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }
-    _network = new double[_gene->segments().length()];
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    _network = new double[_gene->segments().size()];
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         _network[i] = 0;
     }
@@ -120,10 +120,10 @@ void ContinuousTimeRecurrenNeuralNetwork::_initialise()
 
 void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
 {
-    double *newNetwork = new double[_gene->segments().length()];
+    double *newNetwork = new double[_gene->segments().size()];
 
     // do calculation
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         double newValue = -1 * _network[i]; // -y
 
@@ -132,9 +132,9 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
             newValue += input[_gene->segments()[i][gene_input]%(_len_input+1)-1];; // input
         }
 
-        for(qint32 j = 0; j < _gene->segments().length(); ++j)
+        for(qint32 j = 0; j < _gene->segments().size(); ++j)
         {
-            double d = 0.0d;
+            double d = 0.0;
             d += weight(_gene->segments()[j][gene_bias], _config.bias_scalar); // θj
             d += _network[j]; // yj
             d = _config.activision_function(d);
@@ -157,7 +157,7 @@ double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(qint32 i)
     else
     {
         qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": i out of bound";
-        return -1.0d;
+        return -1.0;
     }
 }
 
@@ -177,7 +177,7 @@ bool ContinuousTimeRecurrenNeuralNetwork::_saveNetworkConfig(QXmlStreamWriter *s
 
     writeConfigStart("ContinuousTimeRecurrenNeuralNetwork", config_network, stream);
 
-    for(qint32 i = 0; i < _gene->segments().length(); ++i)
+    for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         QMap<QString, QVariant> config_neuron;
         QMap<qint32, double> connection_neuron;
@@ -191,7 +191,7 @@ bool ContinuousTimeRecurrenNeuralNetwork::_saveNetworkConfig(QXmlStreamWriter *s
             config_neuron["input"] =_gene->segments()[i][gene_input]%(_len_input+1)-1;
         }
 
-        for(qint32 j = 0; j < _gene->segments().length(); ++j)
+        for(qint32 j = 0; j < _gene->segments().size(); ++j)
         {
             connection_neuron[j] = weight(_gene->segments()[i][gene_W_start+j], _config.weight_scalar);
         }

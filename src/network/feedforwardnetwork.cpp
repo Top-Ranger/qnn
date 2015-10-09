@@ -62,7 +62,7 @@ FeedForwardNetwork::~FeedForwardNetwork()
 
 void FeedForwardNetwork::_initialise()
 {
-    if(Q_UNLIKELY(_gene->segments().length() < num_segments(_len_input, _len_output, _config.num_hidden_layer, _config.len_hidden)))
+    if(Q_UNLIKELY(_gene->segments().size() < num_segments(_len_input, _len_output, _config.num_hidden_layer, _config.len_hidden)))
     {
         qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
     }

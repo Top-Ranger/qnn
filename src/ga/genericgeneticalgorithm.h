@@ -23,7 +23,7 @@
 
 #include "../network/abstractneuralnetwork.h"
 #include "../simulation/genericsimulation.h"
-#include <QList>
+#include <QVector>
 #include <QObject>
 
 /*!

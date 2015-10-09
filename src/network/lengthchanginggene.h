@@ -108,7 +108,7 @@ protected:
      * \param segment_size Length of the segments
      * \param config Configuration of the LengthChangingGene
      */
-    LengthChangingGene(QList< QList<qint32> > gene, qint32 segment_size, config config = config());
+    LengthChangingGene(QVector< QVector<qint32> > gene, qint32 segment_size, config config = config());
 
     /*!
      * \brief Creates a gene out of a given segment list. The created gene should hold the same configuration as the object on which the method is called.
@@ -116,7 +116,7 @@ protected:
      * \param segment_size Length of the segments
      * \return
      */
-    GenericGene *createGene(QList< QList<qint32> > gene, qint32 segment_size);
+    GenericGene *createGene(QVector< QVector<qint32> > gene, qint32 segment_size);
 
     /*!
      * \brief Overwritten method to get an identifier.
@@ -138,7 +138,7 @@ protected:
      * \param stream Stream to load values from. Stream is guaranteed to be a valid pointer
      * \return Loaded gene. The caller must delete the gene
      */
-    GenericGene *_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream);
+    GenericGene *_loadGene(QVector< QVector<qint32> > gene, qint32 segment_size, QTextStream *stream);
 
     /*!
      * \brief Holds the configuration of the gene.

@@ -21,7 +21,7 @@
 
 #include <qnn-global.h>
 
-#include <QList>
+#include <QVector>
 #include <QIODevice>
 #include <QTextStream>
 
@@ -36,8 +36,8 @@
  * Other types of genes should inherent this class and m can override all virtual methods. The following methods are mandatory to override:
  *  - identifier()
  *  - _saveGene(QTextStream *stream)
- *  - _loadGene(QList< QList<qint32> > gene qint32 segment_size, QTextStream *stream)
- *  - createGene(QList< QList<qint32> > gene, qint32 segment_size)
+ *  - _loadGene(QVector< QVector<qint32> > gene qint32 segment_size, QTextStream *stream)
+ *  - createGene(QVector< QVector<qint32> > gene, qint32 segment_size)
  *  - createCopy()
  *
  *
@@ -75,7 +75,7 @@ public:
      *
      * \return Reference of list of segments
      */
-    virtual QList< QList<qint32> >& segments();
+    virtual QVector< QVector<qint32> >& segments();
 
     /*!
      * \brief createCopy Creates a deep copy of the gene.
@@ -165,7 +165,7 @@ protected:
      * \param gene Segment list
      * \param segment_size Length of the segments
      */
-    GenericGene(QList< QList<qint32> > gene, qint32 segment_size);
+    GenericGene(QVector< QVector<qint32> > gene, qint32 segment_size);
 
     /*!
      * \brief Creates a gene out of a given segment list. The created gene should hold the same configuration as the object on which the method is called.
@@ -173,7 +173,7 @@ protected:
      * \param segment_size Length of the segments
      * \return Created gene. The caller must delete the gene
      */
-    virtual GenericGene *createGene(QList< QList<qint32> > gene, qint32 segment_size);
+    virtual GenericGene *createGene(QVector< QVector<qint32> > gene, qint32 segment_size);
 
     /*!
      * \brief Returns an identifier unique to the gene class
@@ -207,14 +207,14 @@ protected:
      * \param stream Stream to load values from. Stream is guaranteed to be a valid pointer
      * \return Loaded gene. The caller must delete the gene
      */
-    virtual GenericGene *_loadGene(QList< QList<qint32> > gene, qint32 segment_size, QTextStream *stream);
+    virtual GenericGene *_loadGene(QVector< QVector<qint32> > gene, qint32 segment_size, QTextStream *stream);
 
     /*!
      * \brief The list of segments.
      *
      * A segment is a QList of qint32
      */
-    QList< QList<qint32> > _gene;
+    QVector< QVector<qint32> > _gene;
 
     /*!
      * \brief The length of a segment

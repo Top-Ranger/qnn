@@ -22,7 +22,7 @@
 #include <qnn-global.h>
 
 #include "genericsimulation.h"
-#include <QList>
+#include <QVector>
 
 /*!
  * \brief The TMazeSimulation class represents the t-maze simulation.
@@ -40,7 +40,7 @@ public:
      *
      * \return T-maze
      */
-    static QList<qint32> generateStandardTMaze();
+    static QVector<qint32> generateStandardTMaze();
 
     /*!
      * \brief Standard function to determine if G1 is correct.
@@ -50,7 +50,7 @@ public:
      * \param list T-maze
      * \return G1 correct
      */
-    static bool standardG1Correct(QList<qint32> list);
+    static bool standardG1Correct(QVector<qint32> list);
 
     /*!
      * \brief This struct contains all configuration option of the simulation
@@ -78,12 +78,12 @@ public:
          *
          * The function must return a QList<qint32>. The numbers must be in [0,range_input].
          */
-        QList<qint32> (*generateTMaze)();
+        QVector<qint32> (*generateTMaze)();
 
         /*!
          * \brief G1Correct contains the function that checks if G1 is correct (true) or G2 is correct (false) for the given t-maze
          */
-        bool (*G1Correct)(QList<qint32> list);
+        bool (*G1Correct)(QVector<qint32> list);
 
         /*!
          * \brief Constructor for standard values
