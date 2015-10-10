@@ -25,6 +25,7 @@ void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
 {
     if(Q_UNLIKELY(stream == NULL))
     {
+        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
         return;
     }
 
@@ -61,6 +62,7 @@ void writeConfigStart(QString type, QMap<QString, QVariant> config, QXmlStreamWr
 {
     if(Q_UNLIKELY(stream == NULL))
     {
+        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
         return;
     }
 
@@ -82,6 +84,7 @@ void writeConfigNeuron(qint32 id, QMap<QString, QVariant> config, QMap<qint32, d
 {
     if(Q_UNLIKELY(stream == NULL))
     {
+        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
         return;
     }
 
@@ -110,6 +113,7 @@ void writeConfigEnd(QXmlStreamWriter *stream)
 {
     if(Q_UNLIKELY(stream == NULL))
     {
+        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
         return;
     }
     stream->writeEndElement(); // network
