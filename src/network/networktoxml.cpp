@@ -18,21 +18,19 @@
 
 #include "networktoxml.h"
 
-#include <QDebug>
-
 namespace NetworkToXML {
 void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
 {
     if(Q_UNLIKELY(stream == NULL))
     {
-        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
+        QNN_WARNING_MSG("stream is NULL");
         return;
     }
 
     switch(value.type())
     {
     case QVariant::Invalid:
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Invalid QVariant at '" << key <<"' - Skipping";
+        QNN_WARNING_MSG("Invalid QVariant");
         return;
         break;
     case QVariant::Bool:
@@ -48,7 +46,7 @@ void writeSingleElement(QString key, QVariant value, QXmlStreamWriter *stream)
         stream->writeStartElement("QString");
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown QVariant type" << value.type();
+        QNN_WARNING_MSG("Unknown QVariant type");
         stream->writeStartElement("unknown");
         break;
     }
@@ -62,7 +60,7 @@ void writeConfigStart(QString type, QMap<QString, QVariant> config, QXmlStreamWr
 {
     if(Q_UNLIKELY(stream == NULL))
     {
-        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
+        QNN_WARNING_MSG("stream is NULL");
         return;
     }
 
@@ -84,7 +82,7 @@ void writeConfigNeuron(qint32 id, QMap<QString, QVariant> config, QMap<qint32, d
 {
     if(Q_UNLIKELY(stream == NULL))
     {
-        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
+        QNN_WARNING_MSG("stream is NULL");
         return;
     }
 
@@ -113,7 +111,7 @@ void writeConfigEnd(QXmlStreamWriter *stream)
 {
     if(Q_UNLIKELY(stream == NULL))
     {
-        qWarning() << "WARNING in " << __FILE__ << __LINE__ << ": stream is NULL";
+        QNN_WARNING_MSG("stream is NULL");
         return;
     }
     stream->writeEndElement(); // network

@@ -23,7 +23,6 @@
 #include "networktoxml.h"
 
 #include <QString>
-#include <QDebug>
 #include <QtCore/qmath.h>
 
 #include <math.h>
@@ -84,15 +83,15 @@ ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork(qint32 len_input,
 {
     if(Q_UNLIKELY(_config.area_size <= 0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Area needs to be greater then 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Area needs to be greater then 0");
     }
     if(Q_UNLIKELY(_config.min_size != -1 && _config.min_size < _len_output))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: min_size_network must not be smaller then output lenght!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("min_size_network must not be smaller then output lenght");
     }
-    if(Q_UNLIKELY(_config.offset_rate_of_gas <= 0.0d))
+    if(Q_UNLIKELY(_config.offset_rate_of_gas <= 0.0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: offset_rate_of_gas must be greater than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("offset_rate_of_gas must be greater then 0");
     }
 
     initialiseP();
@@ -271,7 +270,7 @@ GenericGene *ModulatedSpikingNeuronsNetwork::getRandomGene()
     {
         if(Q_UNLIKELY(config.min_length > config.max_length))
         {
-            qCritical() << "CRITICAL ERROR in " << __FILE__ << __LINE__ << ": min_length is not smaller then max_length";
+            QNN_WARNING_MSG("min_length is not smaller then max_length");
             initial_length = _len_output;
         }
         else
@@ -300,11 +299,11 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
 {
     if(Q_UNLIKELY(_gene->segments().size() < _len_output))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Gene length must be bigger then len_output");
     }
     if(Q_UNLIKELY(_gene->segments()[0].size() != 18))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Wrong gene segment length");
     }
     _network = new double[_gene->segments().size()];
     _gas_emitting = new double[_gene->segments().size()];
@@ -474,7 +473,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                             break;
 
                         default:
-                            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] << "- ignoring";
+                            QNN_WARNING_MSG("Unknown gas");
                             break;
                         }
                     }
@@ -591,7 +590,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                     break;
 
                 default:
-                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[_gene->segments()[i][gene_WhenGas]%_WhenGas_list.size()] << "- ignoring";
+                    QNN_WARNING_MSG("Unknown gas circumstances");
                     break;
                 }
 
@@ -627,7 +626,7 @@ double ModulatedSpikingNeuronsNetwork::_getNeuronOutput(qint32 i)
     }
     else
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": i out of bound";
+        QNN_CRITICAL_MSG("i out of bounds");
         return -1.0;
     }
 }
@@ -733,7 +732,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
                         break;
 
                     default:
-                        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _TypeGas_list[_gene->segments()[i][gene_TypeGas]%_TypeGas_list.size()] << "- ignoring";
+                        QNN_WARNING_MSG("Unknown gas");
                         break;
                     }
                 }
@@ -807,7 +806,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
                 break;
 
             default:
-                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _WhenGas_list[_gene->segments()[i][gene_WhenGas]%_WhenGas_list.size()] << "- ignoring";
+                QNN_WARNING_MSG("Unknown gas circumstances");
                 break;
             }
 
@@ -850,7 +849,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
                 break;
 
             default:
-                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _gene->segments()[i][gene_TypeGas]%3 << "- ignoring";
+                QNN_WARNING_MSG("Unknown gas");
                 break;
             }
         }

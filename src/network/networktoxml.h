@@ -19,6 +19,8 @@
 #ifndef NETWORKTOXML_H
 #define NETWORKTOXML_H
 
+#include <qnn-global.h>
+
 #include <QString>
 #include <QVariant>
 #include <QMap>

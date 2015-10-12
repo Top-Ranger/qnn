@@ -23,7 +23,6 @@
 #include "networktoxml.h"
 
 #include <QString>
-#include <QDebug>
 #include <QtCore/qmath.h>
 
 #include <math.h>
@@ -52,15 +51,15 @@ GasNet::GasNet(qint32 len_input, qint32 len_output, config config) :
 {
     if(Q_UNLIKELY(_config.area_size <= 0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Area needs to be greater then 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Area needs to be greater then 0");
     }
     if(Q_UNLIKELY(_config.min_size != -1 && _config.min_size < _len_output))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: min_size_network must not be smaller then output lenght!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("min_size_network must not be smaller then output lenght");
     }
-    if(Q_UNLIKELY(_config.offset_rate_of_gas <= 0.0d))
+    if(Q_UNLIKELY(_config.offset_rate_of_gas <= 0.0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: offset_rate_of_gas must be greater than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("offset_rate_of_gas must be greater then 0");
     }
 
     _P.append(-4.0);
@@ -136,7 +135,7 @@ GenericGene *GasNet::getRandomGene()
     {
         if(Q_UNLIKELY(config.min_length > config.max_length))
         {
-            qCritical() << "CRITICAL ERROR in " << __FILE__ << __LINE__ << ": min_length is not smaller then max_length";
+            QNN_WARNING_MSG("min_length is not smaller then max_length");
             initial_length = _len_output;
         }
         else
@@ -165,11 +164,11 @@ void GasNet::_initialise()
 {
     if(Q_UNLIKELY(_gene->segments().size() < _len_output))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: gene length must be bigger then len_output!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Gene length must be bigger then len_output");
     }
     if(Q_UNLIKELY(_gene->segments()[0].size() != 16))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene segment length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Wrong gene segment length");
     }
     _network = new double[_gene->segments().size()];
     _gas_emitting = new double[_gene->segments().size()];
@@ -284,7 +283,7 @@ void GasNet::_processInput(QList<double> input)
                     break;
 
                 default:
-                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _gene->segments()[i][gene_TypeGas]%3 << "- ignoring";
+                    QNN_WARNING_MSG("Unknown gas");
                     break;
                 }
             }
@@ -367,7 +366,7 @@ void GasNet::_processInput(QList<double> input)
             break;
 
         default:
-            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _gene->segments()[i][gene_WhenGas]%3 << "- ignoring";
+            QNN_WARNING_MSG("Unknown gas circumstances");
             break;
         }
 
@@ -390,7 +389,7 @@ double GasNet::_getNeuronOutput(qint32 i)
     }
     else
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": i out of bound";
+        QNN_CRITICAL_MSG("i out of bounds");
         return -1.0;
     }
 }
@@ -454,7 +453,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
                     break;
 
                 default:
-                    qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _gene->segments()[i][gene_TypeGas]%3 << "- ignoring";
+                    QNN_WARNING_MSG("Unknown gas");
                     break;
                 }
             }
@@ -515,7 +514,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
             break;
 
         default:
-            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas" << _gene->segments()[i][gene_TypeGas]%3 << "- ignoring";
+            QNN_WARNING_MSG("Unknown gas");
             break;
         }
 
@@ -539,7 +538,7 @@ bool GasNet::_saveNetworkConfig(QXmlStreamWriter *stream)
             break;
 
         default:
-            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown gas circumstances" << _gene->segments()[i][gene_WhenGas]%3 << "- ignoring";
+            QNN_WARNING_MSG("Unknown gas circumstances");
             break;
         }
 

@@ -18,7 +18,6 @@
 
 #include "abstractneuralnetwork.h"
 #include <QString>
-#include <QDebug>
 
 AbstractNeuralNetwork::AbstractNeuralNetwork(qint32 len_input, qint32 len_output) :
     _len_input(len_input),
@@ -43,11 +42,11 @@ void AbstractNeuralNetwork::initialise(GenericGene *gene)
 {
     if(Q_UNLIKELY(_gene != NULL))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Network already initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Network already initialised");
     }
     if(Q_UNLIKELY(gene == NULL))
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": can not initialise with gene=NULL!";
+        QNN_CRITICAL_MSG("Can not initialise with NULL gene");
         return;
     }
     _gene = gene->createCopy();
@@ -58,7 +57,11 @@ void AbstractNeuralNetwork::processInput(QList<double> input)
 {
     if(Q_UNLIKELY(_gene == NULL))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Network not initialised");
+    }
+    if(Q_UNLIKELY(input.length() != _len_input))
+    {
+        QNN_FATAL_MSG("input length != _len_input");
     }
     _processInput(input);
 }
@@ -67,7 +70,7 @@ double AbstractNeuralNetwork::getNeuronOutput(qint32 i)
 {
     if(Q_UNLIKELY(_gene == NULL))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Network not initialised").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Network not initialised");
     }
     return _getNeuronOutput(i);
 }
@@ -81,18 +84,18 @@ bool AbstractNeuralNetwork::saveNetworkConfig(QIODevice *device)
 
     if(Q_UNLIKELY(_gene == NULL))
     {
-        qCritical() << "WARNING in " __FILE__ << __LINE__ << ": Network not initialised";
+        QNN_CRITICAL_MSG("Network not initialised");
         return false;
     }
 
     if(Q_UNLIKELY(device->isOpen()))
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Saving to an open device is not permitted";
+        QNN_CRITICAL_MSG("Saving to an open device is not permitted");
         return false;
     }
     if(!device->open(QIODevice::WriteOnly))
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Can not open device";
+        QNN_CRITICAL_MSG("Can not open device");
         return false;
     }
 

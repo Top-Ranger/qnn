@@ -18,8 +18,6 @@
 
 #include "tmazesimulation.h"
 
-#include <QDebug>
-
 namespace {
 enum Direction {
     up_direction = 0,
@@ -86,7 +84,7 @@ double TMazeSimulation::_getScore()
             {
                 if(Q_UNLIKELY(TMaze[position] > _config.range_input))
                 {
-                    qFatal("%s", QString("FATAL ERROR in %1 %2: Value out of range!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+                    QNN_FATAL_MSG("Value out of range");
                 }
                 input[TMaze[position]-1] = 1.0;
             }
@@ -109,7 +107,7 @@ double TMazeSimulation::_getScore()
             switch(direction)
             {
             case start_direction:
-                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Direction ist start_direction";
+                QNN_WARNING_MSG("Direction ist start_direction");
                 break;
 
             case none_direction:
@@ -185,7 +183,7 @@ bool TMazeSimulation::standardG1Correct(QVector<qint32> list)
 {
     if(Q_UNLIKELY(list.size() < 2))
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": List shorter than 2 - returning default false";
+        QNN_WARNING_MSG("List shorter then 2 elements - returning default false");
         return false;
     }
     return list.first() == list.last();

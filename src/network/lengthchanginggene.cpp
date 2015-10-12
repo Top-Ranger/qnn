@@ -18,8 +18,6 @@
 
 #include "lengthchanginggene.h"
 
-#include <QDebug>
-
 LengthChangingGene::LengthChangingGene(qint32 initialLength, qint32 segment_size, config config) :
     GenericGene(initialLength, segment_size),
     _config(config)
@@ -36,11 +34,11 @@ LengthChangingGene::LengthChangingGene(qint32 initialLength, qint32 segment_size
 
     if(Q_UNLIKELY(_config.max_length < _config.min_length))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: min length must be smaller or equal to max length").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Min length must be smaller or equal to max length");
     }
     if(Q_UNLIKELY(initialLength < _config.min_length || initialLength > _config.max_length))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: initial length must be between min length and max length").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Initial length must be between min length and max length");
     }
 }
 
@@ -60,7 +58,7 @@ LengthChangingGene::LengthChangingGene(QVector< QVector<qint32> > gene, qint32 s
 {
     if(Q_UNLIKELY(gene.size() < config.min_length || gene.size() > config.max_length))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: gene length must be between min length and max length").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Gene length must be between min length and max length");
     }
 }
 
@@ -127,7 +125,7 @@ GenericGene *LengthChangingGene::_loadGene(QVector< QVector<qint32> > gene, qint
     *stream >> command;
     if(command != "min_length")
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No min_length";
+        QNN_CRITICAL_MSG("No min_length");
         return NULL;
     }
     *stream >> config.min_length;
@@ -136,7 +134,7 @@ GenericGene *LengthChangingGene::_loadGene(QVector< QVector<qint32> > gene, qint
     *stream >> command;
     if(command != "max_length")
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No max_length";
+        QNN_CRITICAL_MSG("No max_length");
         return NULL;
     }
     *stream >> config.max_length;

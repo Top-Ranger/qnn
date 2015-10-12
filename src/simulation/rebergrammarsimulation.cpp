@@ -18,8 +18,6 @@
 
 #include "rebergrammarsimulation.h"
 
-#include <QDebug>
-
 namespace {
 
 enum ReberMode {
@@ -54,7 +52,7 @@ bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
 {
     if(Q_UNLIKELY(max_depth < 1))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Invalid depth");
         return false;
     }
 
@@ -105,7 +103,7 @@ bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -114,7 +112,7 @@ bool reber(QString &s, ReberMode mode, qint32 max_depth)
 {
     if(Q_UNLIKELY(max_depth < 1))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Invalid depth").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Invalid depth");
         return false;
     }
 
@@ -142,7 +140,7 @@ bool reber(QString &s, ReberMode mode, qint32 max_depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -186,7 +184,7 @@ bool reber_state0(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -230,7 +228,7 @@ bool reber_state1(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -274,7 +272,7 @@ bool reber_state2(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -308,7 +306,7 @@ bool reber_state3(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -352,7 +350,7 @@ bool reber_state4(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -396,7 +394,7 @@ bool reber_state5(QString &s, ReberMode mode, qint32 &depth)
     }
     else
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Unknown mode").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Unknown mode");
         return false;
     }
 }
@@ -427,7 +425,7 @@ char getRandomReberChar()
         return 'V';
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Impossible random status";
+        QNN_WARNING_MSG("Impossible random status");
         return 'B';
         break;
     }
@@ -486,7 +484,7 @@ char networkToReberOutput(AbstractNeuralNetwork *network)
     }
     switch(max) {
     case -1:
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Mo max_value found";
+        QNN_WARNING_MSG("No max_value found");
         return '\0';
         break;
     case 0:
@@ -514,7 +512,7 @@ char networkToReberOutput(AbstractNeuralNetwork *network)
         return '\0';
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": max =" << max;
+        QNN_WARNING_MSG("Invalid max value");
         return '\0';
         break;
     }
@@ -546,7 +544,7 @@ qint32 ReberGrammarSimulation::needOutputLength()
         return 8;
         break;
     default:
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown simulation mode";
+        QNN_WARNING_MSG("Unknown simulation mode");
         return 1;
     }
 }
@@ -612,18 +610,18 @@ double ReberGrammarSimulation::_getScore()
                 } while(valid);
             }
 
-                input_word = word;
+            input_word = word;
 
-                while(input_word.length() != 0)
-                {
-                    QList<double> input = reberCharToInput(input_word.at(0).toLatin1());
-                    input_word.remove(0,1);
-                    network->processInput(input);
-                }
-                if((network->getNeuronOutput(0) >= _config.detect_threshold) == reber_function(word, reber_verify_word, _config.max_depth))
-                {
-                    score += 1.0;
-                }
+            while(input_word.length() != 0)
+            {
+                QList<double> input = reberCharToInput(input_word.at(0).toLatin1());
+                input_word.remove(0,1);
+                network->processInput(input);
+            }
+            if((network->getNeuronOutput(0) >= _config.detect_threshold) == reber_function(word, reber_verify_word, _config.max_depth))
+            {
+                score += 1.0;
+            }
             break;
 
         case CreateWords:
@@ -647,7 +645,7 @@ double ReberGrammarSimulation::_getScore()
 
             if(Q_UNLIKELY(c_output == '\1'))
             {
-                qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No input";
+                QNN_WARNING_MSG("No input");
                 break;
             }
 

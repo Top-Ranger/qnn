@@ -21,7 +21,6 @@
 #include "commonnetworkfunctions.h"
 #include "networktoxml.h"
 
-#include <QDebug>
 #include <QtCore/qmath.h>
 
 using CommonNetworkFunctions::weight;
@@ -64,11 +63,11 @@ void FeedForwardNetwork::_initialise()
 {
     if(Q_UNLIKELY(_gene->segments().size() < num_segments(_len_input, _len_output, _config.num_hidden_layer, _config.len_hidden)))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Wrong gene length!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Wrong gene length");
     }
     else if(Q_UNLIKELY(_config.len_hidden <= 0 || _config.num_hidden_layer < 0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: invalid hidden layer size!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Invalid hidden layer size");
     }
 
     if(_config.len_hidden > 0)
@@ -84,12 +83,6 @@ void FeedForwardNetwork::_initialise()
 
 void FeedForwardNetwork::_processInput(QList<double> input)
 {
-    if(Q_UNLIKELY(input.length() != _len_input))
-    {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": input length" << input.length() << "!= _len_input" << _len_input;
-        return;
-    }
-
     if(_config.num_hidden_layer == 0)
     {
         qint32 current_segment = 0;
@@ -157,7 +150,7 @@ double FeedForwardNetwork::_getNeuronOutput(qint32 i)
     }
     else
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": i out of bound";
+        QNN_CRITICAL_MSG("i out of bounds");
         return -1.0;
     }
 }

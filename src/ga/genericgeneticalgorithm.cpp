@@ -21,7 +21,6 @@
 #include <QThread>
 #include <QtAlgorithms>
 #include <QTime>
-#include <QDebug>
 #include <QtConcurrentRun>
 #include <QFuture>
 
@@ -60,19 +59,19 @@ GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network,
 {
     if(Q_UNLIKELY(network == NULL))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Network might not be NULL");
     }
     if(Q_UNLIKELY(simulation == NULL))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Simulation might not be NULL");
     }
     if(Q_UNLIKELY(population_size <= 0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Population size must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Population size must be greater then 0");
     }
     if(Q_UNLIKELY(max_rounds <= 0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Max rounds must be bigger than 0").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Max rounds must be greater then 0");
     }
     _network = network->createConfigCopy();
     _simulation = simulation->createConfigCopy();
@@ -111,11 +110,11 @@ void GenericGeneticAlgorithm::runGa()
 {
     if(Q_UNLIKELY(_network == NULL))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Network might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Network might not be NULL");
     }
     if(Q_UNLIKELY(_simulation == NULL))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: Simulation might not be NULL").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Simulation might not be NULL");
     }
 
     // Initialise
@@ -270,7 +269,7 @@ void GenericGeneticAlgorithm::createChildren()
             }
             else
             {
-                qCritical() << "WARNING in " __FILE__ << __LINE__ << ": Trysing to append empty list";
+                QNN_WARNING_MSG("Trying to append empty list");
             }
         }
 
@@ -304,7 +303,7 @@ double GenericGeneticAlgorithm::calculateAverageFitness()
 {
     if(_population.length() == 0)
     {
-        qCritical() << "CRITICAL ERROR in " __FILE__ << __LINE__ << ": calling calculate_average_fitness with empty population!";
+        QNN_CRITICAL_MSG("Calling calculate_average_fitness with empty population");
         return -1.0;
     }
 

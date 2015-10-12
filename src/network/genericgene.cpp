@@ -18,7 +18,6 @@
 
 #include "genericgene.h"
 #include <QTime>
-#include <QDebug>
 #include <cstdlib>
 
 namespace {
@@ -46,11 +45,11 @@ GenericGene::GenericGene(qint32 initialLength, qint32 segment_size) :
 {
     if(Q_UNLIKELY(initialLength < 0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: initial length can not be negativ!").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Initial length can not be negativ");
     }
     if(Q_UNLIKELY(segment_size <= 0))
     {
-        qFatal("%s", QString("FATAL ERROR in %1 %2: segment size must be 1 or greater").arg(__FILE__).arg(__LINE__).toLatin1().data());
+        QNN_FATAL_MSG("Segment size must be greater then 0");
     }
 
     _gene.reserve(initialLength);
@@ -105,7 +104,7 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
 {
     if(gene1->_gene[0].size() != gene2->_gene[0].size())
     {
-        qCritical() << "WARNING in " __FILE__ << __LINE__ << ": Attemted crossover of different type of genes";
+        QNN_CRITICAL_MSG("Attemted crossover of different type of genes");
         return QList<GenericGene *>();
     }
     QVector< QVector<qint32> > newGene1;
@@ -163,12 +162,12 @@ bool GenericGene::saveGene(QIODevice *device)
     }
     if(Q_UNLIKELY(device->isOpen()))
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Saving to an open device is not permitted";
+        QNN_CRITICAL_MSG("Saving to an open device is not permitted");
         return false;
     }
     if(!device->open(QIODevice::WriteOnly))
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Can not open device";
+        QNN_CRITICAL_MSG("Can not open device");
         return false;
     }
     QTextStream stream(device);
@@ -202,13 +201,13 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
 
     if(Q_UNLIKELY(device->isOpen()))
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Loading to an open device is not permitted";
+        QNN_CRITICAL_MSG("Loading to an open device is not permitted");
         return NULL;
     }
     if(!device->open(QIODevice::ReadOnly) || device->atEnd())
     {
         device->close();
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Can not open device";
+        QNN_CRITICAL_MSG("Can not open device");
         return NULL;
     }
     QTextStream stream(device);
@@ -219,7 +218,7 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
     if(command != identifier())
     {
         device->close();
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Wrong gene type";
+        QNN_CRITICAL_MSG("Wrong gene type");
         return NULL;
     }
 
@@ -228,7 +227,7 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
     if(command != "segments")
     {
         device->close();
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No segment size";
+        QNN_CRITICAL_MSG("No segment size");
         return NULL;
     }
     stream >> segment_size;
@@ -238,7 +237,7 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
     if(command != "gene")
     {
         device->close();
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": No segment size";
+        QNN_CRITICAL_MSG("No segment size");
         return NULL;
     }
 
@@ -264,7 +263,7 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
         else
         {
             device->close();
-            qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Unknown command" << command;
+            QNN_CRITICAL_MSG("Unknown command");
             return NULL;
         }
     }
@@ -282,7 +281,7 @@ bool GenericGene::canLoad(QIODevice *device)
     }
     if(Q_UNLIKELY(device->isOpen()))
     {
-        qWarning() << "WARNING in " __FILE__ << __LINE__ << ": Loading to an open device is not permitted";
+        QNN_WARNING_MSG("Loading to an open device is not permitted");
         return false;
     }
     if(!device->open(QIODevice::ReadOnly) || device->atEnd())

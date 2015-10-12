@@ -20,6 +20,7 @@
 #define QNN_GLOBAL_H
 
 #include <QtCore/qglobal.h>
+#include <QDebug>
 
 /*!
  * \mainpage QNeuralNetwork documentation
@@ -47,5 +48,25 @@
  * \brief MAX_GENE_VALUE contains the maximum value in a gene segment.
  */
 static const qint32 MAX_GENE_VALUE = 0x7FFFFFFF; // Should be MAX_INT on 32 bit
+
+/*!
+ * \brief This makro prints a debug message.
+ */
+#define QNN_DEBUG_MSG(x) qDebug() << "DEBUG in " << Q_FUNC_INFO << ":" << x
+
+/*!
+ * \brief This makro prints a warning message.
+ */
+#define QNN_WARNING_MSG(x) qWarning() << "WARNING in " << Q_FUNC_INFO << ":" << x
+
+/*!
+ * \brief This makro prints a critical message.
+ */
+#define QNN_CRITICAL_MSG(x) qCritical() << "CRITICAL ERROR in " << Q_FUNC_INFO << ":" << x
+
+/*!
+ * \brief This makro prints a fatal message and terminates the program.
+ */
+#define QNN_FATAL_MSG(x) qFatal("%s", QString("FATAL ERROR in %1: %2").arg(Q_FUNC_INFO).arg(x).toLatin1().data())
 
 #endif // QNN_GLOBAL_H
