@@ -90,6 +90,18 @@ public:
         double (*activision_function)(double);
 
         /*!
+         * \brief If neuron_save is not NULL the value of the neurons will be saved to the QIODevice
+         *
+         * This will be set to NULL if createConfigCopy is called to avoid problems.
+         */
+        QIODevice *neuron_save;
+
+        /*!
+         * \brief This variable saves whether we opened the device. It does not need to be set and will be overwritten.
+         */
+        bool neuron_save_opened;
+
+        /*!
          * \brief Constructor for standard values
          */
         config() :
@@ -100,7 +112,9 @@ public:
             weight_scalar(5),
             bias_scalar(5),
             network_default_size_grow(7),
-            activision_function(&standard_activision_function)
+            activision_function(&standard_activision_function),
+            neuron_save(NULL),
+            neuron_save_opened(false)
         {
         }
     };

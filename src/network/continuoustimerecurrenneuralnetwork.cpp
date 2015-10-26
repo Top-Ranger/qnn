@@ -24,6 +24,7 @@
 
 #include <math.h>
 
+
 // GENE ENCODING: θ, input, τ, W
 // weight between -5,5
 
@@ -78,6 +79,10 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork() :
 ContinuousTimeRecurrenNeuralNetwork::~ContinuousTimeRecurrenNeuralNetwork()
 {
     delete [] _network;
+    if(_config.neuron_save != NULL && _config.neuron_save_opened)
+    {
+        _config.neuron_save->close();
+    }
 }
 
 GenericGene *ContinuousTimeRecurrenNeuralNetwork::getRandomGene()
@@ -97,7 +102,9 @@ GenericGene *ContinuousTimeRecurrenNeuralNetwork::getRandomGene()
 
 AbstractNeuralNetwork *ContinuousTimeRecurrenNeuralNetwork::createConfigCopy()
 {
-    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, _config);
+    config new_config = _config;
+    new_config.neuron_save = NULL;
+    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, new_config);
 }
 
 void ContinuousTimeRecurrenNeuralNetwork::_initialise()
@@ -114,6 +121,41 @@ void ContinuousTimeRecurrenNeuralNetwork::_initialise()
     for(qint32 i = 0; i < _gene->segments().size(); ++i)
     {
         _network[i] = 0;
+    }
+
+    // Prepare output
+    if(_config.neuron_save != NULL)
+    {
+        if(!_config.neuron_save->isOpen())
+        {
+            QNN_DEBUG_MSG("Opening device");
+            if(!_config.neuron_save->open(QIODevice::WriteOnly))
+            {
+                QNN_CRITICAL_MSG("Can not open device");
+                // setting to null because we can not write to it
+                _config.neuron_save = NULL;
+            }
+            else
+            {
+                _config.neuron_save_opened = true;
+            }
+        }
+        else
+        {
+            _config.neuron_save_opened = false;
+        }
+        if(_config.neuron_save != NULL)
+        {
+            // write header
+            QTextStream stream(_config.neuron_save);
+            stream << "Neuron 0";
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << "Neuron " << i;
+            }
+            stream << "\n";
+        }
     }
 }
 
@@ -145,6 +187,19 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
 
     delete [] _network;
     _network = newNetwork;
+
+    // write output
+    if(_config.neuron_save != NULL)
+    {
+        QTextStream stream(_config.neuron_save);
+        stream << _network[0];
+        for(int i = 1; i < _gene->segments().size(); ++i)
+        {
+            stream << ";";
+            stream << _network[i];
+        }
+        stream << "\n";
+    }
 }
 
 double ContinuousTimeRecurrenNeuralNetwork::_getNeuronOutput(qint32 i)

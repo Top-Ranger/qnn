@@ -117,6 +117,14 @@ GasNet::~GasNet()
         }
         delete [] _weights;
     }
+    if(_config.neuron_save != NULL && _config.neuron_save_opened)
+    {
+        _config.neuron_save->close();
+    }
+    if(_config.gas_save != NULL && _config.gas_save_opened)
+    {
+        _config.gas_save->close();
+    }
 }
 
 GenericGene *GasNet::getRandomGene()
@@ -157,7 +165,10 @@ GenericGene *GasNet::getRandomGene()
 
 AbstractNeuralNetwork *GasNet::createConfigCopy()
 {
-    return new GasNet(_len_input, _len_output, _config);
+    config new_config = _config;
+    new_config.neuron_save = NULL;
+    new_config.gas_save = NULL;
+    return new GasNet(_len_input, _len_output, new_config);
 }
 
 void GasNet::_initialise()
@@ -239,6 +250,74 @@ void GasNet::_initialise()
             }
         }
     }
+
+    // Prepare output
+    if(_config.neuron_save != NULL)
+    {
+        if(!_config.neuron_save->isOpen())
+        {
+            QNN_DEBUG_MSG("Opening device");
+            if(!_config.neuron_save->open(QIODevice::WriteOnly))
+            {
+                QNN_CRITICAL_MSG("Can not open device");
+                // setting to null because we can not write to it
+                _config.neuron_save = NULL;
+            }
+            else
+            {
+                _config.neuron_save_opened = true;
+            }
+        }
+        else
+        {
+            _config.neuron_save_opened = false;
+        }
+        if(_config.neuron_save != NULL)
+        {
+            // write header
+            QTextStream stream(_config.neuron_save);
+            stream << "Neuron 0";
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << "Neuron " << i;
+            }
+            stream << "\n";
+        }
+    }
+    if(_config.gas_save != NULL)
+    {
+        if(!_config.gas_save->isOpen())
+        {
+            QNN_DEBUG_MSG("Opening device");
+            if(!_config.gas_save->open(QIODevice::WriteOnly))
+            {
+                QNN_CRITICAL_MSG("Can not open device");
+                // setting to null because we can not write to it
+                _config.gas_save = NULL;
+            }
+            else
+            {
+                _config.gas_save_opened = true;
+            }
+        }
+        else
+        {
+            _config.gas_save_opened = false;
+        }
+        if(_config.gas_save != NULL)
+        {
+            // write header
+            QTextStream stream(_config.gas_save);
+            stream << "positive 0;negative 0";
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << "positive " << i << ";negative " << i;
+            }
+            stream << "\n";
+        }
+    }
 }
 
 void GasNet::_processInput(QList<double> input)
@@ -288,6 +367,19 @@ void GasNet::_processInput(QList<double> input)
                 }
             }
         }
+    }
+
+    // write gas
+    if(_config.gas_save != NULL)
+    {
+        QTextStream stream(_config.gas_save);
+        stream << _network[0];
+        for(int i = 1; i < _gene->segments().size(); ++i)
+        {
+            stream << ";";
+            stream << gas1[i] << ";" << gas2[i];
+        }
+        stream << "\n";
     }
 
     for(qint32 i = 0; i < _gene->segments().size(); ++i)
@@ -378,6 +470,19 @@ void GasNet::_processInput(QList<double> input)
         {
             _gas_emitting[i] = cut01(_gas_emitting[i] - 1.0 / (_config.offset_rate_of_gas + floatFromGeneInput(_gene->segments()[i][gene_Rate_of_gas], _config.range_rate_of_gas)));
         }
+    }
+
+    // write output
+    if(_config.neuron_save != NULL)
+    {
+        QTextStream stream(_config.neuron_save);
+        stream << _network[0];
+        for(int i = 1; i < _gene->segments().size(); ++i)
+        {
+            stream << ";";
+            stream << _network[i];
+        }
+        stream << "\n";
     }
 }
 

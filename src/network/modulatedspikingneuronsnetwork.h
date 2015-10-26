@@ -126,6 +126,30 @@ public:
         double timestep_size;
 
         /*!
+         * \brief If neuron_save is not NULL the value of the neurons will be saved to the QIODevice
+         *
+         * This will be set to NULL if createConfigCopy is called to avoid problems.
+         */
+        QIODevice *neuron_save;
+
+        /*!
+         * \brief This variable saves whether we opened the device. It does not need to be set and will be overwritten.
+         */
+        bool neuron_save_opened;
+
+        /*!
+         * \brief If neuron_save is not NULL the gas concentration at the neurons will be saved to the QIODevice
+         *
+         * This will be set to NULL if createConfigCopy is called to avoid problems.
+         */
+        QIODevice *gas_save;
+
+        /*!
+         * \brief This variable saves whether we opened the device. It does not need to be set and will be overwritten.
+         */
+        bool gas_save_opened;
+
+        /*!
          * \brief Constructor for standard values
          */
         config() :
@@ -144,8 +168,11 @@ public:
             b_modulated(false),
             c_modulated(false),
             d_modulated(true),
-            timestep_size(0.1)
-
+            timestep_size(0.1),
+            neuron_save(NULL),
+            neuron_save_opened(false),
+            gas_save(NULL),
+            gas_save_opened(false)
         {
         }
     };

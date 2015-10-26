@@ -140,6 +140,14 @@ ModulatedSpikingNeuronsNetwork::~ModulatedSpikingNeuronsNetwork()
         }
         delete [] _weights;
     }
+    if(_config.neuron_save != NULL && _config.neuron_save_opened)
+    {
+        _config.neuron_save->close();
+    }
+    if(_config.gas_save != NULL && _config.gas_save_opened)
+    {
+        _config.gas_save->close();
+    }
 }
 
 void ModulatedSpikingNeuronsNetwork::initialiseP()
@@ -292,7 +300,10 @@ GenericGene *ModulatedSpikingNeuronsNetwork::getRandomGene()
 
 AbstractNeuralNetwork *ModulatedSpikingNeuronsNetwork::createConfigCopy()
 {
-    return new ModulatedSpikingNeuronsNetwork(_len_input, _len_output, _config);
+    config new_config = _config;
+    new_config.neuron_save = NULL;
+    new_config.gas_save = NULL;
+    return new ModulatedSpikingNeuronsNetwork(_len_input, _len_output, new_config);
 }
 
 void ModulatedSpikingNeuronsNetwork::_initialise()
@@ -330,9 +341,9 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
         {
             // distance
             _distances[i][j] = calculateDistance(floatFromGeneInput(_gene->segments()[i][gene_x], _config.area_size),
-                                                  floatFromGeneInput(_gene->segments()[i][gene_y], _config.area_size),
-                                                  floatFromGeneInput(_gene->segments()[j][gene_x], _config.area_size),
-                                                  floatFromGeneInput(_gene->segments()[j][gene_y], _config.area_size));
+                                                 floatFromGeneInput(_gene->segments()[i][gene_y], _config.area_size),
+                                                 floatFromGeneInput(_gene->segments()[j][gene_x], _config.area_size),
+                                                 floatFromGeneInput(_gene->segments()[j][gene_y], _config.area_size));
 
             // weight
             _weights[i][j] = 0;
@@ -375,6 +386,77 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
                     _weights[i][j] += -1.0;
                 }
             }
+        }
+    }
+
+    // Prepare output
+    if(_config.neuron_save != NULL)
+    {
+        if(!_config.neuron_save->isOpen())
+        {
+            QNN_DEBUG_MSG("Opening device");
+            if(!_config.neuron_save->open(QIODevice::WriteOnly))
+            {
+                QNN_CRITICAL_MSG("Can not open device");
+                // setting to null because we can not write to it
+                _config.neuron_save = NULL;
+            }
+            else
+            {
+                _config.neuron_save_opened = true;
+            }
+        }
+        else
+        {
+            _config.neuron_save_opened = false;
+        }
+        if(_config.neuron_save != NULL)
+        {
+            // write header
+            QTextStream stream(_config.neuron_save);
+            stream << "Neuron 0";
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << "Neuron " << i;
+            }
+            stream << "\n";
+        }
+    }
+    if(_config.gas_save != NULL)
+    {
+        if(!_config.gas_save->isOpen())
+        {
+            QNN_DEBUG_MSG("Opening device");
+            if(!_config.gas_save->open(QIODevice::WriteOnly))
+            {
+                QNN_CRITICAL_MSG("Can not open device");
+                // setting to null because we can not write to it
+                _config.gas_save = NULL;
+            }
+            else
+            {
+                _config.gas_save_opened = true;
+            }
+        }
+        else
+        {
+            _config.gas_save_opened = false;
+        }
+        if(_config.gas_save != NULL)
+        {
+            // write header
+            QTextStream stream(_config.gas_save);
+            stream << "APos 0;ANeg 0;BPos 0;BNeg 0;CPos 0;CNeg 0;DPos 0;DNeg 0";
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << "APos " << i << ";ANeg " << i
+                       << ";BPos " << i << ";BNeg " << i
+                       << ";CPos " << i << ";CNeg " << i
+                       << ";DPos " << i << ";DNeg " << i;
+            }
+            stream << "\n";
         }
     }
 }
@@ -479,6 +561,22 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                     }
                 }
             }
+        }
+
+        // write gas
+        if(_config.gas_save != NULL)
+        {
+            QTextStream stream(_config.gas_save);
+            stream << _network[0];
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << gasAPos[i] << ";" << gasANeg[i] << ";"
+                       << gasBPos[i] << ";" << gasBNeg[i] << ";"
+                       << gasCPos[i] << ";" << gasCNeg[i] << ";"
+                       << gasDPos[i] << ";" << gasDNeg[i];
+            }
+            stream << "\n";
         }
 
         for(qint32 i = 0; i < _gene->segments().size(); ++i)
@@ -605,6 +703,19 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
             }
         }
 
+        // write output before fire
+        if(_config.neuron_save != NULL)
+        {
+            QTextStream stream(_config.neuron_save);
+            stream << _network[0];
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << _network[i];
+            }
+            stream << "\n";
+        }
+
         for(qint32 i = 0; i < _gene->segments().size(); ++i)
         {
             // Check if fired
@@ -614,6 +725,19 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
                 _u[i] = _u[i] + d[i];
                 ++_firecount[i];
             }
+        }
+
+        // write output after fire
+        if(_config.neuron_save != NULL)
+        {
+            QTextStream stream(_config.neuron_save);
+            stream << _network[0];
+            for(int i = 1; i < _gene->segments().size(); ++i)
+            {
+                stream << ";";
+                stream << _network[i];
+            }
+            stream << "\n";
         }
     }
 }
