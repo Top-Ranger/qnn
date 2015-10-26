@@ -347,6 +347,12 @@ GenericGene *GenericGene::loadThisGene(QIODevice *device)
     return gene.loadGene(device);
 }
 
+bool GenericGene::canLoadThisGene(QIODevice *device)
+{
+    GenericGene gene;
+    return gene.canLoad(device);
+}
+
 GenericGene *GenericGene::createGene(QVector< QVector<qint32> > gene, qint32 segment_size)
 {
     return new GenericGene(gene, segment_size);

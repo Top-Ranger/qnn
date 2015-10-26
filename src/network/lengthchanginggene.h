@@ -94,6 +94,17 @@ public:
      */
     static GenericGene *loadThisGene(QIODevice *device);
 
+    /*!
+     * \brief A static method to test if this kind of gene can be loaded
+     *
+     * This is the static version of LengthChangingGene::canLoad.
+     * With this method you can test if a gene can be loaded without creating an instance of the gene.
+     *
+     * \param device The QIODevice to test
+     * \return True if the gene can be loaded
+     */
+    static bool canLoadThisGene(QIODevice *device);
+
 protected:
     /*!
      * \brief Empty constructor

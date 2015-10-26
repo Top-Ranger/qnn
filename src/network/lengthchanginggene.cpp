@@ -98,6 +98,12 @@ GenericGene *LengthChangingGene::loadThisGene(QIODevice *device)
     return gene.loadGene(device);
 }
 
+bool LengthChangingGene::canLoadThisGene(QIODevice *device)
+{
+    LengthChangingGene gene;
+    return gene.canLoad(device);
+}
+
 GenericGene *LengthChangingGene::createGene(QVector< QVector<qint32> > gene, qint32 segment_size)
 {
     return new LengthChangingGene(gene, segment_size, _config);

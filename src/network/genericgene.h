@@ -34,15 +34,16 @@
  * A gene consists of multiple segemnts. Each of the segments has the same size.
  *
  * Other types of genes should inherent this class and m can override all virtual methods. The following methods are mandatory to override:
- *  - identifier()
- *  - _saveGene(QTextStream *stream)
- *  - _loadGene(QVector< QVector<qint32> > gene qint32 segment_size, QTextStream *stream)
- *  - createGene(QVector< QVector<qint32> > gene, qint32 segment_size)
- *  - createCopy()
+ *  - GenericGene::identifier()
+ *  - GenericGene::_saveGene(QTextStream *stream)
+ *  - GenericGene::_loadGene(QVector< QVector<qint32> > gene, qint32 segment_size, QTextStream *stream)
+ *  - GenericGene::createGene(QVector< QVector<qint32> > gene, qint32 segment_size)
+ *  - GenericGene::createCopy()
  *
  *
  * Each implementation should also provide the following static methods:
- *  - static GenericGene *loadThisGene(QIODevice *device)
+ *  - static GenericGene * GenericGene::loadThisGene(QIODevice *device)
+ *  - static bool GenericGene::canLoadThisGene(QIODevice *device)
  */
 class QNNSHARED_EXPORT GenericGene
 {
@@ -86,7 +87,8 @@ public:
     /*!
      * \brief Combines two genes and returns their two children.
      *
-     * The combination used in this method is a one-point-crossover. The children are created using the createGene method. Both genes must have the same segment size.
+     * The combination used in this method is a one-point-crossover.
+     * The children are created using the createGene method. Both genes must have the same segment size.
      *
      * \param gene1 First parent gene
      * \param gene2 second parent gene
@@ -151,6 +153,17 @@ public:
      * \return Loaded gene (NULL if unsuccessful). The caller must delete the gene
      */
     static GenericGene *loadThisGene(QIODevice *device);
+
+    /*!
+     * \brief A static method to test if this kind of gene can be loaded
+     *
+     * This is the static version of GenericGene::canLoad.
+     * With this method you can test if a gene can be loaded without creating an instance of the gene.
+     *
+     * \param device The QIODevice to test
+     * \return True if the gene can be loaded
+     */
+    static bool canLoadThisGene(QIODevice *device);
 
 protected:
     /*!

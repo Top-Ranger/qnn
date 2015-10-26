@@ -32,8 +32,9 @@
  * A neural network should be solely defined by the type, its configuration and the gene. Each type of neural network should
  * be implemented in an own subclass of this class.
  *
- * A neural network starts in an unitialised state. Most methods (except getRandomGene, createConfigCopy and initialise) won't work
- * until the network is initialised by calling initialise(GenericGene *gene).
+ * A neural network starts in an unitialised state. Most methods
+ * (except AbstractNeuralNetwork::getRandomGene, AbstractNeuralNetwork::createConfigCopy and AbstractNeuralNetwork::initialise) won't work
+ * until the network is initialised by calling AbstractNeuralNetwork::initialise(GenericGene *gene).
  *
  * All virtual methods have to be implemented by each subclass.
  */
