@@ -62,6 +62,9 @@ GasNet::GasNet(qint32 len_input, qint32 len_output, config config) :
         QNN_FATAL_MSG("offset_rate_of_gas must be greater then 0");
     }
 
+    _config.neuron_save_opened = false;
+    _config.gas_save_opened = false;
+
     _P.append(-4.0);
     _P.append(-2.0);
     _P.append(-1.0);

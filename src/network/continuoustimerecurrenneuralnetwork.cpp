@@ -67,6 +67,7 @@ ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork(qint32 
     {
         QNN_FATAL_MSG("max_size_network must not be smaller than size_network");
     }
+    _config.neuron_save_opened = false;
 }
 
 ContinuousTimeRecurrenNeuralNetwork::ContinuousTimeRecurrenNeuralNetwork() :

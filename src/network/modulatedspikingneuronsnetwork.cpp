@@ -94,6 +94,9 @@ ModulatedSpikingNeuronsNetwork::ModulatedSpikingNeuronsNetwork(qint32 len_input,
         QNN_FATAL_MSG("offset_rate_of_gas must be greater then 0");
     }
 
+    _config.neuron_save_opened = false;
+    _config.gas_save_opened = false;
+
     initialiseP();
     initialiseTokenArrays();
 }
