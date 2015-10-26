@@ -100,7 +100,7 @@ public:
      * This is a wrapper function which manages the device as well saves the GenericGene.
      * This method will then call _saveGene where subclasses can save their values.
      *
-     * \param device The QIODevice to which the save may go. Must not be opened
+     * \param device The QIODevice to which the gene is saved
      * \return True if save was successful
      */
     bool saveGene(QIODevice *device);
@@ -113,7 +113,7 @@ public:
      *
      * If the gene can't be loaded NULL will be returned.
      *
-     * \param device The QIODevice from which to load the gene. Must not be opened
+     * \param device The QIODevice from which the gene is loaded
      * \return Loaded Gene (NULL if unsuccessful). The caller must delete the gene
      */
     GenericGene *loadGene(QIODevice *device);

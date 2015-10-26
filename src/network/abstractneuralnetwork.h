@@ -85,7 +85,7 @@ public:
      *
      * The network configuration is saved into XML file format.
      *
-     * \param device The QIODevice to save the configuration to. May not be opened
+     * \param device The QIODevice to save the configuration to
      * \return  True if the saving was successful
      */
     bool saveNetworkConfig(QIODevice *device);

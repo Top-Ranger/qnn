@@ -160,15 +160,16 @@ bool GenericGene::saveGene(QIODevice *device)
     {
         return false;
     }
-    if(Q_UNLIKELY(device->isOpen()))
+    bool opened_device = false;
+    if(!device->isOpen())
     {
-        QNN_CRITICAL_MSG("Saving to an open device is not permitted");
-        return false;
-    }
-    if(!device->open(QIODevice::WriteOnly))
-    {
-        QNN_CRITICAL_MSG("Can not open device");
-        return false;
+        QNN_DEBUG_MSG("Opening device");
+        if(!device->open(QIODevice::WriteOnly))
+        {
+            QNN_CRITICAL_MSG("Can not open device");
+            return false;
+        }
+        opened_device = true;
     }
     QTextStream stream(device);
 
@@ -185,7 +186,10 @@ bool GenericGene::saveGene(QIODevice *device)
     }
     stream << "geneend ";
     bool result = _saveGene(&stream);
-    device->close();
+    if(opened_device)
+    {
+        device->close();
+    }
     return result;
 }
 
@@ -199,16 +203,16 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
     qint32 segment_size;
     QVector< QVector<qint32> > gene;
 
-    if(Q_UNLIKELY(device->isOpen()))
+    bool opened_device = false;
+    if(!device->isOpen())
     {
-        QNN_CRITICAL_MSG("Loading to an open device is not permitted");
-        return NULL;
-    }
-    if(!device->open(QIODevice::ReadOnly) || device->atEnd())
-    {
-        device->close();
-        QNN_CRITICAL_MSG("Can not open device");
-        return NULL;
+        QNN_DEBUG_MSG("Opening device");
+        if(!device->open(QIODevice::ReadOnly) || device->atEnd())
+        {
+            QNN_CRITICAL_MSG("Can not open device");
+            return NULL;
+        }
+        opened_device = true;
     }
     QTextStream stream(device);
     QString command;
@@ -269,7 +273,10 @@ GenericGene *GenericGene::loadGene(QIODevice *device)
     }
 
     GenericGene *newGene = _loadGene(gene, segment_size, &stream);
-    device->close();
+    if(opened_device)
+    {
+        device->close();
+    }
     return newGene;
 }
 
@@ -279,15 +286,16 @@ bool GenericGene::canLoad(QIODevice *device)
     {
         return false;
     }
-    if(Q_UNLIKELY(device->isOpen()))
+    bool opened_device = false;
+    if(!device->isOpen())
     {
-        QNN_WARNING_MSG("Loading to an open device is not permitted");
-        return false;
-    }
-    if(!device->open(QIODevice::ReadOnly) || device->atEnd())
-    {
-        device->close();
-        return false;
+        QNN_DEBUG_MSG("Opening device");
+        if(!device->open(QIODevice::ReadOnly) || device->atEnd())
+        {
+            QNN_CRITICAL_MSG("Can not open device");
+            return false;
+        }
+        opened_device = true;
     }
     QString gene_identifier;
 
@@ -295,7 +303,10 @@ bool GenericGene::canLoad(QIODevice *device)
 
     stream >> gene_identifier;
 
-    device->close();
+    if(opened_device)
+    {
+        device->close();
+    }
 
     return gene_identifier == identifier();
 }

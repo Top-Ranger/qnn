@@ -88,20 +88,24 @@ bool AbstractNeuralNetwork::saveNetworkConfig(QIODevice *device)
         return false;
     }
 
-    if(Q_UNLIKELY(device->isOpen()))
+    bool opened_device = false;
+    if(!device->isOpen())
     {
-        QNN_CRITICAL_MSG("Saving to an open device is not permitted");
-        return false;
-    }
-    if(!device->open(QIODevice::WriteOnly))
-    {
-        QNN_CRITICAL_MSG("Can not open device");
-        return false;
+        QNN_DEBUG_MSG("Opening device");
+        if(!device->open(QIODevice::WriteOnly))
+        {
+            QNN_CRITICAL_MSG("Can not open device");
+            return false;
+        }
+        opened_device = true;
     }
 
     QXmlStreamWriter stream(device);
     bool result = _saveNetworkConfig(&stream);
     result = result && !stream.hasError();
-    device->close();
+    if(opened_device)
+    {
+        device->close();
+    }
     return result;
 }
