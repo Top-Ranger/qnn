@@ -102,9 +102,7 @@ GenericGene *ContinuousTimeRecurrenNeuralNetwork::getRandomGene()
 
 AbstractNeuralNetwork *ContinuousTimeRecurrenNeuralNetwork::createConfigCopy()
 {
-    config new_config = _config;
-    new_config.neuron_save = NULL;
-    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, new_config);
+    return new ContinuousTimeRecurrenNeuralNetwork(_len_input, _len_output, _config);
 }
 
 void ContinuousTimeRecurrenNeuralNetwork::_initialise()

@@ -128,7 +128,10 @@ public:
         /*!
          * \brief If neuron_save is not NULL the value of the neurons will be saved to the QIODevice
          *
-         * This will be set to NULL if createConfigCopy is called to avoid problems.
+         * You should not set this to a value != NULL if multiple networks are created
+         * (e.g. running genetic algorithm or  running simulations with multiple trials)
+         * using AbstractNeuralNetwork::createConfigCopy()
+         * as it might lead to race conditions and multiple runs in one file.
          */
         QIODevice *neuron_save;
 
@@ -140,7 +143,10 @@ public:
         /*!
          * \brief If neuron_save is not NULL the gas concentration at the neurons will be saved to the QIODevice
          *
-         * This will be set to NULL if createConfigCopy is called to avoid problems.
+         * You should not set this to a value != NULL if multiple networks are created
+         * (e.g. running genetic algorithm or  running simulations with multiple trials)
+         * using AbstractNeuralNetwork::createConfigCopy()
+         * as it might lead to race conditions and multiple runs in one file.
          */
         QIODevice *gas_save;
 

@@ -165,10 +165,7 @@ GenericGene *GasNet::getRandomGene()
 
 AbstractNeuralNetwork *GasNet::createConfigCopy()
 {
-    config new_config = _config;
-    new_config.neuron_save = NULL;
-    new_config.gas_save = NULL;
-    return new GasNet(_len_input, _len_output, new_config);
+    return new GasNet(_len_input, _len_output, _config);
 }
 
 void GasNet::_initialise()
