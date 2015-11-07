@@ -277,7 +277,7 @@ void GasNet::_initialise()
             // write header
             QTextStream stream(_config.neuron_save);
             stream << "Neuron 0";
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << "Neuron " << i;
@@ -310,7 +310,7 @@ void GasNet::_initialise()
             // write header
             QTextStream stream(_config.gas_save);
             stream << "positive 0;negative 0";
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << "positive " << i << ";negative " << i;
@@ -374,7 +374,7 @@ void GasNet::_processInput(QList<double> input)
     {
         QTextStream stream(_config.gas_save);
         stream << _network[0];
-        for(int i = 1; i < _gene->segments().size(); ++i)
+        for(qint32 i = 1; i < _gene->segments().size(); ++i)
         {
             stream << ";";
             stream << gas1[i] << ";" << gas2[i];
@@ -477,7 +477,7 @@ void GasNet::_processInput(QList<double> input)
     {
         QTextStream stream(_config.neuron_save);
         stream << _network[0];
-        for(int i = 1; i < _gene->segments().size(); ++i)
+        for(qint32 i = 1; i < _gene->segments().size(); ++i)
         {
             stream << ";";
             stream << _network[i];

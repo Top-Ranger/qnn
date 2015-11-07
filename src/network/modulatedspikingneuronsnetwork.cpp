@@ -415,7 +415,7 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
             // write header
             QTextStream stream(_config.neuron_save);
             stream << "Neuron 0";
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << "Neuron " << i;
@@ -448,7 +448,7 @@ void ModulatedSpikingNeuronsNetwork::_initialise()
             // write header
             QTextStream stream(_config.gas_save);
             stream << "APos 0;ANeg 0;BPos 0;BNeg 0;CPos 0;CNeg 0;DPos 0;DNeg 0";
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << "APos " << i << ";ANeg " << i
@@ -568,7 +568,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         {
             QTextStream stream(_config.gas_save);
             stream << _network[0];
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << gasAPos[i] << ";" << gasANeg[i] << ";"
@@ -708,7 +708,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         {
             QTextStream stream(_config.neuron_save);
             stream << _network[0];
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << _network[i];
@@ -732,7 +732,7 @@ void ModulatedSpikingNeuronsNetwork::_processInput(QList<double> input)
         {
             QTextStream stream(_config.neuron_save);
             stream << _network[0];
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << _network[i];

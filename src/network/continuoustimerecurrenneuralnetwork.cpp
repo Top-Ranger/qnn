@@ -148,7 +148,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_initialise()
             // write header
             QTextStream stream(_config.neuron_save);
             stream << "Neuron 0";
-            for(int i = 1; i < _gene->segments().size(); ++i)
+            for(qint32 i = 1; i < _gene->segments().size(); ++i)
             {
                 stream << ";";
                 stream << "Neuron " << i;
@@ -192,7 +192,7 @@ void ContinuousTimeRecurrenNeuralNetwork::_processInput(QList<double> input)
     {
         QTextStream stream(_config.neuron_save);
         stream << _network[0];
-        for(int i = 1; i < _gene->segments().size(); ++i)
+        for(qint32 i = 1; i < _gene->segments().size(); ++i)
         {
             stream << ";";
             stream << _network[i];

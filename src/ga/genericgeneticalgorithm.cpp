@@ -231,7 +231,7 @@ void GenericGeneticAlgorithm::createChildren()
     QList<GenericGene *> childrenGene;
     QList< QList< QFuture<double> > > threadList;
     QList<GeneContainer> saveSmallPopulation;
-    int number_list = 0;
+    qint32 number_list = 0;
 
     while(!_population.empty())
     {
@@ -275,7 +275,7 @@ void GenericGeneticAlgorithm::createChildren()
 
     }
 
-    for(int j = 0; j < number_list; ++j)
+    for(qint32 j = 0; j < number_list; ++j)
     {
         for(qint32 i = 0; i < newChildren[j].length(); ++i)
         {

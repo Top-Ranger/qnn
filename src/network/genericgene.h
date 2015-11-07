@@ -140,7 +140,7 @@ public:
      * This method creates a random value in the range of [0, MAX_GENE_VALUE] making the whole gene independent of any
      * standard library. However as qrand is used qsrand() has to be called to get true random values.
      *
-     * \return A random int in the range [0, MAX_GENE_VALUE]
+     * \return A random qint32 in the range [0, MAX_GENE_VALUE]
      */
     qint32 getIndependentRandomInt();
 
