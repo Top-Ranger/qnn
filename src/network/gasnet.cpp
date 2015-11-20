@@ -373,7 +373,7 @@ void GasNet::_processInput(QList<double> input)
     if(_config.gas_save != NULL)
     {
         QTextStream stream(_config.gas_save);
-        stream << _network[0];
+        stream << gas1[0] << ";" << gas2[0];
         for(qint32 i = 1; i < _gene->segments().size(); ++i)
         {
             stream << ";";
