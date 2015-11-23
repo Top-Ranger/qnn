@@ -16,6 +16,7 @@ VERSION = 0.0.1
 
 INCLUDEPATH += src/
 
+QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += \
     src/network/abstractneuralnetwork.cpp \
@@ -31,7 +32,8 @@ SOURCES += \
     src/network/modulatedspikingneuronsnetwork.cpp \
     src/simulation/tmazesimulation.cpp \
     src/network/networktoxml.cpp \
-    src/simulation/rebergrammarsimulation.cpp
+    src/simulation/rebergrammarsimulation.cpp \
+    src/ga/cuckoosearch.cpp
 
 HEADERS += \
     src/network/abstractneuralnetwork.h \
@@ -48,7 +50,8 @@ HEADERS += \
     src/network/modulatedspikingneuronsnetwork.h \
     src/simulation/tmazesimulation.h \
     src/network/networktoxml.h \
-    src/simulation/rebergrammarsimulation.h
+    src/simulation/rebergrammarsimulation.h \
+    src/ga/cuckoosearch.h
 
 DESTDIR = $$PWD
 
