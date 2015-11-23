@@ -58,6 +58,9 @@ void CuckooSearch::createChildren()
     }
 
     // Replace eggs
+    // Because the genes / networks may be accessed in a parallel running performLevyFlight we have to store them for now and delete them later
+    QList<GenericGene *> geneToDelete;
+    QList<AbstractNeuralNetwork *> networksToDelete;
     for(qint32 i = 0; i < _population_size; ++i)
     {
         GeneContainer *egg = newEggs[i].result();
@@ -65,18 +68,23 @@ void CuckooSearch::createChildren()
         if(egg->fitness > _population[chosenNest].fitness)
         {
             // Replace egg
-            delete _population[chosenNest].network;
-            delete _population[chosenNest].gene;
+            // Cache genes / networks for deletion
+            networksToDelete.append(_population[chosenNest].network);
+            geneToDelete.append(_population[chosenNest].gene);
             _population[chosenNest] = *egg;
         }
         else
         {
             // Do not replace egg
+            // Because this genes / networks are never in the population we can delete them directly
             delete egg->gene;
             delete egg->network;
         }
         delete egg;
     }
+    // Now we can delete the genes / networks
+    qDeleteAll(geneToDelete);
+    qDeleteAll(networksToDelete);
 }
 
 void CuckooSearch::survivorSelection()
