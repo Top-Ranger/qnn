@@ -58,7 +58,12 @@ void CuckooSearch::createChildren()
     QList< QFuture<GeneContainer *> > newEggs;
     for(qint32 i = 0; i < _population_size; ++i)
     {
-        newEggs.append(QtConcurrent::run(this, &CuckooSearch::performLevyFlight, &_population[i], _simulation));
+        // Create new container to prevent modification of the pointers
+        GeneContainer cuckoo;
+        cuckoo.fitness = _population[i].fitness;
+        cuckoo.gene = _population[i].gene;
+        cuckoo.network = _population[i].network;
+        newEggs.append(QtConcurrent::run(this, &CuckooSearch::performLevyFlight, cuckoo, _simulation));
     }
 
     // Replace eggs
@@ -123,7 +128,7 @@ void CuckooSearch::survivorSelection()
     _population.append(nestList);
 }
 
-GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer *cuckoo, GenericSimulation *simulation)
+GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer cuckoo, GenericSimulation *simulation)
 {
     std::random_device rd;
     std::normal_distribution<double> nd;
@@ -133,8 +138,8 @@ GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericG
     // Create new egg
     GeneContainer *newEgg = new GeneContainer;
     newEgg->fitness = -1.0;
-    newEgg->network = cuckoo->network->createConfigCopy();
-    GenericGene *newGene = cuckoo->gene->createCopy();
+    newEgg->network = cuckoo.network->createConfigCopy();
+    GenericGene *newGene = cuckoo.gene->createCopy();
 
     // Create new gene using Levy flight
     for(int segment = 0; segment < newGene->segments().size(); ++segment)

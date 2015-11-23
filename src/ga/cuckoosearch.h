@@ -84,7 +84,7 @@ protected:
      * \param simulation The simulation from which the fitness is calculated
      * \return Pointer to GenericGeneticAlgorithm::GeneContainer. The caller must delete the container as well as the network / gene in the container
      */
-    GeneContainer *performLevyFlight(GeneContainer *cuckoo, GenericSimulation *simulation);
+    GeneContainer *performLevyFlight(GeneContainer cuckoo, GenericSimulation *simulation);
 
     /*!
      * \brief Configuration of the cuckoo search
