@@ -17,28 +17,93 @@
 class QNNSHARED_EXPORT CuckooSearch : public GenericGeneticAlgorithm
 {
 public:
+    /*!
+     * \brief This struct contains all configuration option of Cuckoo search
+     */
     struct config {
+        /*!
+         * \brief abandoned_nests holds the percent of nests which got abandoned in each generation
+         *
+         *  The value must be in the range [0.0, 1.0]
+         */
         double abandoned_nests;
 
+        /*!
+         * \brief Constructor for standard values
+         */
         config() :
-            abandoned_nests(0.2)
+            abandoned_nests(0.1)
         {
         }
     };
 
+    /*!
+     * Constructor of CuckooSearch
+     *
+     * \brief Constructor of CuckooSearch
+     * \param network The network which should be optimised. Might not be NULL
+     * \param simulation The simulation for which the network should be optimised. Might not be NULL
+     * \param population_size The population size
+     * \param fitness_to_reach The fitness which should be reached. Once it has been reached the cuckoo search will finish
+     * \param max_rounds The maximum amount of rounds. The cuckoo search will abort after the amount of rounds
+     * \param config Configuration for this cuckoo search
+     * \param parent The parent of the object
+     */
     CuckooSearch(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, config config = config(), QObject *parent = 0);
+
+    /*!
+     * \brief Deconstructor
+     */
     virtual ~CuckooSearch();
 
 protected:
+    /*!
+     * \brief Empty constructor
+     *
+     * This constructor may be useful for subclasses
+     */
     CuckooSearch(config config = config(), QObject *parent = 0);
+
+    /*!
+     * \brief In this function the new population is build. This is an overwritten function.
+     *
+     * The building of the new population consists of performing Lévy flights and replacing eggs
+     */
     void createChildren();
+
+    /*!
+     * \brief In this function the survivors are selected. This is an overwritten function.
+     *
+     * The survivor selection consists of abandoning the worst nests and building new random solutions
+     */
     void survivorSelection();
+
+    /*!
+     * \brief This function performs the Lévy flight for a single solution (cuckoo).
+     * \param cuckoo The initial solution
+     * \param simulation The simulation from which the fitness is calculated
+     * \return Pointer to GenericGeneticAlgorithm::GeneContainer. The caller must delete the container as well as the network / gene in the container
+     */
     GeneContainer *performLevyFlight(GeneContainer *cuckoo, GenericSimulation *simulation);
 
+    /*!
+     * \brief Configuration of the cuckoo search
+     */
     config _config;
 
 private:
+    /*!
+     * \brief levy_beta contains the beta value used in the Lévy flight
+     *
+     * For more information see Xin-She Yang and Suash Deb. 2010. Engineering Optimisation by Cuckoo Search. ArXiv e-prints (May 2010).
+     */
     static constexpr double levy_beta = 3.0/2.0;
+
+    /*!
+     * \brief levy_beta contains the beta value used in the Lévy flight
+     *
+     * For more information see Xin-She Yang and Suash Deb. 2010. Engineering Optimisation by Cuckoo Search. ArXiv e-prints (May 2010).
+     */
     static constexpr double levy_sigma = pow((tgamma(1.0+levy_beta)*sin(M_PI*levy_beta/2.0)/(tgamma((1.0+levy_beta)/2.0)*levy_beta*exp2((levy_beta-1.0)/2.0))),(1.0/levy_beta));
 };
 

@@ -46,6 +46,10 @@ CuckooSearch::CuckooSearch(config config, QObject *parent) :
     GenericGeneticAlgorithm(parent),
     _config(config)
 {
+    if(Q_UNLIKELY(_config.abandoned_nests < 0 || _config.abandoned_nests > 1.0))
+    {
+        QNN_FATAL_MSG("_config.abandoned_nests is out of bounds");
+    }
 }
 
 void CuckooSearch::createChildren()
