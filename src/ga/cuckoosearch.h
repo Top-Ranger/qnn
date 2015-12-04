@@ -93,6 +93,13 @@ protected:
 
 private:
     /*!
+     * \brief Alpha value (typical step size) of Lévy flight
+     *
+     *  In QNN the maximum size for a gene value is MAX_GENE_VALUE; Because a typical stepsize should be L/100 we use MAX_GENE_VALUE/100.
+     */
+    static constexpr double levy_alpha = 0.01 * MAX_GENE_VALUE;
+
+    /*!
      * \brief levy_beta contains the beta value used in the Lévy flight
      *
      * For more information see Xin-She Yang and Suash Deb. 2010. Engineering Optimisation by Cuckoo Search. ArXiv e-prints (May 2010).

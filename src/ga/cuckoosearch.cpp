@@ -148,7 +148,7 @@ GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericG
         {
             double u = nd(rd) * levy_sigma;
             double v = nd(rd);
-            double stepsize = 0.01 * MAX_GENE_VALUE * u/qPow(qAbs(v),(1/levy_beta));
+            double stepsize = levy_alpha * u/qPow(qAbs(v),(1/levy_beta));
             qint64 newValue = qAbs((double) newGene->segments()[segment][i] + stepsize * nd(rd));
             if(Q_UNLIKELY(newValue < 0))
             {
