@@ -89,7 +89,7 @@ public:
          * \brief Constructor for standard values
          */
         config() :
-            trials(24),
+            trials(250),
             max_timesteps(50),
             range_input(5),
             generateTMaze(&generateStandardTMaze),
