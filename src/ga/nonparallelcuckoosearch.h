@@ -1,5 +1,5 @@
-#ifndef NonParallelCuckooSearch_H
-#define NonParallelCuckooSearch_H
+#ifndef NONPARALLELCUCKOOSEARCH_H
+#define NONPARALLELCUCKOOSEARCH_H
 
 #include <qnn-global.h>
 
@@ -115,4 +115,4 @@ private:
     static constexpr double levy_sigma = pow((tgamma(1.0+levy_beta)*sin(M_PI*levy_beta/2.0)/(tgamma((1.0+levy_beta)/2.0)*levy_beta*exp2((levy_beta-1.0)/2.0))),(1.0/levy_beta));
 };
 
-#endif // NonParallelCuckooSearch_H
+#endif // NONPARALLELCUCKOOSEARCH_H
