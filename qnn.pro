@@ -33,7 +33,8 @@ SOURCES += \
     src/simulation/tmazesimulation.cpp \
     src/network/networktoxml.cpp \
     src/simulation/rebergrammarsimulation.cpp \
-    src/ga/cuckoosearch.cpp
+    src/ga/cuckoosearch.cpp \
+    src/ga/nonparallelcuckoosearch.cpp
 
 HEADERS += \
     src/network/abstractneuralnetwork.h \
@@ -51,7 +52,8 @@ HEADERS += \
     src/simulation/tmazesimulation.h \
     src/network/networktoxml.h \
     src/simulation/rebergrammarsimulation.h \
-    src/ga/cuckoosearch.h
+    src/ga/cuckoosearch.h \
+    src/ga/nonparallelcuckoosearch.h
 
 DESTDIR = $$PWD
 
