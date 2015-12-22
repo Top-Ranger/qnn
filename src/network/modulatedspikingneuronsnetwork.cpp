@@ -891,6 +891,10 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         config_neuron["gasCNeg_concentration"] = gasCNeg[i];
         config_neuron["gasDNeg_concentration"] = gasDNeg[i];
 
+        if(_gene->segments()[i][gene_input]%(_len_input+1) != 0)
+        {
+            config_neuron["input"] = _gene->segments()[i][gene_input]%(_len_input+1)-1;
+        }
 
         if(_emitting_possible)
         {
@@ -996,7 +1000,7 @@ bool ModulatedSpikingNeuronsNetwork::_saveNetworkConfig(QXmlStreamWriter *stream
         config_neuron["b_modulated"] = getModulatedValue(_config.b_modulated, gasBPos[i], gasBNeg[i], _gene->segments()[i][gene_b]%_Pb.size(), _Pb);
         config_neuron["c_modulated"] = getModulatedValue(_config.c_modulated, gasCPos[i], gasCNeg[i], _gene->segments()[i][gene_c]%_Pc.size(), _Pc);
         config_neuron["d_modulated"] = getModulatedValue(_config.d_modulated, gasDPos[i], gasDNeg[i], _gene->segments()[i][gene_d]%_Pd.size(), _Pd);
-        config_neuron["qint32ernal_charge"] = _network[i];
+        config_neuron["internal_charge"] = _network[i];
         config_neuron["fire_output"] = _firecount[i] * _config.timestep_size;
 
         for(qint32 j = 0; j < _gene->segments().size(); ++j)
