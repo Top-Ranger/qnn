@@ -5,6 +5,7 @@
 
 #include "genericgeneticalgorithm.h"
 #include "nonparallelgenericgeneticalgorithm.h"
+#include <QtCore/qmath.h>
 
 /*!
  * \brief This class implements a non-parallel version of the cuckoo search with Lévy flights.

@@ -4,6 +4,7 @@
 #include <qnn-global.h>
 
 #include "genericgeneticalgorithm.h"
+#include <QtCore/qmath.h>
 
 /*!
  * \brief This class implements the cuckoo search with Lévy flights.
