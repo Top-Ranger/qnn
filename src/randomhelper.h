@@ -32,12 +32,11 @@ inline void check_initialised()
         QNN_WARNING_MSG("Random initialised");
         std::random_device random_device;
         QVector<int> seed_vector;
-        seed_vector.reserve(5);
+        seed_vector.reserve(4);
         seed_vector << random_device();
         seed_vector << QTime(0,0,0).msecsTo(QTime::currentTime());
         seed_vector << QDate::currentDate().dayOfYear();
         seed_vector << QDate::currentDate().year();
-        seed_vector << QThread::currentThreadId();
         std::seed_seq seed(seed_vector.begin(), seed_vector.end());
         rnd.seed(seed);
         initialised = true;
