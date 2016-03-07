@@ -1,0 +1,4 @@
+#ifndef RANDOMHELPER_H
+#define RANDOMHELPER_H
+
+#endif // RANDOMHELPER_H
