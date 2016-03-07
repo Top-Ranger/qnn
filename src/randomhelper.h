@@ -29,7 +29,6 @@ inline void check_initialised()
 {
     if(Q_UNLIKELY(!initialised))
     {
-        QNN_WARNING_MSG("Random initialised");
         std::random_device random_device;
         QVector<int> seed_vector;
         seed_vector.reserve(4);
