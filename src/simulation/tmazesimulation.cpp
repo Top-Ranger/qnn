@@ -18,6 +18,8 @@
 
 #include "tmazesimulation.h"
 
+#include <randomhelper.h>
+
 namespace {
 enum Direction {
     up_direction = 0,
@@ -162,19 +164,19 @@ QVector<qint32> TMazeSimulation::generateStandardTMaze()
 {
     QVector<qint32> list;
     list.reserve(7);
-    qint32 number = (qrand()%5)+1;
+    qint32 number = RandomHelper::getRandomInt(1,5);
     list << number;
     for(qint32 i = 0; i < 5; ++i)
     {
         list << 0;
     }
-    if(qrand()%2)
+    if(RandomHelper::getRandomBool())
     {
         list << number;
     }
     else
     {
-        list << (qrand()%5)+1;
+        list << RandomHelper::getRandomInt(1,5);
     }
     return list;
 }

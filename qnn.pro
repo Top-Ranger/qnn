@@ -53,7 +53,8 @@ HEADERS += \
     src/network/networktoxml.h \
     src/simulation/rebergrammarsimulation.h \
     src/ga/cuckoosearch.h \
-    src/ga/nonparallelcuckoosearch.h
+    src/ga/nonparallelcuckoosearch.h \
+    src/randomhelper.h
 
 DESTDIR = $$PWD
 

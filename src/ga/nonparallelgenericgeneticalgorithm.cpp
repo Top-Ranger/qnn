@@ -17,6 +17,7 @@
  */
 
 #include "nonparallelgenericgeneticalgorithm.h"
+#include <randomhelper.h>
 
 NonParallelGenericGeneticAlgorithm::NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
     GenericGeneticAlgorithm(network, simulation, population_size, fitness_to_reach, max_rounds, parent)
@@ -61,7 +62,7 @@ void NonParallelGenericGeneticAlgorithm::createChildren()
         childrenGene.clear();
         for(qint32 i = 0; i < 8 && !_population.empty(); ++i)
         {
-            temp.append(_population.takeAt(qrand()%_population.length()));
+            temp.append(_population.takeAt(RandomHelper::getRandomInt(0, _population.length()-1)));
         }
         qSort(temp);
         if(Q_LIKELY(temp.length() >= 2))

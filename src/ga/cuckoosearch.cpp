@@ -6,22 +6,14 @@
 #include <QFuture>
 #include <QtAlgorithms>
 #include <random>
+#include <randomhelper.h>
 
 namespace {
 
 static const qint32 MAX_FORWARD_RANDOM = 256;
 
-double runSimulation(GenericSimulation *simulation, AbstractNeuralNetwork *network, GenericGene *gene, qint32 rand_seed, qint32 forward_random)
+double runSimulation(GenericSimulation *simulation, AbstractNeuralNetwork *network, GenericGene *gene)
 {
-    // We need to seed RNG on each thread to get different random values in the simulations
-    qsrand(rand_seed);
-
-    // Advance random a bit for better randomness in the simulations
-    for(qint32 i = 0; i < forward_random; ++i)
-    {
-        qrand();
-    }
-
     // Run simulation
     double score;
     GenericSimulation *newSimulation = simulation->createConfigCopy();
@@ -73,7 +65,7 @@ void CuckooSearch::createChildren()
     for(qint32 i = 0; i < _population_size; ++i)
     {
         GeneContainer *egg = newEggs[i].result();
-        qint32 chosenNest = qrand()%_population_size;
+        qint32 chosenNest = RandomHelper::getRandomInt(0, _population_size-1);
         if(egg->fitness > _population[chosenNest].fitness)
         {
             // Replace egg
@@ -119,7 +111,7 @@ void CuckooSearch::survivorSelection()
         nest.gene = _network->getRandomGene();
         nest.fitness = -1.0;
         nestList.append(nest);
-        futureList.append(QtConcurrent::run(runSimulation, _simulation, nest.network, nest.gene, qrand(), qrand()%MAX_FORWARD_RANDOM));
+        futureList.append(QtConcurrent::run(runSimulation, _simulation, nest.network, nest.gene));
     }
     for(qint32 i = 0; i < numberNests; ++i)
     {
@@ -130,11 +122,6 @@ void CuckooSearch::survivorSelection()
 
 GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer cuckoo, GenericSimulation *simulation)
 {
-    std::random_device rd;
-    std::normal_distribution<double> nd;
-
-    qsrand((double) MAX_GENE_VALUE * (double) rd() / (double) rd.max());
-
     // Create new egg
     GeneContainer *newEgg = new GeneContainer;
     newEgg->fitness = -1.0;
@@ -146,10 +133,10 @@ GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericG
     {
         for(int i = 0; i < newGene->segments()[segment].size(); ++i)
         {
-            double u = nd(rd) * levy_sigma;
-            double v = nd(rd);
+            double u = RandomHelper::getNormalDistributedDouble() * levy_sigma;
+            double v = RandomHelper::getNormalDistributedDouble();
             double stepsize = levy_alpha * u/qPow(qAbs(v),(1/levy_beta));
-            qint64 newValue = qAbs((double) newGene->segments()[segment][i] + stepsize * nd(rd));
+            qint64 newValue = qAbs((double) newGene->segments()[segment][i] + stepsize * RandomHelper::getNormalDistributedDouble());
             if(Q_UNLIKELY(newValue < 0))
             {
                 newValue = 0;

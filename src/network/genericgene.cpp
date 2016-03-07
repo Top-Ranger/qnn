@@ -19,21 +19,7 @@
 #include "genericgene.h"
 #include <QTime>
 #include <cstdlib>
-
-namespace {
-static qint32 random_exponent = 0;
-static double random_divisor = RAND_MAX;
-void calculateRandomFactor()
-{
-    random_exponent = 1;
-    random_divisor = RAND_MAX;
-    while(random_divisor < MAX_GENE_VALUE)
-    {
-        ++random_exponent;
-        random_divisor *= RAND_MAX;
-    }
-}
-}
+#include <randomhelper.h>
 
 GenericGene::GenericGene()
 {
@@ -92,7 +78,7 @@ void GenericGene::mutate()
     {
         for(qint32 j = 0; j < _gene[i].size(); ++j)
         {
-            if((double) qrand()/(double) RAND_MAX < MUTATION_RATE)
+            if(RandomHelper::getRandomDouble(0,1) < MUTATION_RATE)
             {
                 _gene[i][j] = getIndependentRandomInt();
             }
@@ -111,8 +97,8 @@ QList<GenericGene *> GenericGene::combine(GenericGene *gene1, GenericGene *gene2
     QVector< QVector<qint32> > newGene2;
     qint32 smallerLength = gene1->_gene.size() < gene2->_gene.size() ? gene1->_gene.size() : gene2->_gene.size();
     qint32 largerLength = gene1->_gene.size() > gene2->_gene.size() ? gene1->_gene.size() : gene2->_gene.size();
-    qint32 outer_crossover = qrand() % smallerLength;
-    qint32 inner_crossover = qrand() % gene1->_gene[0].size();
+    qint32 outer_crossover = RandomHelper::getRandomInt(0, smallerLength-1);
+    qint32 inner_crossover = RandomHelper::getRandomInt(0, gene1->_gene[0].size()-1);
     qint32 i;
     for(i = 0; i < outer_crossover; ++i)
     {
@@ -313,32 +299,7 @@ bool GenericGene::canLoad(QIODevice *device)
 
 qint32 GenericGene::getIndependentRandomInt()
 {
-    // Because the range of the RNG in different libraries does not need to be equal we have to calculate a platform-independent value to make genes platform-independent
-    if(Q_UNLIKELY(random_exponent == 0))
-    {
-        calculateRandomFactor();
-    }
-    double d = 0;
-    for(qint32 i = 0; i < random_exponent; ++i)
-    {
-        d *= RAND_MAX;
-        d += qrand();
-    }
-
-    // Sometimes d might be slightly bigger then 1 because of float imprecision
-    // Therefore we have to check for overflows
-    qint64 result = MAX_GENE_VALUE * (d / random_divisor);
-    if(Q_UNLIKELY(result > MAX_GENE_VALUE))
-    {
-        // Overflow has occured
-        result = MAX_GENE_VALUE;
-    }
-    else if(Q_UNLIKELY(result < 0))
-    {
-        // negativ value has occured
-        result = 0;
-    }
-    return result;
+    return RandomHelper::getRandomInt(0, MAX_GENE_VALUE);
 }
 
 GenericGene *GenericGene::loadThisGene(QIODevice *device)

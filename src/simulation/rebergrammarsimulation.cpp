@@ -18,6 +18,8 @@
 
 #include "rebergrammarsimulation.h"
 
+#include <randomhelper.h>
+
 namespace {
 
 enum ReberMode {
@@ -61,7 +63,7 @@ bool embedded_reber(QString &s, ReberMode mode, qint32 max_depth)
         s.clear();
         if(reber(s, mode, max_depth))
         {
-            if(qrand()%2)
+            if(RandomHelper::getRandomBool())
             {
                 s.prepend("BT");
                 s.append("TE");
@@ -154,7 +156,7 @@ bool reber_state0(QString &s, ReberMode mode, qint32 &depth)
 
     if(mode == reber_create_random_word)
     {
-        if(qrand()%2)
+        if(RandomHelper::getRandomBool())
         {
             return reber_state1(s.append('T'), mode, depth);
         }
@@ -198,7 +200,7 @@ bool reber_state1(QString &s, ReberMode mode, qint32 &depth)
 
     if(mode == reber_create_random_word)
     {
-        if(qrand()%2)
+        if(RandomHelper::getRandomBool())
         {
             return reber_state1(s.append('S'), mode, depth);
         }
@@ -242,7 +244,7 @@ bool reber_state2(QString &s, ReberMode mode, qint32 &depth)
 
     if(mode == reber_create_random_word)
     {
-        if(qrand()%2)
+        if(RandomHelper::getRandomBool())
         {
             return reber_state3(s.append('S'), mode, depth);
         }
@@ -320,7 +322,7 @@ bool reber_state4(QString &s, ReberMode mode, qint32 &depth)
 
     if(mode == reber_create_random_word)
     {
-        if(qrand()%2)
+        if(RandomHelper::getRandomBool())
         {
             return reber_state4(s.append('T'), mode, depth);
         }
@@ -364,7 +366,7 @@ bool reber_state5(QString &s, ReberMode mode, qint32 &depth)
 
     if(mode == reber_create_random_word)
     {
-        if(qrand()%2)
+        if(RandomHelper::getRandomBool())
         {
             return reber_state2(s.append('P'), mode, depth);
         }
@@ -401,7 +403,7 @@ bool reber_state5(QString &s, ReberMode mode, qint32 &depth)
 
 char getRandomReberChar()
 {
-    switch(qrand()%7)
+    switch(RandomHelper::getRandomInt(0,6))
     {
     case 0:
         return 'B';
@@ -598,13 +600,13 @@ double ReberGrammarSimulation::_getScore()
 
         switch (_config.mode) {
         case DetectGrammar:
-            if(qrand()%2)
+            if(RandomHelper::getRandomBool())
             {
                 // Replace some characters to get an ivalid word
                 bool valid;
                 QString temp_word;
                 do {
-                    word.replace(qrand()%word.length(), 1, QChar(getRandomReberChar()));
+                    word.replace(RandomHelper::getRandomInt(0, word.length()-1), 1, QChar(getRandomReberChar()));
                     temp_word = word;
                     valid = reber_function(temp_word, reber_verify_word, _config.max_depth);
                 } while(valid);
@@ -629,7 +631,7 @@ double ReberGrammarSimulation::_getScore()
             QString input_word;
             char c_output = '\1';
 
-            qint32 input_length = (word.length()/2) + qrand()%(word.length()/4)+1;
+            qint32 input_length = (word.length()/2) + RandomHelper::getRandomInt(0, (word.length()/4));
             for(qint32 i = 0; i < input_length && iter != word.end(); ++i)
             {
                 input_word.append(*iter++);

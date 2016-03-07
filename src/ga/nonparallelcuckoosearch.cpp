@@ -3,7 +3,7 @@
 #include <math.h>
 #include <QtCore/qmath.h>
 #include <QtAlgorithms>
-#include <random>
+#include <randomhelper.h>
 
 NonParallelCuckooSearch::NonParallelCuckooSearch(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, config config, QObject *parent) :
     NonParallelGenericGeneticAlgorithm(network, simulation, population_size, fitness_to_reach, max_rounds, parent),
@@ -46,7 +46,7 @@ void NonParallelCuckooSearch::createChildren()
     for(qint32 i = 0; i < _population_size; ++i)
     {
         GeneContainer *egg = newEggs[i];
-        qint32 chosenNest = qrand()%_population_size;
+        qint32 chosenNest = RandomHelper::getRandomInt(0,_population_size-1);
         if(egg->fitness > _population[chosenNest].fitness)
         {
             // Replace egg
@@ -100,11 +100,6 @@ void NonParallelCuckooSearch::survivorSelection()
 
 GenericGeneticAlgorithm::GeneContainer *NonParallelCuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer cuckoo, GenericSimulation *simulation)
 {
-    std::random_device rd;
-    std::normal_distribution<double> nd;
-
-    qsrand((double) MAX_GENE_VALUE * (double) rd() / (double) rd.max());
-
     // Create new egg
     GeneContainer *newEgg = new GeneContainer;
     newEgg->fitness = -1.0;
@@ -116,10 +111,10 @@ GenericGeneticAlgorithm::GeneContainer *NonParallelCuckooSearch::performLevyFlig
     {
         for(int i = 0; i < newGene->segments()[segment].size(); ++i)
         {
-            double u = nd(rd) * levy_sigma;
-            double v = nd(rd);
+            double u = RandomHelper::getNormalDistributedDouble() * levy_sigma;
+            double v = RandomHelper::getNormalDistributedDouble();
             double stepsize = levy_alpha * u/qPow(qAbs(v),(1/levy_beta));
-            qint64 newValue = qAbs((double) newGene->segments()[segment][i] + stepsize * nd(rd));
+            qint64 newValue = qAbs((double) newGene->segments()[segment][i] + stepsize * RandomHelper::getNormalDistributedDouble());
             if(Q_UNLIKELY(newValue < 0))
             {
                 newValue = 0;

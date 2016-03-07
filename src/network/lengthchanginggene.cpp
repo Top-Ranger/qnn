@@ -18,6 +18,8 @@
 
 #include "lengthchanginggene.h"
 
+#include <randomhelper.h>
+
 LengthChangingGene::LengthChangingGene(qint32 initialLength, qint32 segment_size, config config) :
     GenericGene(initialLength, segment_size),
     _config(config)
@@ -67,14 +69,14 @@ void LengthChangingGene::mutate()
     GenericGene::mutate();
     if(_gene.size() > _config.min_length)
     {
-        if(((double) qrand()/(double) RAND_MAX) < MUTATION_RATE)
+        if(RandomHelper::getRandomDouble(0,1) < MUTATION_RATE)
         {
-            _gene.remove(qrand()%_gene.size());
+            _gene.remove(RandomHelper::getRandomInt(0, _gene.size()-1));
         }
     }
     if(_gene.size() < _config.max_length)
     {
-        if(((double) qrand()/(double) RAND_MAX) < MUTATION_RATE)
+        if(RandomHelper::getRandomDouble(0,1) < MUTATION_RATE)
         {
             QVector<qint32> newSegment;
             newSegment.reserve(_segment_size);

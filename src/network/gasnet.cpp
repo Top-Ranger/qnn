@@ -21,6 +21,7 @@
 #include "lengthchanginggene.h"
 #include "commonnetworkfunctions.h"
 #include "networktoxml.h"
+#include <randomhelper.h>
 
 #include <QString>
 #include <QtCore/qmath.h>
@@ -158,7 +159,7 @@ GenericGene *GasNet::getRandomGene()
             }
             else
             {
-                initial_length = qrand()%diff + config.min_length;
+                initial_length = RandomHelper::getRandomInt(0, diff-1) + config.min_length;
             }
         }
     }

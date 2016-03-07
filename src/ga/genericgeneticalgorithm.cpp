@@ -23,22 +23,14 @@
 #include <QTime>
 #include <QtConcurrentRun>
 #include <QFuture>
+#include <randomhelper.h>
 
 namespace {
 
 static const qint32 MAX_FORWARD_RANDOM = 256;
 
-double runOneSimulation(GenericSimulation *simulation, qint32 rand_seed, qint32 forward_random)
+double runOneSimulation(GenericSimulation *simulation)
 {
-    // We need to seed RNG on each thread to get different random values in the simulations
-    qsrand(rand_seed);
-
-    // Advance random a bit for better randomness in the simulations
-    for(qint32 i = 0; i < forward_random; ++i)
-    {
-        qrand();
-    }
-
     double result = simulation->getScore();
     delete simulation;
     return result;
@@ -116,9 +108,6 @@ void GenericGeneticAlgorithm::runGa()
     {
         QNN_FATAL_MSG("Simulation might not be NULL");
     }
-
-    // Initialise
-    qsrand(QTime(0,0,0).msecsTo(QTime::currentTime()));
 
     delete _best.network;
     _best.network = NULL;
@@ -215,7 +204,7 @@ void GenericGeneticAlgorithm::createInitialPopulation()
     {
         GenericSimulation *simulation = _simulation->createConfigCopy();
         simulation->initialise(_population[i].network, _population[i].gene);
-        threadList.append(QtConcurrent::run(runOneSimulation, simulation, qrand(), qrand()%MAX_FORWARD_RANDOM));
+        threadList.append(QtConcurrent::run(runOneSimulation, simulation));
     }
 
     for(qint32 i = 0; i < _population_size; ++i)
@@ -239,7 +228,7 @@ void GenericGeneticAlgorithm::createChildren()
         temp.append(QList<GeneContainer>());
         for(qint32 i = 0; i < 8 && !_population.empty(); ++i)
         {
-            temp[number_list].append(_population.takeAt(qrand()%_population.length()));
+            temp[number_list].append(_population.takeAt(RandomHelper::getRandomInt(0, _population.length()-1)));
         }
         qSort(temp[number_list]);
         if(Q_LIKELY(temp[number_list].length() >= 2))
@@ -257,7 +246,7 @@ void GenericGeneticAlgorithm::createChildren()
                 newChildren[number_list].append(container);
                 GenericSimulation *simulation = _simulation->createConfigCopy();
                 simulation->initialise(container.network, container.gene);
-                threadList[number_list].append(QtConcurrent::run(runOneSimulation, simulation, qrand(), qrand()%MAX_FORWARD_RANDOM));
+                threadList[number_list].append(QtConcurrent::run(runOneSimulation, simulation));
             }
             ++number_list;
         }

@@ -133,13 +133,6 @@ public:
 
     /*!
      * \brief Returns a random value independent of platform
-     *
-     * qrand return a value in the range [0, RAND_MAX]. As RAND_MAX is library-dependent genes that were created
-     * with qrand would not be transferable to another c++ library.
-     *
-     * This method creates a random value in the range of [0, MAX_GENE_VALUE] making the whole gene independent of any
-     * standard library. However as qrand is used qsrand() has to be called to get true random values.
-     *
      * \return A random qint32 in the range [0, MAX_GENE_VALUE]
      */
     qint32 getIndependentRandomInt();
