@@ -9,6 +9,9 @@
 #include <QTime>
 #include <QDate>
 
+/*!
+ * \brief This namespace contains some utility functions to utilise c++11 random
+ */
 namespace RandomHelper {
 /*!
  * \brief Random engine
