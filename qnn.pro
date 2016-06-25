@@ -21,7 +21,6 @@ QMAKE_CXXFLAGS += -std=c++11
 SOURCES += \
     src/network/abstractneuralnetwork.cpp \
     src/network/feedforwardnetwork.cpp \
-    src/simulation/genericsimulation.cpp \
     src/network/genericgene.cpp \
     src/ga/genericgeneticalgorithm.cpp \
     src/network/continuoustimerecurrenneuralnetwork.cpp \
@@ -34,11 +33,11 @@ SOURCES += \
     src/network/networktoxml.cpp \
     src/simulation/rebergrammarsimulation.cpp \
     src/ga/cuckoosearch.cpp \
-    src/ga/nonparallelcuckoosearch.cpp
+    src/ga/nonparallelcuckoosearch.cpp \
+    src/simulation/abstractsimulation.cpp
 
 HEADERS += \
     src/network/abstractneuralnetwork.h \
-    src/simulation/genericsimulation.h \
     src/network/feedforwardnetwork.h \
     src/network/genericgene.h \
     src/ga/genericgeneticalgorithm.h \
@@ -54,7 +53,8 @@ HEADERS += \
     src/simulation/rebergrammarsimulation.h \
     src/ga/cuckoosearch.h \
     src/ga/nonparallelcuckoosearch.h \
-    src/randomhelper.h
+    src/randomhelper.h \
+    src/simulation/abstractsimulation.h
 
 DESTDIR = $$PWD
 

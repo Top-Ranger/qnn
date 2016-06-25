@@ -21,7 +21,7 @@
 
 #include <qnn-global.h>
 
-#include "genericsimulation.h"
+#include "abstractsimulation.h"
 
 /*!
  * \brief The ReberGrammarSimulation class represents the reber grammar task.
@@ -31,7 +31,7 @@
  *
  * For more information see http://www.willamette.edu/~gorr/classes/cs449/reber.html
  */
-class QNNSHARED_EXPORT ReberGrammarSimulation : public GenericSimulation
+class QNNSHARED_EXPORT ReberGrammarSimulation : public AbstractSimulation
 {
 public:
 
@@ -120,7 +120,7 @@ public:
      * \brief Creates an uninitialised copy of the simulation
      * \return Copy of the simulation. The caller must delete the simulation
      */
-    GenericSimulation *createConfigCopy();
+    AbstractSimulation *createConfigCopy();
 
 protected:
     /*!

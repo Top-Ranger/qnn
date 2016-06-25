@@ -16,8 +16,8 @@
  * along with qnn.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GENERICSIMULATION_H
-#define GENERICSIMULATION_H
+#ifndef ABSTRACTSIMULATION_H
+#define ABSTRACTSIMULATION_H
 
 #include <qnn-global.h>
 
@@ -25,7 +25,7 @@
 #include "../network/genericgene.h"
 
 /*!
- * \brief The GenericSimulation class is the base class for all simulations.
+ * \brief The AbstractSimulation class is the base class for all simulations.
  *
  * A simulation is a task which the network has to perform. This task may be performed one time or multiple times.
  * Each simulation should return a score in the range [0,1] describing how well the task was done.
@@ -35,18 +35,18 @@
  *
  * A subclass of this must overwrite all virtual methods.
  */
-class QNNSHARED_EXPORT GenericSimulation
+class QNNSHARED_EXPORT AbstractSimulation
 {
 public:
     /*!
      * \brief Constructor
      */
-    GenericSimulation();
+    AbstractSimulation();
 
     /*!
      * \brief Deconstructior
      */
-    virtual ~GenericSimulation();
+    virtual ~AbstractSimulation();
 
     /*!
      * \brief Initialises the simulation.
@@ -68,19 +68,19 @@ public:
      * \brief Returns the lengh of input that is used for this simulation
      * \return Input length needed
      */
-    virtual qint32 needInputLength();
+    virtual qint32 needInputLength() = 0;
 
     /*!
      * \brief Returns the lengh of output that is used for this simulation
      * \return Output length needed
      */
-    virtual qint32 needOutputLength();
+    virtual qint32 needOutputLength() = 0;
 
     /*!
      * \brief Creates an uninitialised copy of the simulation
      * \return Copy of the simulation. The caller must delete the simulation
      */
-    virtual GenericSimulation *createConfigCopy();
+    virtual AbstractSimulation *createConfigCopy() = 0;
 
 protected:
     /*!
@@ -89,7 +89,7 @@ protected:
      * This method is the method where subclasses should implement their initialisation.
      * _gene and _network is guaranteed to be valid.
      */
-    virtual void _initialise();
+    virtual void _initialise() = 0;
 
     /*!
      * \brief Initialises the network
@@ -97,7 +97,7 @@ protected:
      * This method is the method where subclasses should implement their simulation.
      * _gene and _network is guaranteed to be valid.
      */
-    virtual double _getScore();
+    virtual double _getScore() = 0;
 
     /*!
      * \brief The uninitialised network that should be tested.
@@ -110,4 +110,4 @@ protected:
     GenericGene *_gene;
 };
 
-#endif // GENERICSIMULATION_H
+#endif // ABSTRACTSIMULATION_H

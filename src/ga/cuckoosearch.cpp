@@ -12,11 +12,11 @@ namespace {
 
 static const qint32 MAX_FORWARD_RANDOM = 256;
 
-double runSimulation(GenericSimulation *simulation, AbstractNeuralNetwork *network, GenericGene *gene)
+double runSimulation(AbstractSimulation *simulation, AbstractNeuralNetwork *network, GenericGene *gene)
 {
     // Run simulation
     double score;
-    GenericSimulation *newSimulation = simulation->createConfigCopy();
+    AbstractSimulation *newSimulation = simulation->createConfigCopy();
     newSimulation->initialise(network, gene);
     score = newSimulation->getScore();
     delete newSimulation;
@@ -24,7 +24,7 @@ double runSimulation(GenericSimulation *simulation, AbstractNeuralNetwork *netwo
 }
 }
 
-CuckooSearch::CuckooSearch(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, config config, QObject *parent) :
+CuckooSearch::CuckooSearch(AbstractNeuralNetwork *network, AbstractSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, config config, QObject *parent) :
     GenericGeneticAlgorithm(network, simulation, population_size, fitness_to_reach, max_rounds, parent),
     _config(config)
 {
@@ -120,7 +120,7 @@ void CuckooSearch::survivorSelection()
     _population.append(nestList);
 }
 
-GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer cuckoo, GenericSimulation *simulation)
+GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer cuckoo, AbstractSimulation *simulation)
 {
     // Create new egg
     GeneContainer *newEgg = new GeneContainer;
@@ -151,7 +151,7 @@ GenericGeneticAlgorithm::GeneContainer *CuckooSearch::performLevyFlight(GenericG
     newEgg->gene = newGene;
 
     // Calculate fitness
-    GenericSimulation *newSimulation = simulation->createConfigCopy();
+    AbstractSimulation *newSimulation = simulation->createConfigCopy();
     newSimulation->initialise(newEgg->network, newEgg->gene);
     newEgg->fitness = newSimulation->getScore();
     delete newSimulation;

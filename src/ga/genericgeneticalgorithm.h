@@ -22,7 +22,7 @@
 #include <qnn-global.h>
 
 #include "../network/abstractneuralnetwork.h"
-#include "../simulation/genericsimulation.h"
+#include "../simulation/abstractsimulation.h"
 #include <QVector>
 #include <QObject>
 
@@ -53,7 +53,7 @@ public:
      * \param max_rounds The maximum amount of rounds. The genetic algorithm will abort after the amount of rounds
      * \param parent The parent of the object
      */
-    explicit GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, QObject *parent = 0);
+    explicit GenericGeneticAlgorithm(AbstractNeuralNetwork *network, AbstractSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, QObject *parent = 0);
 
     /*!
      * \brief Deconstructor
@@ -113,7 +113,7 @@ public:
      *
      * \return Simulation copy. The caller must delete the simulation
      */
-    GenericSimulation *getSimulationCopy();
+    AbstractSimulation *getSimulationCopy();
 
 signals:
     /*!
@@ -211,7 +211,7 @@ protected:
     /*!
      * \brief The simulation which is used for the optimisation
      */
-    GenericSimulation *_simulation;
+    AbstractSimulation *_simulation;
 
     /*!
      * \brief The size of the population

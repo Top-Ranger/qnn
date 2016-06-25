@@ -5,7 +5,7 @@
 #include <QtAlgorithms>
 #include <randomhelper.h>
 
-NonParallelCuckooSearch::NonParallelCuckooSearch(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, config config, QObject *parent) :
+NonParallelCuckooSearch::NonParallelCuckooSearch(AbstractNeuralNetwork *network, AbstractSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, config config, QObject *parent) :
     NonParallelGenericGeneticAlgorithm(network, simulation, population_size, fitness_to_reach, max_rounds, parent),
     _config(config)
 {
@@ -89,7 +89,7 @@ void NonParallelCuckooSearch::survivorSelection()
         nest.network = _network->createConfigCopy();
         nest.gene = _network->getRandomGene();
 
-        GenericSimulation *newSimulation = _simulation->createConfigCopy();
+        AbstractSimulation *newSimulation = _simulation->createConfigCopy();
         newSimulation->initialise(_network, nest.gene);
         nest.fitness = newSimulation->getScore();
         delete newSimulation;
@@ -98,7 +98,7 @@ void NonParallelCuckooSearch::survivorSelection()
     }
 }
 
-GenericGeneticAlgorithm::GeneContainer *NonParallelCuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer cuckoo, GenericSimulation *simulation)
+GenericGeneticAlgorithm::GeneContainer *NonParallelCuckooSearch::performLevyFlight(GenericGeneticAlgorithm::GeneContainer cuckoo, AbstractSimulation *simulation)
 {
     // Create new egg
     GeneContainer *newEgg = new GeneContainer;
@@ -129,7 +129,7 @@ GenericGeneticAlgorithm::GeneContainer *NonParallelCuckooSearch::performLevyFlig
     newEgg->gene = newGene;
 
     // Calculate fitness
-    GenericSimulation *newSimulation = simulation->createConfigCopy();
+    AbstractSimulation *newSimulation = simulation->createConfigCopy();
     newSimulation->initialise(newEgg->network, newEgg->gene);
     newEgg->fitness = newSimulation->getScore();
     delete newSimulation;

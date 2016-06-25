@@ -16,24 +16,24 @@
  * along with qnn.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "genericsimulation.h"
+#include "abstractsimulation.h"
 
 #include <QList>
 #include <QString>
 
-GenericSimulation::GenericSimulation() :
+AbstractSimulation::AbstractSimulation() :
     _network(NULL),
     _gene(NULL)
 { 
 }
 
-GenericSimulation::~GenericSimulation()
+AbstractSimulation::~AbstractSimulation()
 {
     delete _network;
     delete _gene;
 }
 
-void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *gene)
+void AbstractSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *gene)
 {
     if(Q_UNLIKELY(_network != NULL || _gene != NULL))
     {
@@ -49,39 +49,11 @@ void GenericSimulation::initialise(AbstractNeuralNetwork *network, GenericGene *
     _initialise();
 }
 
-double GenericSimulation::getScore()
+double AbstractSimulation::getScore()
 {
     if(Q_UNLIKELY(_network == NULL || _gene == NULL))
     {
         QNN_FATAL_MSG("Network not initialised");
     }
     return _getScore();
-}
-
-qint32 GenericSimulation::needInputLength()
-{
-    return 5;
-}
-
-qint32 GenericSimulation::needOutputLength()
-{
-    return 1;
-}
-
-void GenericSimulation::_initialise()
-{
-    _network->initialise(_gene);
-}
-
-GenericSimulation *GenericSimulation::createConfigCopy()
-{
-    return new GenericSimulation();
-}
-
-double GenericSimulation::_getScore()
-{
-    QList<double> input;
-    input << 0.2 << 0.4 << 0.6 << 0.8 << 1.0;
-    _network->processInput(input);
-    return _network->getNeuronOutput(0);
 }

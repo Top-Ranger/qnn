@@ -522,7 +522,7 @@ char networkToReberOutput(AbstractNeuralNetwork *network)
 } // End namespace
 
 ReberGrammarSimulation::ReberGrammarSimulation(config config) :
-    GenericSimulation(),
+    AbstractSimulation(),
     _config(config)
 {
 }
@@ -551,7 +551,7 @@ qint32 ReberGrammarSimulation::needOutputLength()
     }
 }
 
-GenericSimulation *ReberGrammarSimulation::createConfigCopy()
+AbstractSimulation *ReberGrammarSimulation::createConfigCopy()
 {
     return new ReberGrammarSimulation(_config);
 }

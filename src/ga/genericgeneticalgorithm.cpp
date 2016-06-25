@@ -29,7 +29,7 @@ namespace {
 
 static const qint32 MAX_FORWARD_RANDOM = 256;
 
-double runOneSimulation(GenericSimulation *simulation)
+double runOneSimulation(AbstractSimulation *simulation)
 {
     double result = simulation->getScore();
     delete simulation;
@@ -37,7 +37,7 @@ double runOneSimulation(GenericSimulation *simulation)
 }
 }
 
-GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
+GenericGeneticAlgorithm::GenericGeneticAlgorithm(AbstractNeuralNetwork *network, AbstractSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
     QObject(parent),
     _population(),
     _best(),
@@ -182,7 +182,7 @@ AbstractNeuralNetwork *GenericGeneticAlgorithm::getNetworkCopy()
     return _network->createConfigCopy();
 }
 
-GenericSimulation *GenericGeneticAlgorithm::getSimulationCopy()
+AbstractSimulation *GenericGeneticAlgorithm::getSimulationCopy()
 {
     return _simulation->createConfigCopy();
 }
@@ -202,7 +202,7 @@ void GenericGeneticAlgorithm::createInitialPopulation()
 
     for(qint32 i = 0; i < _population_size; ++i)
     {
-        GenericSimulation *simulation = _simulation->createConfigCopy();
+        AbstractSimulation *simulation = _simulation->createConfigCopy();
         simulation->initialise(_population[i].network, _population[i].gene);
         threadList.append(QtConcurrent::run(runOneSimulation, simulation));
     }
@@ -244,7 +244,7 @@ void GenericGeneticAlgorithm::createChildren()
                 container.network = _network->createConfigCopy();
                 container.fitness = -1.0;
                 newChildren[number_list].append(container);
-                GenericSimulation *simulation = _simulation->createConfigCopy();
+                AbstractSimulation *simulation = _simulation->createConfigCopy();
                 simulation->initialise(container.network, container.gene);
                 threadList[number_list].append(QtConcurrent::run(runOneSimulation, simulation));
             }

@@ -19,7 +19,7 @@
 #include "nonparallelgenericgeneticalgorithm.h"
 #include <randomhelper.h>
 
-NonParallelGenericGeneticAlgorithm::NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
+NonParallelGenericGeneticAlgorithm::NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, AbstractSimulation *simulation, qint32 population_size, double fitness_to_reach, qint32 max_rounds, QObject *parent) :
     GenericGeneticAlgorithm(network, simulation, population_size, fitness_to_reach, max_rounds, parent)
 {
 }
@@ -40,7 +40,7 @@ void NonParallelGenericGeneticAlgorithm::createInitialPopulation()
         GeneContainer container;
         container.gene = _network->getRandomGene();
         container.network = _network->createConfigCopy();
-        GenericSimulation *simulation = _simulation->createConfigCopy();
+        AbstractSimulation *simulation = _simulation->createConfigCopy();
         simulation->initialise(container.network, container.gene);
         container.fitness = simulation->getScore();
         delete simulation;
@@ -74,7 +74,7 @@ void NonParallelGenericGeneticAlgorithm::createChildren()
                 GeneContainer container;
                 container.gene = childrenGene[i];
                 container.network = _network->createConfigCopy();
-                GenericSimulation *simulation = _simulation->createConfigCopy();
+                AbstractSimulation *simulation = _simulation->createConfigCopy();
                 simulation->initialise(container.network, container.gene);
                 container.fitness = simulation->getScore();
                 newChildren.append(container);

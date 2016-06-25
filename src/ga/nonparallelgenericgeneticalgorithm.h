@@ -40,7 +40,7 @@ public:
      * \param max_rounds The maximum amount of rounds. The genetic algorithm will abort after the amount of rounds
      * \param parent The parent of the object
      */
-    NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, QObject *parent = 0);
+    NonParallelGenericGeneticAlgorithm(AbstractNeuralNetwork *network, AbstractSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, QObject *parent = 0);
 
     /*!
      * \brief Deconstructor

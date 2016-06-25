@@ -21,7 +21,7 @@
 
 #include <qnn-global.h>
 
-#include "genericsimulation.h"
+#include "abstractsimulation.h"
 #include <QVector>
 
 /*!
@@ -30,7 +30,7 @@
  * In the Tmaze simulation a robot must walk a discrete corridor. Each step contains a number.
  * Based on the numbers the robot must make a decision at the end if he wants to go to the left (G1) or to the right (G2).
  */
-class QNNSHARED_EXPORT TMazeSimulation : public GenericSimulation
+class QNNSHARED_EXPORT TMazeSimulation : public AbstractSimulation
 {
 public:
     /*!
@@ -128,7 +128,7 @@ public:
      * \brief Creates an uninitialised copy of the simulation
      * \return Copy of the simulation. The caller must delete the simulation
      */
-    GenericSimulation *createConfigCopy();
+    AbstractSimulation *createConfigCopy();
 
 protected:
 

@@ -51,7 +51,7 @@ public:
      * \param config Configuration for this cuckoo search
      * \param parent The parent of the object
      */
-    NonParallelCuckooSearch(AbstractNeuralNetwork *network, GenericSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, config config = config(), QObject *parent = 0);
+    NonParallelCuckooSearch(AbstractNeuralNetwork *network, AbstractSimulation *simulation, qint32 population_size = 300, double fitness_to_reach = 0.99, qint32 max_rounds = 200, config config = config(), QObject *parent = 0);
 
     /*!
      * \brief Deconstructor
@@ -86,7 +86,7 @@ protected:
      * \param simulation The simulation from which the fitness is calculated
      * \return Pointer to GenericGeneticAlgorithm::GeneContainer. The caller must delete the container as well as the network / gene in the container
      */
-    GeneContainer *performLevyFlight(GeneContainer cuckoo, GenericSimulation *simulation);
+    GeneContainer *performLevyFlight(GeneContainer cuckoo, AbstractSimulation *simulation);
 
     /*!
      * \brief Configuration of the cuckoo search

@@ -32,7 +32,7 @@ enum Direction {
 }
 
 TMazeSimulation::TMazeSimulation(config config) :
-    GenericSimulation(),
+    AbstractSimulation(),
     _config(config)
 {
 }
@@ -51,7 +51,7 @@ qint32 TMazeSimulation::needOutputLength()
     return 4;
 }
 
-GenericSimulation *TMazeSimulation::createConfigCopy()
+AbstractSimulation *TMazeSimulation::createConfigCopy()
 {
     return new TMazeSimulation(_config);
 }
