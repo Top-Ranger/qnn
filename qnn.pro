@@ -24,7 +24,6 @@ SOURCES += \
     src/network/genericgene.cpp \
     src/ga/genericgeneticalgorithm.cpp \
     src/network/continuoustimerecurrenneuralnetwork.cpp \
-    src/ga/nonparallelgenericgeneticalgorithm.cpp \
     src/network/gasnet.cpp \
     src/network/lengthchanginggene.cpp \
     src/network/commonnetworkfunctions.cpp \
@@ -33,7 +32,6 @@ SOURCES += \
     src/network/networktoxml.cpp \
     src/simulation/rebergrammarsimulation.cpp \
     src/ga/cuckoosearch.cpp \
-    src/ga/nonparallelcuckoosearch.cpp \
     src/simulation/abstractsimulation.cpp
 
 HEADERS += \
@@ -43,7 +41,6 @@ HEADERS += \
     src/ga/genericgeneticalgorithm.h \
     src/qnn-global.h \
     src/network/continuoustimerecurrenneuralnetwork.h \
-    src/ga/nonparallelgenericgeneticalgorithm.h \
     src/network/gasnet.h \
     src/network/lengthchanginggene.h \
     src/network/commonnetworkfunctions.h \
@@ -52,7 +49,6 @@ HEADERS += \
     src/network/networktoxml.h \
     src/simulation/rebergrammarsimulation.h \
     src/ga/cuckoosearch.h \
-    src/ga/nonparallelcuckoosearch.h \
     src/randomhelper.h \
     src/simulation/abstractsimulation.h
 
