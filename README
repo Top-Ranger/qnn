@@ -15,3 +15,18 @@ contained in a simulation.
 
 QNeuralNetwork is licensed under the terms of the GNU Lesser General Public
 License Version 3 or (at your option) any later version.
+
+-------------------------------------------------------------------------------
+
+If you use this work, please cite:
+
+@misc{soll_analysis_2016,
+  title = {Analysis of modulated spiking neural network},
+  language = {eng},
+  timestamp = {2016-07-15T20:05:37Z},
+  urldate = {2016-04-29},
+  author = {Soll, Marcus},
+  year = {2016},
+  type = {bachelor thesis},
+  doi = {10.13140/RG.2.1.2046.8728}
+}
