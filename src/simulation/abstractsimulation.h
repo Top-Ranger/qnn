@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Marcus Soll
+ * Copyright (C) 2015,2016 Marcus Soll
  * This file is part of qnn.
  *
  * qnn is free software: you can redistribute it and/or modify
@@ -30,6 +30,10 @@
  * A simulation is a task which the network has to perform. This task may be performed one time or multiple times.
  * Each simulation should return a score in the range [0,1] describing how well the task was done.
  * All calculation should be done inside the getScore method.
+ *
+ * You must expect that multiple different instances of a simulation are executed in parallel.
+ * If this is not possible (e.g. because you rely on an external service which can't handle parallel execution) you
+ * have to ensure a serial execution yourself (e.g. by using mutex).
  *
  * A simulation starts in an uninitialised state. The function getScore can only be called after the simulation has be initialised.
  *
